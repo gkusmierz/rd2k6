@@ -3,6 +3,17 @@
 
 ---
 
+## Krok 0: Bootstrap Serena MCP (OBOWIĄZKOWY)
+
+**Wykonaj PRZED jakąkolwiek pracą z kodem:**
+1. `ToolSearch(query="+serena", max_results=50)` — pobierze definicje narzędzi Serena MCP
+2. Wywołaj `mcp__serena__initial_instructions()` — inicjalizacja Sereny
+3. Dopiero potem kontynuuj normalną pracę
+
+> ⚠️ Bez tego kroku narzędzia Serena NIE BĘDĄ DOSTĘPNE — są to deferred tools wymagające jawnego pobrania.
+
+---
+
 ## Toolbox — Serena MCP First
 
 > **Twarda reguła:** Używaj Serena MCP jako PRIMARY tool do interakcji z kodem źródłowym.
@@ -49,9 +60,9 @@ Walidacja:
 
 ## Kroki wykonania
 
-### Krok 1 — Aktualizuj status w manifest.md
+### Krok 1 — Aktualizuj kanban w manifest.md
 
-Zmień status artifaktu z `pending` na `in-progress`.
+W tabeli `Artifacts` znajdź wiersz artefaktu i zmień kolumnę **P1** z `pending` na `in-progress`.
 Dodaj datę startu do Sessions Log.
 
 ### Krok 2 — Utwórz folder artifaktu
@@ -173,7 +184,10 @@ Wszystkie pliki .h/.cpp skatalogowane
 Klasy Qt zidentyfikowane z typem (QMainWindow/QDialog/etc.)
 Entry point (main.cpp) zidentyfikowany
 Pliki testowe zidentyfikowane (lub "brak" odnotowane)
+Kolumna P1 w manifest.md → done
 ```
+
+**Po zakończeniu**: zmień kolumnę **P1** w tabeli `Artifacts` manifestu na `done`.
 
 ---
 

@@ -3,6 +3,17 @@
 
 ---
 
+## Krok 0: Bootstrap Serena MCP (OBOWIĄZKOWY)
+
+**Wykonaj PRZED jakąkolwiek pracą z kodem:**
+1. `ToolSearch(query="+serena", max_results=50)` — pobierze definicje narzędzi Serena MCP
+2. Wywołaj `mcp__serena__initial_instructions()` — inicjalizacja Sereny
+3. Dopiero potem kontynuuj normalną pracę
+
+> ⚠️ Bez tego kroku narzędzia Serena NIE BĘDĄ DOSTĘPNE — są to deferred tools wymagające jawnego pobrania.
+
+---
+
 ## Cel
 
 Zbudować pełny inwentarz klas, metod, sygnałów i slotów dla jednego artifaktu.
@@ -97,7 +108,10 @@ Jeśli brakuje klas → uruchom ponownie sub-agenta dla tych par.
 inventory.md istnieje z frontmatter phase=2, status=done
 Liczba klas w inventory = liczba klas z discovery-state.md
 Zero duplikatów
+Kolumna P2 w manifest.md → done
 ```
+
+**Po zakończeniu**: zmień kolumnę **P2** w tabeli Artifacts manifestu na done.
 
 ## Co dalej
 

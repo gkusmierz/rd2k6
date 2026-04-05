@@ -3,6 +3,17 @@
 
 ---
 
+## Krok 0: Bootstrap Serena MCP (OBOWIĄZKOWY)
+
+**Wykonaj PRZED jakąkolwiek pracą z kodem:**
+1. `ToolSearch(query="+serena", max_results=50)` — pobierze definicje narzędzi Serena MCP
+2. Wywołaj `mcp__serena__initial_instructions()` — inicjalizacja Sereny
+3. Dopiero potem kontynuuj normalną pracę
+
+> ⚠️ Bez tego kroku narzędzia Serena NIE BĘDĄ DOSTĘPNE — są to deferred tools wymagające jawnego pobrania.
+
+---
+
 ## Toolbox — Serena MCP First
 
 > **Twarda reguła:** Używaj Serena MCP do pracy z kodem C++/Qt.
@@ -213,4 +224,7 @@ ui-contracts.md istnieje z frontmatter phase=3, status=done
 Każde okno z inventory.md (typ MainWindow/Dialog/Widget) ma UI Contract
 Każdy button/action ma zmapowany slot
 Stany widoku wypełnione
+Kolumna P3 w manifest.md → done
 ```
+
+**Po zakończeniu**: zmień kolumnę **P3** w tabeli Artifacts manifestu na done.

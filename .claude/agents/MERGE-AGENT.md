@@ -3,6 +3,17 @@
 
 ---
 
+## Krok 0: Bootstrap Serena MCP (OBOWIĄZKOWY)
+
+**Wykonaj PRZED jakąkolwiek pracą z kodem:**
+1. `ToolSearch(query="+serena", max_results=50)` — pobierze definicje narzędzi Serena MCP
+2. Wywołaj `mcp__serena__initial_instructions()` — inicjalizacja Sereny
+3. Dopiero potem kontynuuj normalną pracę
+
+> ⚠️ Bez tego kroku narzędzia Serena NIE BĘDĄ DOSTĘPNE — są to deferred tools wymagające jawnego pobrania.
+
+---
+
 ## Toolbox
 
 > Ten agent operuje na plikach `.md` (analysis outputs), nie na kodzie źródłowym.

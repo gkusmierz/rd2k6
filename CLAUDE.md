@@ -26,6 +26,9 @@ nie tylko Rivendell. Zabierasz go do każdego nowego projektu open source.
 6. **Zawsze aktualizuj frontmatter.** Każdy plik ma status. Aktualizuj go po każdej fazie.
 7. **Partial pliki są persystowane.** Nie usuwaj `_partials/` — to audit trail.
 8. **Serena przed grep.** Używaj narzędzi semantycznych Sereny, nie brute-force grep.
+9. **Bootstrap Serena MCP.** Każdy agent/sub-agent MUSI na starcie wykonać:
+   `ToolSearch(query="+serena", max_results=50)` → `mcp__serena__initial_instructions()`.
+   Narzędzia Serena są deferred — bez jawnego pobrania przez ToolSearch NIE BĘDĄ DOSTĘPNE.
 
 ---
 
@@ -62,6 +65,9 @@ Nie wiesz co dalej?
 | `/qtre-phase-6-spec-synthesis ARTIFACT_ID` | 6 | SPEC Synthesis — kompletna specyfikacja |
 | `/qtre-phase-7-feature-decomposition ARTIFACT_ID` | 7 | Feature Decomposition — FEAT-*.md |
 | `/qtre-status` | - | Sprawdź status projektu i następne kroki |
+| `/qtre-run-by-phase [N\|N-M] [FILTER]` | orch | Orkiestracja: faza po fazie (`2`=tylko faza 2, `2-5`=zakres) |
+| `/qtre-run-by-artifact` | orch | Orkiestracja: artefakt po artefakcie, pełny pipeline |
+| `/qtre-run-bulk` | orch | Orkiestracja: bulk — wszystkie artefakty × wszystkie fazy |
 
 ---
 
@@ -117,8 +123,14 @@ Kopiujesz go do root projektu C++/Qt i masz gotowy zestaw narzędzi.
 │   ├── qtre-phase-5-facts-mining.md
 │   ├── qtre-phase-6-spec-synthesis.md
 │   ├── qtre-phase-7-feature-decomposition.md
+│   ├── qtre-run-by-phase.md
+│   ├── qtre-run-by-artifact.md
+│   ├── qtre-run-bulk.md
 │   └── qtre-status.md
 ├── agents/                        ← definicje agentów (instrukcje)
+│   ├── ORCHESTRATOR-by-phase.md
+│   ├── ORCHESTRATOR-by-artifact.md
+│   ├── ORCHESTRATOR-bulk.md
 │   ├── PREREQ-CHECK.md
 │   ├── PHASE-0-discovery.md
 │   ├── PHASE-1-structure-scan.md

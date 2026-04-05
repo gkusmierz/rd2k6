@@ -18,6 +18,9 @@
 | SPEC Synthesis | .claude/agents/PHASE-6-spec-synthesis.md | 6 | monolithic | active |
 | Feature Decomposition | .claude/agents/PHASE-7-feature-decomposition.md | 7 | orchestrator | active |
 | Merge Agent | .claude/agents/MERGE-AGENT.md | 2,3,4,5,7 | merge | active |
+| Orchestrator By-Phase | .claude/agents/ORCHESTRATOR-by-phase.md | all | orchestrator | active |
+| Orchestrator By-Artifact | .claude/agents/ORCHESTRATOR-by-artifact.md | all | orchestrator | active |
+| Orchestrator Bulk | .claude/agents/ORCHESTRATOR-bulk.md | all | orchestrator | active |
 
 ---
 
@@ -107,4 +110,5 @@ Każdy agent ma wersję niezależną od systemu. Zmiana agenta = bump wersji.
 
 | Agent | Wersja | Ostatnia zmiana | Powód |
 |-------|--------|-----------------|-------|
-| Wszystkie | 1.0.0 | 2026-04-05 | Initial release |
+| Wszystkie (phases) | 1.0.0 | 2026-04-05 | Initial release |
+| Orchestrators (3x) | 1.0.0 | 2026-04-05 | Phase-first, Artifact-first, Bulk modes |

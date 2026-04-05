@@ -1,5 +1,10 @@
 Uruchom agenta PHASE-7 — Feature Decomposition.
 
+BOOTSTRAP (wykonaj NAJPIERW):
+1. ToolSearch(query="+serena", max_results=50) — pobierz narzędzia Serena MCP
+2. mcp__serena__initial_instructions() — zainicjalizuj Serenę
+Bez tego narzędzia Serena NIE BĘDĄ DOSTĘPNE (są to deferred tools).
+
 Przeczytaj plik `.claude/agents/PHASE-7-feature-decomposition.md` i wykonaj wszystkie kroki opisane w tym agencie.
 
 Parametr wejściowy: $ARGUMENTS (artifact ID, np. "LIB").

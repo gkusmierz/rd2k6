@@ -3,6 +3,17 @@
 
 ---
 
+## Krok 0: Bootstrap Serena MCP (OBOWIĄZKOWY)
+
+**Wykonaj PRZED jakąkolwiek pracą z kodem:**
+1. `ToolSearch(query="+serena", max_results=50)` — pobierze definicje narzędzi Serena MCP
+2. Wywołaj `mcp__serena__initial_instructions()` — inicjalizacja Sereny
+3. Dopiero potem kontynuuj normalną pracę
+
+> ⚠️ Bez tego kroku narzędzia Serena NIE BĘDĄ DOSTĘPNE — są to deferred tools wymagające jawnego pobrania.
+
+---
+
 ## Toolbox — Serena MCP First
 
 > **Twarda reguła:** Używaj Serena MCP jako PRIMARY tool do interakcji z kodem źródłowym.
@@ -288,4 +299,7 @@ Każda reguła biznesowa zapisana w Gherkin
 Każdy use case zmapowany na klasę/metodę z inventory.md
 Linux-specific komponenty wypisane z priorytetem zastąpienia
 Sekcja Conflicts wypełniona (lub "Brak rozbieżności" jeśli czysto)
+Kolumna P5 w manifest.md → done
 ```
+
+**Po zakończeniu**: zmień kolumnę **P5** w tabeli Artifacts manifestu na done.

@@ -3,6 +3,17 @@
 
 ---
 
+## Krok 0: Bootstrap Serena MCP (OBOWIĄZKOWY)
+
+**Wykonaj PRZED jakąkolwiek pracą z kodem:**
+1. `ToolSearch(query="+serena", max_results=50)` — pobierze definicje narzędzi Serena MCP
+2. Wywołaj `mcp__serena__initial_instructions()` — inicjalizacja Sereny
+3. Dopiero potem kontynuuj normalną pracę
+
+> ⚠️ Bez tego kroku narzędzia Serena NIE BĘDĄ DOSTĘPNE — są to deferred tools wymagające jawnego pobrania.
+
+---
+
 ## Cel
 
 Zdekomponować SPEC.md na zestaw FEAT-*.md — samowystarczalne wsady dla agentów
@@ -201,9 +212,11 @@ Dla każdego FEAT:
   - "Open Questions" wypełnione lub "Brak otwartych pytań"
 
 Topological sort jest możliwy (brak circular deps)
-Artifact status w manifest.md → done
+Kolumna P7 w manifest.md → done
 Sessions Log zaktualizowany
 ```
+
+**Po zakończeniu**: zmień kolumnę **P7** w tabeli Artifacts manifestu na done.
 
 ## Co dalej
 

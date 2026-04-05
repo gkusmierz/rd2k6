@@ -34,17 +34,26 @@ project_name: ~
 
 ## Artifacts
 
-| ID | Nazwa | Typ | Prefix | Priorytet | Status fazy 1 | Status fazy 5 | Status done |
-|----|-------|-----|--------|-----------|--------------|--------------|-------------|
-| L01 | {libname} | library | {XXX} | 0 | pending | pending | pending |
-| A01 | {appname} | application | {XXX} | 1 | pending | pending | pending |
+| ID | Nazwa | Typ | Pri | P1 | P2 | P3 | P4 | P5 | P6 | P7 |
+|----|-------|-----|-----|----|----|----|----|----|----|-----|
+| L01 | {libname} | library | 0 | pending | pending | pending | pending | pending | pending | pending |
+| A01 | {appname} | application | 1 | pending | pending | pending | pending | pending | pending | pending |
+
+Statusy kolumn P1-P7: `pending` → `in-progress` → `done` | `failed` | `skip`
+Fazy wypełniają się od lewej do prawej. Orkiestratory czytają tę tabelę jako jedyne źródło prawdy.
 
 ## Dependency Graph (inter-artifact)
 
-```
-{LIB_ID} ({libname}) ← {app1}, {app2}, {app3}
-{LIB2_ID} ({lib2name}) ← {app1}
-```
+Kolumna `Depends On` zawiera ID artefaktów które MUSZĄ mieć ukończoną analizę
+danej fazy zanim ten artefakt może być analizowany w tej fazie.
+
+**Reguła**: Artefakt może rozpocząć fazę N ≥ 2 tylko gdy WSZYSTKIE jego zależności
+mają P{N}=done. Faza 1 (structure scan) nie wymaga zależności.
+
+| ID | Depends On | Uwagi |
+|----|-----------|-------|
+| {LIB_ID} | — | root dependency |
+| {APP_ID} | {LIB_ID} | zależy od biblioteki |
 
 ## Sessions Log
 

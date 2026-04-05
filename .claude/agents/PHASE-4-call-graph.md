@@ -3,6 +3,17 @@
 
 ---
 
+## Krok 0: Bootstrap Serena MCP (OBOWIĄZKOWY)
+
+**Wykonaj PRZED jakąkolwiek pracą z kodem:**
+1. `ToolSearch(query="+serena", max_results=50)` — pobierze definicje narzędzi Serena MCP
+2. Wywołaj `mcp__serena__initial_instructions()` — inicjalizacja Sereny
+3. Dopiero potem kontynuuj normalną pracę
+
+> ⚠️ Bez tego kroku narzędzia Serena NIE BĘDĄ DOSTĘPNE — są to deferred tools wymagające jawnego pobrania.
+
+---
+
 ## Toolbox — Serena MCP First
 
 > **Twarda reguła:** Używaj Serena MCP jako PRIMARY tool do interakcji z kodem źródłowym.
@@ -185,4 +196,7 @@ call-graph.md istnieje z frontmatter phase=4, status=done
 Każdy connect() z kodu ma krawędź w grafie
 Każdy emit() jest zmapowany do connect() odbiorców
 Cross-artifact połączenia (D-Bus) są oznaczone
+Kolumna P4 w manifest.md → done
 ```
+
+**Po zakończeniu**: zmień kolumnę **P4** w tabeli Artifacts manifestu na done.
