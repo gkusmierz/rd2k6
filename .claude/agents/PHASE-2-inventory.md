@@ -1,5 +1,5 @@
 # PHASE-2 — Inventory Build Agent (Orchestrator)
-## Wersja: 1.1.0 | Faza: 2 | Scope: per artifact
+## Wersja: 1.2.0 | Faza: 2 | Scope: per artifact
 
 ---
 
@@ -45,6 +45,38 @@ Obsługa przypadków brzegowych:
 - plik .cpp bez .h → analyze implementację bezpośrednio (może być main.cpp)
 - pliki `moc_*.cpp` → POMIŃ (generowane przez moc)
 - pliki `ui_*.h` → POMIŃ (generowane z .ui plików, analizowane w Fazie 3)
+
+### Krok 1b — Skanuj WSZYSTKIE klasy (nie tylko Q_OBJECT)
+
+> **WAŻNE:** Wiele projektów Qt ma klasy plain C++ (Active Record, Value Object,
+> helper/utility) BEZ makra Q_OBJECT. Te klasy NIE pojawiają się w skanowaniu
+> sygnałów/slotów ale SĄ częścią domain model i muszą być zinwentaryzowane.
+
+```
+# Znajdź WSZYSTKIE klasy C++ w artifact folder
+Serena: search_for_pattern(
+  substring_pattern="^class\\s+\\w+",
+  relative_path="{ARTIFACT_FOLDER}",
+  paths_include_glob="**/*.h"
+)
+→ LISTA_WSZYSTKIE
+
+# Porównaj z listą Q_OBJECT klas z discovery-state.md
+# Różnica = plain C++ klasy do dodania do inwentarza
+PLAIN_CPP = LISTA_WSZYSTKIE - LISTA_QOBJECT
+
+# Dla każdej plain C++ klasy: uruchom sub-agenta tak samo jak dla Q_OBJECT
+# Sub-agent automatycznie ustawi "Sygnały: Brak" i "Sloty: Brak"
+```
+
+**Kategoryzacja plain C++ klas:**
+```
+Klasa z getterami/setterami + SQL → Active Record (model domenowy)
+Klasa z samymi metodami statycznymi → Utility
+Klasa z enum'ami i stałymi → Value Object / Constants
+Klasa z algorytmami → Service (non-Qt)
+struct / klasa z samymi polami → Data Transfer Object
+```
 
 ### Krok 2 — Uruchom sub-agenty równolegle
 
@@ -96,9 +128,39 @@ Po merge sprawdź inventory.md:
 - Żadna klasa nie jest zduplikowana?
 - Każda klasa z Q_OBJECT ma sekcję sygnałów i slotów?
 - Każdy Q_PROPERTY jest wylistowany?
+- Liczba klas w inventory >= liczba klas ze skanu (Krok 1b)?
 ```
 
 Jeśli brakuje klas → uruchom ponownie sub-agenta dla tych par.
+
+### Krok 6 — Spot-check (OBOWIĄZKOWY)
+
+> Losowa weryfikacja 3 klas zapobiega propagacji błędów do kolejnych faz.
+
+Wybierz **3 losowe klasy** z wygenerowanego inventory.md (preferuj mix: 1 QObject, 1 Dialog, 1 plain C++).
+
+Dla każdej:
+```
+# Zweryfikuj sygnały
+Serena: search_for_pattern(
+  substring_pattern="signals:",
+  relative_path="{HEADER_FILE}",
+  context_lines_after=30
+)
+→ Porównaj z sekcją "Sygnały" w inventory
+→ Czy brakuje jakiegoś sygnału? Czy jakiś jest nadmiarowy?
+
+# Zweryfikuj typ socketu / komunikacji (jeśli klasa komunikacyjna)
+Serena: find_symbol(
+  name_path_pattern="{CLASS}/connectHost",
+  relative_path="{SOURCE_FILE}",
+  include_body=true
+)
+→ Czy opis w inventory odpowiada faktycznej implementacji?
+→ TCP vs UDP? Synchroniczny vs asynchroniczny?
+```
+
+Jeśli >=1 rozbieżność → przeglądnij powiązane klasy i popraw.
 
 ---
 
@@ -106,8 +168,9 @@ Jeśli brakuje klas → uruchom ponownie sub-agenta dla tych par.
 
 ```
 inventory.md istnieje z frontmatter phase=2, status=done
-Liczba klas w inventory = liczba klas z discovery-state.md
+Liczba klas w inventory >= liczba klas z discovery-state.md (uwzględnia plain C++)
 Zero duplikatów
+Spot-check 3 klas przeszedł bez rozbieżności
 Kolumna P2 w manifest.md → done
 ```
 

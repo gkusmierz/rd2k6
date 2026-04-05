@@ -4,17 +4,27 @@ artifact: {ARTIFACT_ID}
 artifact_name: {pełna nazwa}
 status: done
 completed_at: ~
-sections_complete: 14
+sections_complete: 16
 quality_gates_passed: 4
-agent_version: 1.0.0
+agent_version: 1.3.0
 ---
 
 # SPEC: {ARTIFACT_NAME}
 ## Behavioral Specification — WHAT without HOW
 
 > Dokument ten opisuje CO system robi i JAKIE MA ZACHOWANIE.
-> Nie opisuje JAK to robi ani w jakiej technologii.
-> Wystarczy do zbudowania klona w dowolnym języku na dowolnej platformie.
+> Jest **nawigacyjnym PRD** — podsumowuje i linkuje do szczegółów w fazach 2-5.
+> Agenci kodujący czytają FEAT pliki (Phase 7) które zawierają kompletne dane.
+
+### Źródła szczegółów
+
+| Dokument | Zawiera | Czytaj gdy |
+|----------|---------|-----------|
+| `inventory.md` | Pełne API klas, sygnały, sloty, enums | Potrzebujesz sygnatury metody |
+| `ui-contracts.md` | Pełne kontrakty UI, widgety, stany, walidacje | Potrzebujesz detali UI |
+| `mockups/*.html` | Wizualne odwzorowania okien (Tailwind) | Chcesz zobaczyć jak wygląda |
+| `call-graph.md` | Wszystkie connect(), emit(), przepływy | Potrzebujesz grafu zdarzeń |
+| `facts.md` | Reguły Gherkin z source references | Potrzebujesz reguł z dowodami |
 
 ---
 
@@ -27,12 +37,9 @@ agent_version: 1.0.0
 | Aktor | Rola |
 |-------|------|
 | {Operator} | {opis} |
-| {Administrator} | {opis} |
-| {System} | {opis} |
 
 **Kluczowe wartości biznesowe:**
 - {wartość 1}
-- {wartość 2}
 
 ---
 
@@ -40,74 +47,88 @@ agent_version: 1.0.0
 
 ### Encje biznesowe
 
-| Encja | Opis | Kluczowe pola |
-|-------|------|--------------|
-| {Encja} | {co reprezentuje} | {lista pól z typami} |
+| Encja | Opis | Kluczowe pola | Pełne API |
+|-------|------|--------------|-----------|
+| {Encja} | {co reprezentuje} | {pola} | `inventory.md#{KLASA}` |
 
 ### Relacje
 
 ```
 {Encja A} 1──────────N {Encja B}   (jeden A ma wiele B)
-{Encja B} N──────────M {Encja C}   (wiele-do-wielu)
 ```
 
-### Enums (zbiory stanów)
+### Enums
 
 | Enum | Wartości | Znaczenie |
 |------|----------|-----------|
-| {NazwaEnum} | {val1, val2} | {co reprezentuje każda wartość} |
 
 ---
 
-## Sekcja 3 — Functional Capabilities (Use Cases)
+## Sekcja 3 — Data Model (schemat DB)
+
+> Tabele bazy danych z kolumnami. Wyekstrahowane z kodu SQL w artefakcie.
+
+### Tabela: {NAZWA}
+
+| Kolumna | Typ | Null | Opis | Mapowanie |
+|---------|-----|------|------|-----------|
+| {col} | {typ} | {YES/NO} | {opis} | → {Encja.pole} |
+
+### Relacje FK
+
+```
+{TABELA_A}.{kolumna} → {TABELA_B}.{PK}
+```
+
+---
+
+## Sekcja 4 — Functional Capabilities (Use Cases)
 
 | ID | Aktor | Akcja | Efekt biznesowy | Priorytet |
 |----|-------|-------|----------------|-----------|
 | UC-001 | {Aktor} | {akcja} | {efekt} | MUST/SHOULD/COULD |
 
+→ Pełne reguły: `facts.md`
+
 ---
 
-## Sekcja 4 — Business Rules (Gherkin)
+## Sekcja 5 — Business Rules (Gherkin)
+
+> Kluczowe reguły definiujące zachowanie systemu.
+> Kompletna lista z source references: `facts.md`
 
 ```gherkin
-# Wszystkie reguły biznesowe — z facts.md
-
-Rule: {Nazwa reguły}
-  ...
-
-Rule: {Kolejna reguła}
-  ...
+Rule: {Nazwa}
+  Scenario: {opis}
+    Given ...
+    When  ...
+    Then  ...
 ```
 
 ---
 
-## Sekcja 5 — State Machines
-
-<!-- Dla każdej encji ze statusem/stanem -->
+## Sekcja 6 — State Machines
 
 ### {NazwaEncji} State Machine
 
 ```mermaid
 stateDiagram-v2
     [*] --> {Stan1}
-    ...
 ```
 
-| Przejście | Trigger | Warunek | Efekt uboczny |
-|-----------|---------|---------|--------------|
+| Przejście | Trigger | Warunek | Efekt |
+|-----------|---------|---------|-------|
 
 ---
 
-## Sekcja 6 — Reactive Architecture
+## Sekcja 7 — Reactive Architecture
 
 ### Kluczowe przepływy zdarzeń
-
-<!-- Z call-graph.md — opisane słownie, bez Qt-specific terminologii -->
 
 **Przepływ: {nazwa}**
 ```
 [Użytkownik] {akcja}
-    → {co system robi krok po kroku}
+    → {co system robi}
     → {efekt końcowy}
 ```
 
@@ -116,40 +137,43 @@ stateDiagram-v2
 | Źródło | Zdarzenie | Cel | Efekt |
 |--------|-----------|-----|-------|
 
----
-
-## Sekcja 7 — UI/UX Contracts
-
-<!-- Kompletna lista z ui-contracts.md -->
-
-### {NazwaOkna}
-
-| Pole | Wartość |
-|------|---------|
-| Typ | MainWindow / Dialog / Panel |
-| Otwierane przez | {kto/co otwiera} |
-| Dane wejściowe | {co potrzebuje żeby się wyświetlić} |
-
-**Widgety i interakcje:**
-| Element | Akcja użytkownika | Efekt |
-|---------|------------------|-------|
-
-**Stany widoku:**
-| Stan | Kiedy | Co widzi użytkownik |
-|------|-------|---------------------|
-
-**Nawigacja z tego okna:**
-| Dokąd | Jak | Warunek |
-|-------|-----|---------|
+→ Pełny graf: `call-graph.md`
 
 ---
 
-## Sekcja 8 — Data Flow
+## Sekcja 8 — UI/UX Contracts
+
+> Referencje do pełnych kontraktów. NIE kopiuj tabel widgetów.
+
+### {NazwaOkna} — {krótki opis}
+{1-2 zdania co robi to okno}
+- **Kontrakt:** `ui-contracts.md#{KLASA}`
+- **Mockup:** `mockups/{KLASA}.html`
+- **Features:** {PREFIX}-{NNN}
+
+→ Pełna dokumentacja UI: `ui-contracts.md`
+
+---
+
+## Sekcja 9 — API & Protocol Contracts
+
+### {Nazwa protokołu} ({mechanizm} → {cel})
+
+| Komenda | Parametry | Odpowiedź | Znaczenie |
+|---------|-----------|-----------|-----------|
+| {cmd} | {params} | {response} | {opis} |
+
+### HTTP/REST Endpoints (jeśli istnieją)
+
+| Metoda | Endpoint | Parametry | Odpowiedź |
+|--------|----------|-----------|-----------|
+
+---
+
+## Sekcja 10 — Data Flow
 
 ```
-[Baza danych] → [Model domenowy] → [ViewModel] → [Widok UI]
-     ↑                                                ↓
-[Baza danych] ← [Model domenowy] ← [Akcja użytkownika]
+[Baza danych] → [Model domenowy] → [Logika biznesowa] → [UI]
 ```
 
 | Transformacja | Od | Do | Co się zmienia |
@@ -157,21 +181,14 @@ stateDiagram-v2
 
 ---
 
-## Sekcja 9 — Error Taxonomy
+## Sekcja 11 — Error Taxonomy
 
-| Kod/Typ błędu | Kategoria | Co wywołuje | Zachowanie systemu | Komunikat użytkownika |
-|--------------|-----------|-------------|------------------|----------------------|
-| {błąd} | user/system/external | {co} | {co robi system} | {co widzi user} |
+| Kod/Typ | Kategoria | Co wywołuje | Zachowanie | Komunikat |
+|---------|-----------|-------------|-----------|-----------|
 
 ---
 
-## Sekcja 10 — Integration Contracts
-
-### Shared Libraries
-
-| Biblioteka | Używane funkcjonalności | Interfejs |
-|------------|------------------------|-----------|
-| {librd} | {lista} | {API} |
+## Sekcja 12 — Integration Contracts
 
 ### Cross-artifact
 
@@ -180,90 +197,54 @@ stateDiagram-v2
 
 ### Zewnętrzne systemy
 
-| System | Rola | Protokół/Format | Dane |
-|--------|------|----------------|------|
+| System | Rola | Protokół | Dane |
+|--------|------|----------|------|
 
 ---
 
-## Sekcja 11 — Platform Independence Map
+## Sekcja 13 — Platform Independence Map
 
-> Ta sekcja jest kluczowa dla projektu klonowania.
-> Każdy komponent platform-specific musi być tu udokumentowany.
-
-| Funkcja | Rivendell (Linux) | Klon (platforma docelowa) | Priorytet zastąpienia |
-|---------|------------------|--------------------------|----------------------|
-| Audio playback | JACK / ALSA | [decyzja implementatora] | CRITICAL |
-| Audio record | JACK / ALSA | [decyzja implementatora] | CRITICAL |
-| IPC | D-Bus | [decyzja implementatora] | CRITICAL |
-| CD ripping | cdparanoia | [decyzja implementatora] | HIGH |
-| Database | MySQL | [decyzja implementatora] | HIGH |
-| Audio encode | lame / FLAC | [decyzja implementatora] | MEDIUM |
-
-**Wymagania funkcjonalne dla zamienników:**
-| Funkcja | Wymagania WHAT (nie HOW) |
-|---------|--------------------------|
-| Audio playback | Odtwarza pliki WAV/FLAC/MP3, kontrola głośności, seeking |
+| Funkcja | Oryginał | Klon | Priorytet |
+|---------|----------|------|-----------|
 
 ---
 
-## Sekcja 12 — Non-Functional Requirements
-
-<!-- Tylko te udowodnione przez kod — testowalne -->
+## Sekcja 14 — Non-Functional Requirements
 
 ```gherkin
-Scenario: {Wymóg wydajnościowy}
+Scenario: {wymóg}
   Given {warunki}
   When  {akcja}
-  Then  {mierzalne kryterium}
+  Then  {kryterium}
 ```
 
 ---
 
-## Sekcja 13 — Configuration
+## Sekcja 15 — Configuration
 
-| Klucz | Typ | Domyślna wartość | Opis |
-|-------|-----|-----------------|------|
-| {klucz} | {typ} | {wartość} | {co kontroluje} |
+| Klucz | Typ | Domyślna | Opis |
+|-------|-----|---------|------|
 
 ---
 
-## Sekcja 14 — E2E Acceptance Scenarios
+## Sekcja 16 — E2E Acceptance Scenarios
 
 ```gherkin
-Feature: {Pełna nazwa feature}
-
-  Background:
-    Given {wspólny stan wstępny dla wszystkich scenariuszy}
-
-  Scenario: {Kompletny happy path}
-    Given {pełny stan wstępny}
-    When  {sekwencja akcji użytkownika}
-    Then  {pełny oczekiwany efekt w UI}
-    And   {efekt w danych/bazie}
-    And   {efekty uboczne: powiadomienia, logi, etc.}
-
-  Scenario: {Ważny edge case}
-    Given {warunek graniczny}
-    When  {akcja}
-    Then  {oczekiwane zachowanie}
-
-  Scenario: {Failure case}
-    Given {warunek błędu}
-    When  {akcja użytkownika}
-    Then  {komunikat błędu i zachowanie systemu}
+Feature: {nazwa}
+  Scenario: {happy path}
+    Given ...
+    When  ...
+    Then  ...
 ```
 
 ---
 
 ## Assumptions & Open Questions
 
-<!-- Miejsca gdzie kod był niejasny i musiano przyjąć założenia -->
-
-| # | Założenie | Alternatywa | Wpływ na implementację |
-|---|-----------|-------------|----------------------|
-| 1 | {założenie} | {inne możliwe zachowanie} | {co by się zmieniło} |
+| # | Założenie | Alternatywa | Wpływ |
+|---|-----------|-------------|-------|
 
 ---
 
-*SPEC wygenerowany przez Qt Reverse Engineering Multi-Agent System v1.0.0*
-*Źródła: inventory.md + ui-contracts.md + call-graph.md + facts.md*
+*SPEC wygenerowany przez Qt Reverse Engineering Multi-Agent System v1.3.0*
+*Źródła: inventory.md + ui-contracts.md + call-graph.md + facts.md + kod źródłowy*

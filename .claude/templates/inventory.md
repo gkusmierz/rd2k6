@@ -7,7 +7,8 @@ completed_at: ~
 partial_count: ~
 conflicts_found: 0
 missing_coverage: 0
-agent_version: 1.0.0
+spot_check_issues: 0
+agent_version: 1.2.0
 ---
 
 # Inventory: {ARTIFACT_NAME}
@@ -23,6 +24,7 @@ agent_version: 1.0.0
 | QObject subclassy (serwisy) | ~ |
 | QAbstractItemModel subclassy | ~ |
 | QThread subclassy | ~ |
+| Plain C++ (non-Qt) klasy | ~ |
 
 ---
 

@@ -64,6 +64,10 @@ Nie wiesz co dalej?
 | `/qtre-phase-5-facts-mining ARTIFACT_ID` | 5 | Facts Mining — reguły biznesowe |
 | `/qtre-phase-6-spec-synthesis ARTIFACT_ID` | 6 | SPEC Synthesis — kompletna specyfikacja |
 | `/qtre-phase-7-feature-decomposition ARTIFACT_ID` | 7 | Feature Decomposition — FEAT-*.md |
+| `/qtre-qa ARTIFACT_ID PHASE` | QA | Weryfikacja outputu fazy — loguje BUGs do changelog |
+| `/qtre-qa-fix ARTIFACT_ID PHASE [opis]` | QA | Naprawa bugów z changelog (+ opcjonalny ręczny bug) |
+| `/qtre-qa-report ARTIFACT_ID PHASE opis` | QA | Zgłoś ręcznie problem → weryfikacja → naprawa |
+| `/qtre-qa-loop ARTIFACT_ID PHASE [MAX]` | QA | Pętla verify→fix→verify do stabilności (domyślnie max 5) |
 | `/qtre-status` | - | Sprawdź status projektu i następne kroki |
 | `/qtre-run-by-phase [N\|N-M] [FILTER]` | orch | Orkiestracja: faza po fazie (`2`=tylko faza 2, `2-5`=zakres) |
 | `/qtre-run-by-artifact` | orch | Orkiestracja: artefakt po artefakcie, pełny pipeline |
@@ -87,9 +91,14 @@ Nie wiesz co dalej?
     │   ├── inv-*.md
     │   ├── sig-*.md
     │   └── ui-*.md
-    └── Features/                  ← FAZA 7
-        ├── {PREFIX}-001.md
-        ├── {PREFIX}-002.md
+    ├── Features/                  ← FAZA 7
+    │   ├── {PREFIX}-001.md
+    │   ├── {PREFIX}-002.md
+    │   └── ...
+    └── _qa/                       ← QA loop outputs
+        ├── changelog.md           ← append-only BUG/FIX log
+        ├── qa-phase-3-cycle-1.md  ← raport QA per cykl
+        ├── qa-phase-3-cycle-2.md
         └── ...
 ```
 
@@ -171,3 +180,6 @@ Ten system jest wersjonowany. Przy każdej istotnej zmianie:
 v1.0.0 — 2026-04-05 — Initial release. Zaprojektowany na bazie analizy Rivendell 4.4.1.
 v1.1.0 — 2026-04-05 — Migracja do struktury Claude Code. Slash commands, .claude/commands/.
 v1.2.0 — 2026-04-05 — Self-contained .claude/. Agents, templates, docs przeniesione do .claude/. Prefix qtre- na commands.
+v1.3.0 — 2026-04-05 — Phase 3: 3 tryby UI (XML/Code/QML) + screenshots→mockupy. Phase 2: skan plain C++. Spot-check we wszystkich fazach. Nowy agent QA.
+v1.4.0 — 2026-04-05 — Pętla QA: changelog per artifact, QA-fix agent, QA-loop orkiestrator. Verify→Fix→Verify do stabilności.
+v1.5.0 — 2026-04-05 — Przełamanie łańcucha zależności. SPEC=nawigacyjny PRD (nie superdokument). FEAT czyta fazy 2-5 bezpośrednio. Nowe sekcje: Data Model (DB), API/Protocol Contracts.

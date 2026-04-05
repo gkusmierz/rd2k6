@@ -4,19 +4,34 @@ artifact: {ARTIFACT_ID}
 artifact_name: {pełna nazwa}
 status: done
 completed_at: ~
+ui_mode: A|B|C|mixed
 windows_total: ~
 dialogs_total: ~
 panels_total: ~
-agent_version: 1.0.0
+screenshots_used: 0
+mockups_generated: 0
+spot_check_issues: 0
+agent_version: 1.2.0
 ---
 
 # UI Contracts: {ARTIFACT_NAME}
 
+## Tryb ekstrakcji
+
+| Parametr | Wartość |
+|----------|---------|
+| Tryb UI | A (XML) / B (Code-first) / C (QML) / mixed |
+| Pliki .ui | {N} |
+| Pliki .qml | {N} |
+| Programowy UI (C++) | {N dialogów/widgetów} |
+| Screenshots użyte | {N} |
+| Mockupy wygenerowane | {N} |
+
 ## Przegląd okien
 
-| Klasa | Typ | Tytuł | Otwierany przez | Modalność |
-|-------|-----|-------|----------------|-----------|
-| {NazwaKlasy} | MainWindow/Dialog/Widget | {windowTitle} | {kto} | modal/modeless |
+| Klasa | Typ | Tytuł | Otwierany przez | Modalność | Źródło UI | Screenshot | Mockup |
+|-------|-----|-------|----------------|-----------|-----------|-----------|--------|
+| {NazwaKlasy} | Dialog | {windowTitle} | {kto} | modal | .ui/code/qml | ✅/❌ | ✅/❌ |
 
 ## Navigation Flow
 
@@ -32,12 +47,22 @@ agent_version: 1.0.0
 ## UI Contract: {NazwaOkna}
 
 **Klasa:** `{NazwaKlasy}`
-**Plik .ui:** `{plik.ui}` (lub "brak — generowane w kodzie")
+**Źródło UI:** `{plik.ui}` / `{plik.qml}` / "kod C++ (programowy)"
 **Typ:** MainWindow / Dialog / Widget / Panel
 **Tytuł okna:** {windowTitle}
 **Modalność:** modal / modeless
 **Rodzic:** {KlasaRodzica lub "top-level"}
 **Otwierany przez:** {KlasaKtóraOtwiera → metoda}
+
+### Źródła ekstrakcji
+
+| Źródło | Status | Plik |
+|--------|--------|------|
+| Kod C++ | ✅/❌ | {source_file.cpp} |
+| Plik .ui | ✅/❌/N/A | {file.ui lub N/A} |
+| Plik .qml | ✅/❌/N/A | {file.qml lub N/A} |
+| Screenshot | ✅/❌ | {screenshot.png lub brak} |
+| Mockup HTML | ✅/❌ | {mockups/Class.html lub brak} |
 
 ### Dane wejściowe (co okno potrzebuje żeby się wyświetlić)
 
@@ -50,52 +75,45 @@ agent_version: 1.0.0
 | Widget (objectName) | Typ Qt | Etykieta/Placeholder | Akcja użytkownika | Efekt / Slot |
 |--------------------|--------|---------------------|------------------|-------------|
 | {saveButton} | QPushButton | "Save" | kliknięcie | zapisuje formularz → {onSaveClicked()} |
-| {titleEdit} | QLineEdit | "Enter title..." | edycja tekstu | aktualizacja pola |
-| {cartList} | QListWidget | - | double-click | otwiera CartEditDialog |
+
+### Bindingi reaktywne (tylko QML — TRYB C)
+
+| Property QML | Wyrażenie | Źródło danych | Aktualizacja |
+|---|---|---|---|
+| text | model.title | CartModel (C++) | automatyczna |
 
 ### Menu i akcje (jeśli MainWindow lub ma QMenuBar)
 
 | Menu | Podmenu | Akcja (QAction) | Shortcut | Slot | Warunek aktywności |
 |------|---------|----------------|----------|------|-------------------|
-| File | - | New Cart | Ctrl+N | {onNewCart()} | zawsze |
-| File | - | Delete | Del | {onDeleteCart()} | gdy zaznaczone |
-| Edit | - | Copy Audio | Ctrl+C | {onCopyAudio()} | gdy cut zaznaczony |
 
 ### Stany widoku
 
 | Stan | Kiedy następuje | Co widzi użytkownik | Disabled/Hidden |
 |------|----------------|---------------------|----------------|
 | initial | przy otwarciu | {opis} | {lista elementów} |
-| loading | ładowanie danych | spinner / "Loading..." | buttony akcji |
-| empty | brak danych | "{komunikat empty state}" | - |
-| populated | dane załadowane | pełny widok | - |
-| editing | edycja w toku | zmienione pola (bold/kolor) | save disabled jeśli invalid |
-| error | błąd | inline error message | - |
 
 ### Walidacje UI
 
-| Pole | Reguła | Komunikat błędu | Kiedy sprawdzane |
-|------|--------|----------------|-----------------|
-| {titleEdit} | wymagane, max 255 znaków | "Title is required" | przed zapisem |
-| {numberEdit} | musi być dodatnie | "Cart number must be positive" | on change |
+| Pole | Reguła | Komunikat błędu | Kiedy sprawdzane | Źródło (plik:linia) |
+|------|--------|----------------|-----------------|---------------------|
+| {titleEdit} | wymagane | "Title is required" | przed zapisem | {file.cpp:123} |
 
 ### Nawigacja
 
 | Skąd | Jak otwierane | Co przekazuje | Warunek |
 |------|--------------|---------------|---------|
-| {MainWindow} | {File → New lub button} | {brak / cart_id} | {zawsze / jeśli zaznaczone} |
 
-### Linki do okien otwieranych z tego okna
+### Rozbieżności screenshot ↔ kod
 
-| Docelowe okno | Jak | Przekazuje | Warunek |
-|--------------|-----|------------|---------|
-| {CutEditDialog} | double-click na liście cutów | {cut_id} | gdy cut zaznaczony |
+| Element | Na screenshot | W kodzie | Uwagi |
+|---------|--------------|----------|-------|
+| (brak rozbieżności) | | | |
 
 ### Linux-specific elementy UI
 
 | Element | Powód platformowej specyfiki | Zastąpić przez |
 |---------|------------------------------|---------------|
-| {np. /dev/dsp selector} | ALSA device picker | {platform-agnostic audio device selector} |
 
 ---
 

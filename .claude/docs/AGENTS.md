@@ -18,6 +18,8 @@
 | SPEC Synthesis | .claude/agents/PHASE-6-spec-synthesis.md | 6 | monolithic | active |
 | Feature Decomposition | .claude/agents/PHASE-7-feature-decomposition.md | 7 | orchestrator | active |
 | Merge Agent | .claude/agents/MERGE-AGENT.md | 2,3,4,5,7 | merge | active |
+| Phase QA Verify | .claude/agents/PHASE-QA-verify.md | post-N | monolithic | active |
+| Phase QA Fix | .claude/agents/PHASE-QA-fix.md | post-QA | monolithic | active |
 | Orchestrator By-Phase | .claude/agents/ORCHESTRATOR-by-phase.md | all | orchestrator | active |
 | Orchestrator By-Artifact | .claude/agents/ORCHESTRATOR-by-artifact.md | all | orchestrator | active |
 | Orchestrator Bulk | .claude/agents/ORCHESTRATOR-bulk.md | all | orchestrator | active |
@@ -110,5 +112,13 @@ Każdy agent ma wersję niezależną od systemu. Zmiana agenta = bump wersji.
 
 | Agent | Wersja | Ostatnia zmiana | Powód |
 |-------|--------|-----------------|-------|
-| Wszystkie (phases) | 1.0.0 | 2026-04-05 | Initial release |
+| PHASE-2 Inventory | 1.2.0 | 2026-04-05 | Skan plain C++ klas + spot-check |
+| PHASE-3 UI Extraction | 1.2.0 | 2026-04-05 | 3 tryby (XML/Code/QML) + screenshots→mockupy + spot-check |
+| PHASE-4 Call Graph | 1.2.0 | 2026-04-05 | Spot-check |
+| PHASE-5 Facts Mining | 1.2.0 | 2026-04-05 | Source references wymagane + spot-check |
+| PHASE-6 SPEC Synthesis | 1.2.0 | 2026-04-05 | Version bump |
+| PHASE-7 Feature Decomp | 1.2.0 | 2026-04-05 | Version bump |
+| PHASE-QA Verify | 1.1.0 | 2026-04-05 | Weryfikacja + changelog BUG logging |
+| PHASE-QA Fix | 1.0.0 | 2026-04-05 | Nowy agent: autonomiczna naprawa bugów |
 | Orchestrators (3x) | 1.0.0 | 2026-04-05 | Phase-first, Artifact-first, Bulk modes |
+| Pozostałe | 1.1.0 | 2026-04-05 | Serena bootstrap |

@@ -1,5 +1,5 @@
 # PHASE-4 — Signal & Call Graph Agent
-## Wersja: 1.1.0 | Faza: 4 | Scope: per artifact
+## Wersja: 1.2.0 | Faza: 4 | Scope: per artifact
 
 ---
 
@@ -195,8 +195,28 @@ Oznacz jako WARNING — mogą być intencjonalne (feedback loops) lub bugi
 call-graph.md istnieje z frontmatter phase=4, status=done
 Każdy connect() z kodu ma krawędź w grafie
 Każdy emit() jest zmapowany do connect() odbiorców
-Cross-artifact połączenia (D-Bus) są oznaczone
+Cross-artifact połączenia (TCP/IPC) są oznaczone
+Spot-check 3 klas przeszedł
 Kolumna P4 w manifest.md → done
+```
+
+### Spot-check (OBOWIĄZKOWY)
+
+Wybierz **3 klasy** z największą liczbą sygnałów. Dla każdej:
+
+```
+# Porównaj sygnały z header vs call-graph.md
+Serena: search_for_pattern(
+  substring_pattern="signals:",
+  relative_path="{HEADER_FILE}",
+  context_lines_after=30
+)
+→ Lista sygnałów z headera
+
+# Porównaj z sekcją w call-graph.md
+→ Czy każdy sygnał z headera jest w grafie?
+→ Jeśli brakuje → sprawdź czy sygnał jest połączony w aplikacjach klienckich
+   (w takim przypadku dodaj do "Missing Coverage" z wyjaśnieniem)
 ```
 
 **Po zakończeniu**: zmień kolumnę **P4** w tabeli Artifacts manifestu na done.

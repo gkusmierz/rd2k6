@@ -8,7 +8,7 @@ depends_on: []
 blocks: []
 estimated_wp: ~
 phase: 7
-agent_version: 1.0.0
+agent_version: 1.3.0
 ---
 
 # {PREFIX}-{NNN}: {Tytuł}
@@ -23,109 +23,207 @@ i kto jej używa. Zero implementacji, zero technologii.}
 | Aktor | Rola w tej feature |
 |-------|-------------------|
 | {np. Operator} | {co robi} |
-| {np. Administrator} | {co robi} |
 
 ## Granica funkcjonalności
 
 ```
 IN SCOPE:
   - {co wchodzi w skład tej feature}
-  - {kolejny element}
 
 OUT OF SCOPE:
   - {co celowo pominięto} → patrz {PREFIX}-{OTHER}
-  - {kolejny element out of scope}
 ```
+
+---
 
 ## Use Cases
 
-| ID | Aktor | Akcja | Efekt biznesowy |
-|----|-------|-------|----------------|
-| UC-1 | {Aktor} | {co robi} | {co osiąga} |
-| UC-2 | {Aktor} | {co robi} | {co osiąga} |
+| ID | Aktor | Akcja | Efekt biznesowy | Priorytet |
+|----|-------|-------|----------------|-----------|
+| UC-1 | {Aktor} | {co robi} | {co osiąga} | MUST |
 
-## Reguły biznesowe
+---
+
+## Reguły biznesowe (Gherkin)
+
+> Pełne reguły z source references. Z facts.md, nie streszczone.
 
 ```gherkin
-Rule: {Nazwa reguły biznesowej}
+Rule: {Nazwa reguły}
 
   Scenario: {happy path}
     Given {stan wstępny}
-    When  {akcja użytkownika lub systemu}
-    Then  {oczekiwany wynik}
-    And   {efekt uboczny jeśli istnieje}
+    When  {akcja}
+    Then  {oczekiwany efekt}
 
-  Scenario: {edge case lub negative}
-    Given {stan wstępny}
-    When  {akcja która powinna się nie udać lub przypadek graniczny}
+  Scenario: {edge case}
+    Given {warunek graniczny}
+    When  {akcja}
     Then  {oczekiwane zachowanie}
+
+  # Źródło: {plik}:{linia} | Pewność: potwierdzone
 ```
 
-## UI Contracts (dla tej feature)
+---
 
-| Okno/Dialog | Typ | Powiązany UC | Link do pełnego kontraktu |
-|-------------|-----|-------------|--------------------------|
-| {NazwaOkna} | Dialog | UC-1 | ui-contracts.md#{ANCHOR} |
+## Data Model (tabele DB w scope)
 
-### Kluczowe elementy UI
+> Z SPEC.md Sekcja 3 — tylko tabele dotyczące tego FEAT.
 
-{Wyciąg z ui-contracts.md: tylko te widgety i stany które dotyczą tej feature}
+### Tabela: {NAZWA}
 
-## Dane i encje domenowe
+| Kolumna | Typ | Null | Opis |
+|---------|-----|------|------|
+| {col} | {typ} | {YES/NO} | {opis} |
 
-| Encja | Operacje w tej feature | Pola wymagane | Pola opcjonalne |
-|-------|----------------------|--------------|-----------------|
-| {Encja} | CREATE / READ / UPDATE / DELETE | {lista} | {lista} |
+### Relacje FK
+
+```
+{TABELA_A}.{kolumna} → {TABELA_B}.{PK}
+```
+
+Jeśli feature nie operuje na DB: "Brak bezpośrednich operacji DB."
+
+---
+
+## API klas w scope
+
+> Z inventory.md — pełne sygnatury metod, parametry, efekty.
+
+### {NazwaKlasy}
+
+**Odpowiedzialność:** {1-2 zdania}
+**Pełny opis:** `inventory.md#{NazwaKlasy}`
+
+**Publiczne API:**
+| Metoda | Parametry | Efekt | Warunki wywołania |
+|--------|-----------|-------|------------------|
+| {metoda} | {typy} | {co osiąga} | {kiedy} |
+
+**Sygnały:**
+| Sygnał | Parametry | Znaczenie biznesowe |
+|--------|-----------|---------------------|
+| {sygnał} | {typy} | {co oznacza} |
+
+**Enums:**
+| Enum | Wartości | Znaczenie |
+|------|----------|-----------|
+| {nazwa} | {wartości} | {co reprezentują} |
+
+---
+
+## Protokoły komunikacji (jeśli dotyczy)
+
+> Z SPEC.md Sekcja 9 — komendy używane przez klasy w scope.
+
+| Komenda | Parametry | Odpowiedź | Znaczenie |
+|---------|-----------|-----------|-----------|
+| {cmd} | {params} | {resp} | {opis} |
+
+Jeśli feature nie komunikuje się przez protokoły: "Brak — feature nie używa protokołów IPC/TCP."
+
+---
+
+## UI Contracts
+
+> Referencje do pełnych kontraktów + kluczowe widgety dla tego FEAT.
+> Agent kodujący MUSI przeczytać pełne kontrakty i otworzyć mockupy.
+
+### {NazwaOkna} — {krótki opis}
+
+**Pełny kontrakt:** `ui-contracts.md#{KLASA}`
+**Mockup HTML:** `mockups/{KLASA}.html`
+
+**Kluczowe widgety w scope tej feature:**
+| Widget | Typ | Etykieta | Akcja | Slot |
+|--------|-----|----------|-------|------|
+| {widget_name} | {QtType} | "{label}" | {akcja} | {slot()} |
+
+**Stany widoku (relevantne dla tej feature):**
+| Stan | Kiedy | Efekt wizualny |
+|------|-------|---------------|
+
+**Walidacje (z source reference):**
+| Pole | Reguła | Komunikat | Źródło |
+|------|--------|-----------|--------|
+| {pole} | {reguła} | "{tekst}" | {plik}:{linia} |
+
+Jeśli feature nie ma UI: "Brak — feature jest backend-only."
+
+---
+
+## Sygnały integracji (z call-graph.md)
+
+**Emitowane (ta feature → inne):**
+| Sygnał | Klasa | Odbiorca | Slot | Kontekst |
+|--------|-------|----------|------|----------|
+| {sygnał()} | {klasa tu} | {klasa tam} | {slot()} | {kiedy} |
+
+**Odbierane (inne → ta feature):**
+| Nadawca | Sygnał | Klasa (tu) | Slot | Kontekst |
+|---------|--------|------------|------|----------|
+| {klasa tam} | {sygnał()} | {klasa tu} | {slot()} | {kiedy} |
+
+Jeśli feature jest izolowana: "Brak — feature nie emituje ani nie odbiera sygnałów."
+
+---
 
 ## Platform Independence
 
-| Funkcja | Oryginał (Linux) | Klon (platforma docelowa) | Priorytet |
-|---------|-----------------|--------------------------|-----------|
-| {np. audio playback} | JACK/ALSA | [decyzja implementatora] | CRITICAL |
+| Funkcja | Oryginał | Klon | Priorytet |
+|---------|----------|------|-----------|
+| {funkcja} | {impl Linux} | [implementator] | CRITICAL/HIGH |
 
-Jeśli ta feature nie ma platform-specific komponentów: "Brak — feature jest platform-agnostic."
+Jeśli feature jest platform-agnostic: "Brak — feature jest platform-agnostic."
 
-## Sygnały integracji z innymi features
+---
 
-| Zdarzenie | Emitowane przez (tu) | Odbiera | Feature |
-|-----------|---------------------|---------|---------|
-| {zdarzenie} | {ta feature} | {kto} | {PREFIX}-{NNN} |
+## Configuration (klucze w scope)
 
-| Zdarzenie | Emitowane przez | Odbiera (tu) | Feature |
-|-----------|----------------|-------------|---------|
-| {zdarzenie} | {kto} | {ta feature} | {PREFIX}-{NNN} |
+| Klucz | Typ | Domyślna | Wpływ na tę feature |
+|-------|-----|---------|---------------------|
+| {klucz} | {typ} | {wartość} | {co zmienia} |
+
+Jeśli brak: "Brak konfiguracji specyficznej dla tej feature."
+
+---
 
 ## Acceptance Criteria (E2E)
 
 ```gherkin
 Feature: {Tytuł tej feature}
 
-  Scenario: {Kompletny user journey — happy path}
+  Scenario: {Kompletny happy path}
     Given {pełny stan wstępny}
     When  {sekwencja akcji}
-    Then  {pełny oczekiwany efekt}
+    Then  {pełny efekt}
     And   {efekty uboczne}
 
-  Scenario: {Ważny edge case}
-    Given {stan wstępny edge case}
+  Scenario: {Edge case}
+    Given {warunek}
     When  {akcja}
-    Then  {oczekiwane zachowanie}
+    Then  {zachowanie}
 ```
 
-## Open Questions dla agenta PM
+---
+
+## Open Questions
 
 - [ ] {Pytanie wymagające decyzji przed implementacją}
-- [ ] {Kolejne pytanie}
 
 Jeśli brak: "Brak otwartych pytań — feature gotowa do implementacji."
 
-## Szacowany zakres (Working Packages)
+---
 
-| WP | Opis | Zależności WP |
-|----|------|--------------|
-| WP-1 | {np. Domain model: klasa Cart} | - |
-| WP-2 | {np. Unit testy dla Cart} | WP-1 |
-| WP-3 | {np. UI: CartEditDialog} | WP-1 |
-| WP-4 | {np. Integration test} | WP-1, WP-2, WP-3 |
+## Working Packages (wstępny podział)
+
+| WP | Opis | Zależności |
+|----|------|-----------|
+| WP-1 | Domain model: {klasy} | - |
+| WP-2 | Data access: {tabele DB} | WP-1 |
+| WP-3 | Business logic: {reguły} | WP-1 |
+| WP-4 | UI: {dialogi/widgety} | WP-1, WP-3 |
+| WP-5 | Integration: {sygnały, protokoły} | WP-3 |
+| WP-6 | Tests | WP-1..WP-5 |
 
 *Szacunek wstępny — agent PM może podzielić inaczej.*

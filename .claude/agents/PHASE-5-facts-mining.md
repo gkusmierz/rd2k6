@@ -1,5 +1,5 @@
 # PHASE-5 — Facts Mining Agent
-## Wersja: 1.1.0 | Faza: 5 | Scope: per artifact
+## Wersja: 1.2.0 | Faza: 5 | Scope: per artifact
 
 ---
 
@@ -118,6 +118,23 @@ Serena: search_for_pattern(
   context_lines_after=1
 )
 → Każdy klucz = opcja konfiguracyjna (reguła z domyślną wartością)
+```
+
+**Reguła zapisu faktów (OBOWIĄZKOWA):**
+
+> Każdy fakt MUSI mieć twardy source reference. Fakty bez źródła NIE trafiają do output.
+
+```
+Format source reference:
+  Kod:  {plik}:{linia} lub {plik}:{zakres_linii}
+  Test: {plik_testowy}::{metoda_testowa}
+  PDF:  PDF:{strona}
+  Doc:  docs/opsguide/{plik.xml}:{sekcja}
+
+Pewność:
+  potwierdzone   — fakt jednoznacznie wynika z kodu/testu
+  prawdopodobne  — fakt wynika z kontekstu, ale nie jest jawny
+  do_weryfikacji  — wymaga ludzkiej oceny
 ```
 
 **Output:** `.analysis/{ARTIFACT_ID}/_partials/facts-code.md`
@@ -291,14 +308,31 @@ TEMPLATE:        .claude/templates/facts.md
 
 ---
 
+## Spot-check (OBOWIĄZKOWY)
+
+Po merge facts.md wybierz **3 losowe reguły Gherkin** i zweryfikuj je z kodem:
+
+```
+Dla każdej reguły:
+  1. Odczytaj pole "Źródło: {plik}:{linia}"
+  2. Serena: find_symbol lub Read: {plik} (offset=linia)
+  3. Potwierdź że reguła Gherkin odpowiada logice w kodzie
+
+Jeśli reguła nie ma source reference → ODRZUĆ (usuń z facts.md)
+Jeśli source reference wskazuje na inną logikę → POPRAW regułę
+```
+
+---
+
 ## Warunek done
 
 ```
 facts.md istnieje z frontmatter phase=5, status=done
-Każda reguła biznesowa zapisana w Gherkin
+Każda reguła biznesowa zapisana w Gherkin Z source reference (plik:linia)
 Każdy use case zmapowany na klasę/metodę z inventory.md
 Linux-specific komponenty wypisane z priorytetem zastąpienia
 Sekcja Conflicts wypełniona (lub "Brak rozbieżności" jeśli czysto)
+Spot-check 3 reguł przeszedł
 Kolumna P5 w manifest.md → done
 ```
 
