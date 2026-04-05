@@ -1,5 +1,5 @@
 # PREREQ-CHECK — Prerequisite Check Agent
-## Wersja: 1.0.0 | Faza: -1
+## Wersja: 1.1.0 | Faza: -1
 
 ---
 

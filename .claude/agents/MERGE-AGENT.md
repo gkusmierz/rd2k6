@@ -1,5 +1,15 @@
 # MERGE-AGENT — Merge & Consolidation Agent
-## Wersja: 1.0.0 | Wywoływany przez: Fazy 2, 3, 4, 5, 7
+## Wersja: 1.1.0 | Wywoływany przez: Fazy 2, 3, 4, 5, 7
+
+---
+
+## Toolbox
+
+> Ten agent operuje na plikach `.md` (analysis outputs), nie na kodzie źródłowym.
+> - Listowanie partial plików: `Serena: find_file` (nie `ls`, `find`)
+> - Szukanie statusów w frontmatter: `Serena: search_for_pattern` (nie `grep`)
+> - Czytanie treści partials: **Read** tool (pliki .md, nie kod)
+> - Czytanie szablonów: **Read** tool
 
 ---
 
@@ -26,24 +36,28 @@ TEMPLATE:        szablon do użycia (np. .claude/templates/inventory.md)
 
 ### Krok 1 — Zbierz wszystkie partial pliki
 
-```bash
-PARTIALS=$(ls .analysis/{ARTIFACT_ID}/_partials/{PARTIAL_PATTERN} 2>/dev/null | sort)
-COUNT=$(echo "$PARTIALS" | wc -l)
-echo "Znaleziono $COUNT partial plików"
 ```
+# Znajdź partial pliki pasujące do wzorca
+Serena: find_file(
+  file_mask="{PARTIAL_PATTERN}",
+  relative_path=".analysis/{ARTIFACT_ID}/_partials"
+)
+→ Lista partial plików, zlicz wyniki
 
-Sprawdź że wszystkie mają `status: done` w frontmatter:
-```bash
-for f in $PARTIALS; do
-  STATUS=$(grep "^status:" "$f" | cut -d: -f2 | tr -d ' ')
-  [ "$STATUS" = "done" ] || echo "WARNING: $f ma status=$STATUS"
-done
+# Sprawdź status każdego partial
+Serena: search_for_pattern(
+  substring_pattern="^status:",
+  relative_path=".analysis/{ARTIFACT_ID}/_partials",
+  paths_include_glob="**/{PARTIAL_PATTERN}"
+)
+→ Każdy musi mieć "status: done", inaczej WARNING
 ```
 
 ### Krok 2 — Załaduj szablon
 
 ```
-Serena: read_file(path=".claude/templates/{OUTPUT_FILE}.md")
+# Szablony to pliki .md — użyj Read tool
+Read: .claude/templates/{OUTPUT_FILE_TEMPLATE}
 → Zapamiętaj strukturę sekcji szablonu
 ```
 

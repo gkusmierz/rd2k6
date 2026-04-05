@@ -1,5 +1,22 @@
 # PHASE-2 — Inventory Sub-Agent (per klasa)
-## Wersja: 1.0.0 | Faza: 2 | Scope: jeden plik .h + .cpp
+## Wersja: 1.1.0 | Faza: 2 | Scope: jeden plik .h + .cpp
+
+---
+
+## Toolbox — Serena MCP First
+
+> **Twarda reguła:** Używaj Serena MCP jako PRIMARY tool do interakcji z kodem źródłowym.
+> NIGDY nie używaj `grep`, `cat`, `Read` do czytania kodu C++/Qt.
+> Bash dopuszczalny TYLKO dla operacji systemowych.
+>
+> | Potrzebujesz | Użyj Serena | NIE używaj |
+> |---|---|---|
+> | Przegląd symboli pliku | `get_symbols_overview` | `cat`, `head`, `Read` |
+> | Szukanie wzorców w kodzie | `search_for_pattern` | `grep`, `rg` |
+> | Czytanie ciała metody/klasy | `find_symbol(include_body=true)` | `Read`, `cat` |
+> | Ustalenie typu Qt klasy | `find_symbol(include_info=true)` | `grep "class"` |
+> | Referencje do symbolu | `find_referencing_symbols` | `grep` |
+> | Enums i stałe | `find_symbol` z `include_kinds` | `grep "enum"` |
 
 ---
 
@@ -26,11 +43,12 @@ PARTIAL_ID:   numer partial (np. 007)
 ### Krok 1 — Pobierz overview przez Serena
 
 ```
-Serena: get_symbols_overview(file="{HEADER_FILE}")
+Serena: get_symbols_overview(relative_path="{HEADER_FILE}", depth=1)
 → Lista symboli najwyższego poziomu (klasy, funkcje, enums)
+→ depth=1: pokaż też metody klas
 
 Jeśli SOURCE_FILE != null:
-Serena: get_symbols_overview(file="{SOURCE_FILE}")
+Serena: get_symbols_overview(relative_path="{SOURCE_FILE}")
 → Lista metod zaimplementowanych
 ```
 
@@ -38,8 +56,14 @@ Serena: get_symbols_overview(file="{SOURCE_FILE}")
 
 #### 2a — Ustal typ Qt
 
-```bash
-grep "class {CLASSNAME}.*:.*public" {HEADER_FILE}
+```
+Serena: find_symbol(
+  name_path_pattern="{CLASSNAME}",
+  relative_path="{HEADER_FILE}",
+  include_info=true,
+  max_matches=1
+)
+→ Odczytaj klasę bazową z wyniku (info zawiera sygnaturę z dziedziczeniem)
 ```
 
 Mapa typów:
@@ -60,8 +84,9 @@ Mapa typów:
 
 ```
 Serena: search_for_pattern(
-  pattern="signals:",
-  file="{HEADER_FILE}"
+  substring_pattern="signals:",
+  relative_path="{HEADER_FILE}",
+  context_lines_after=20
 )
 → Znajdź sekcję signals:
 → Wylistuj każdy sygnał z typami parametrów
@@ -74,8 +99,9 @@ Dla każdego sygnału opisz: nazwa, parametry, semantyczne znaczenie
 
 ```
 Serena: search_for_pattern(
-  pattern="(public|protected|private) slots:",
-  file="{HEADER_FILE}"
+  substring_pattern="(public|protected|private) slots:",
+  relative_path="{HEADER_FILE}",
+  context_lines_after=20
 )
 → Znajdź sekcje slotów
 → Wylistuj każdy slot z typami parametrów i widocznością
@@ -85,8 +111,8 @@ Serena: search_for_pattern(
 
 ```
 Serena: search_for_pattern(
-  pattern="Q_PROPERTY",
-  file="{HEADER_FILE}"
+  substring_pattern="Q_PROPERTY",
+  relative_path="{HEADER_FILE}"
 )
 → Każdy Q_PROPERTY: typ, nazwa, READ, WRITE, NOTIFY
 → To jest bindable state klasy
@@ -95,7 +121,12 @@ Serena: search_for_pattern(
 #### 2e — Wyciągnij publiczne metody (API klasy)
 
 ```
-Serena: get_symbols_overview(file="{HEADER_FILE}")
+Serena: find_symbol(
+  name_path_pattern="{CLASSNAME}",
+  relative_path="{HEADER_FILE}",
+  depth=1
+)
+→ Pobierz listę metod klasy (depth=1 = bezpośrednie dzieci)
 → Filtruj: tylko public methods
 → Pomiń: konstruktory trywialne, gettery/settery proste
 → Zostaw: metody które mają semantyczne znaczenie biznesowe
@@ -103,8 +134,17 @@ Serena: get_symbols_overview(file="{HEADER_FILE}")
 
 #### 2f — Wyciągnij enums i stałe
 
-```bash
-grep -A 20 "enum\|enum class" {HEADER_FILE} | head -60
+```
+# Enums — użyj LSP symbol kind 10 (Enum)
+Serena: get_symbols_overview(relative_path="{HEADER_FILE}", depth=1)
+→ Wyfiltruj symbole typu Enum i EnumMember
+
+# Jeśli potrzebujesz pełnych wartości:
+Serena: find_symbol(
+  name_path_pattern="{ENUM_NAME}",
+  relative_path="{HEADER_FILE}",
+  include_body=true
+)
 ```
 
 Każdy enum = zbiór możliwych stanów lub kategorii (często = reguła biznesowa).
@@ -113,8 +153,13 @@ Każdy enum = zbiór możliwych stanów lub kategorii (często = reguła bizneso
 
 Dla każdej publicznej metody z 2e:
 ```
-Serena: find_symbol("{CLASSNAME}::{METHOD_NAME}")
-→ Pobierz implementację
+Serena: find_symbol(
+  name_path_pattern="{CLASSNAME}/{METHOD_NAME}",
+  relative_path="{SOURCE_FILE}",
+  include_body=true,
+  max_matches=1
+)
+→ Pobierz implementację metody
 → Wyciągnij: warunki wejściowe (if/guard clauses)
 → Wyciągnij: walidacje (assert, throw, return early)
 → Wyciągnij: SQL zapytania (QSqlQuery) — to są reguły biznesowe!
@@ -125,13 +170,22 @@ Serena: find_symbol("{CLASSNAME}::{METHOD_NAME}")
 #### 2h — Identyfikacja Linux-specific użycia
 
 ```
-Szukaj w implementacji:
-- QProcess z komendami: "jackd", "cdparanoia", "lame", "flac"
-- QDBusInterface, QDBusConnection
-- Hardcoded ścieżki: "/dev/", "/proc/", "/etc/"
-- #ifdef Q_OS_LINUX
+Serena: search_for_pattern(
+  substring_pattern="QProcess|jackd|cdparanoia|lame|flac",
+  relative_path="{SOURCE_FILE}"
+)
 
-Każde znalezione użycie → oznacz jako LINUX_SPECIFIC
+Serena: search_for_pattern(
+  substring_pattern="QDBusInterface|QDBusConnection",
+  relative_path="{SOURCE_FILE}"
+)
+
+Serena: search_for_pattern(
+  substring_pattern="/dev/|/proc/|/etc/|Q_OS_LINUX",
+  relative_path="{SOURCE_FILE}"
+)
+
+→ Każde znalezione użycie → oznacz jako LINUX_SPECIFIC
 ```
 
 ### Krok 3 — Zapisz partial wynik

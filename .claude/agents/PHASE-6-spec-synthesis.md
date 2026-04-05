@@ -1,5 +1,14 @@
 # PHASE-6 — SPEC Synthesis Agent
-## Wersja: 1.0.0 | Faza: 6 | Scope: per artifact | Typ: monolithic
+## Wersja: 1.1.0 | Faza: 6 | Scope: per artifact | Typ: monolithic
+
+---
+
+## Toolbox
+
+> Ten agent operuje na plikach `.md` (analysis outputs), nie bezpośrednio na kodzie.
+> - Walidacja statusów: `Serena: search_for_pattern` (nie `grep` w bash)
+> - Czytanie plików wejściowych: **Read** tool (pliki .md)
+> - Jeśli potrzebujesz wrócić do kodu źródłowego: użyj `Serena: find_symbol`, `search_for_pattern`
 
 ---
 
@@ -28,12 +37,25 @@ Opcjonalne:
 ```
 
 **Walidacja wejścia:**
-```bash
-for f in inventory.md ui-contracts.md call-graph.md facts.md; do
-  STATUS=$(grep "^status:" .analysis/{ARTIFACT_ID}/$f | cut -d: -f2 | tr -d ' ')
-  [ "$STATUS" = "done" ] || \
-    echo "BLOKADA: $f nie ma statusu done (actual: $STATUS)"
-done
+```
+# Sprawdź status każdego pliku wejściowego
+Serena: search_for_pattern(
+  substring_pattern="^status:",
+  relative_path=".analysis/{ARTIFACT_ID}/inventory.md"
+)
+Serena: search_for_pattern(
+  substring_pattern="^status:",
+  relative_path=".analysis/{ARTIFACT_ID}/ui-contracts.md"
+)
+Serena: search_for_pattern(
+  substring_pattern="^status:",
+  relative_path=".analysis/{ARTIFACT_ID}/call-graph.md"
+)
+Serena: search_for_pattern(
+  substring_pattern="^status:",
+  relative_path=".analysis/{ARTIFACT_ID}/facts.md"
+)
+→ Każdy musi zwrócić "status: done", inaczej BLOKADA
 ```
 
 ---

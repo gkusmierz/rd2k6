@@ -1,5 +1,21 @@
 # PHASE-5 — Facts Mining Agent
-## Wersja: 1.0.0 | Faza: 5 | Scope: per artifact
+## Wersja: 1.1.0 | Faza: 5 | Scope: per artifact
+
+---
+
+## Toolbox — Serena MCP First
+
+> **Twarda reguła:** Używaj Serena MCP jako PRIMARY tool do interakcji z kodem źródłowym.
+> Bash dopuszczalny TYLKO dla: operacji na PDF (pdftotext, pdftoppm), LOC counting (wc -l).
+>
+> | Potrzebujesz | Użyj Serena | NIE używaj |
+> |---|---|---|
+> | Szukanie wzorców w kodzie | `search_for_pattern` | `grep`, `rg` |
+> | Symbole pliku testowego | `get_symbols_overview` | `cat`, `head` |
+> | Listowanie plików testowych | `find_file` | `find` |
+> | Ciało metody testowej | `find_symbol(include_body=true)` | `Read` |
+> | PDF → tekst/obraz | **bash** (`pdftotext`, `pdftoppm`) | — |
+> | Pliki .md (analysis outputs) | **Read** tool | — |
 
 ---
 
@@ -37,8 +53,11 @@ Opcjonalne (użyj jeśli dostępne):
 **1. Guard clauses i walidacje:**
 ```
 Serena: search_for_pattern(
-  pattern="if.*return|if.*throw|if.*emit.*error",
-  path="{ARTIFACT_FOLDER}"
+  substring_pattern="if.*return|if.*throw|if.*emit.*error",
+  relative_path="{ARTIFACT_FOLDER}",
+  paths_include_glob="**/*.cpp",
+  context_lines_before=1,
+  context_lines_after=2
 )
 → Każdy guard clause = reguła: "akcja X jest dozwolona tylko gdy Y"
 ```
@@ -46,8 +65,11 @@ Serena: search_for_pattern(
 **2. SQL zapytania — to są reguły biznesowe:**
 ```
 Serena: search_for_pattern(
-  pattern="QSqlQuery|exec(",
-  path="{ARTIFACT_FOLDER}"
+  substring_pattern="QSqlQuery|exec\\(",
+  relative_path="{ARTIFACT_FOLDER}",
+  paths_include_glob="**/*.cpp",
+  context_lines_before=3,
+  context_lines_after=5
 )
 → Dla każdego SQL: co zapisuje/czyta/waliduje
 → WHERE clause = reguła filtrowania
@@ -55,18 +77,22 @@ Serena: search_for_pattern(
 ```
 
 **3. Obliczenia i formuły:**
-```bash
-grep -rn "=.*\*\|=.*\/\|\..*().*+\|.*%.*" \
-  --include="*.cpp" {ARTIFACT_FOLDER} | \
-  grep -v "^//\|test\|Test" | head -50
-# → każda formuła = reguła obliczeniowa
+```
+Serena: search_for_pattern(
+  substring_pattern="=.*[*/]|=.*[+].*\\(|.*%[^s]",
+  relative_path="{ARTIFACT_FOLDER}",
+  paths_include_glob="**/*.cpp",
+  paths_exclude_glob="*test*"
+)
+→ Każda formuła = reguła obliczeniowa
 ```
 
 **4. Stałe i magic numbers:**
 ```
 Serena: search_for_pattern(
-  pattern="#define|const.*=.*[0-9]",
-  path="{ARTIFACT_FOLDER}"
+  substring_pattern="#define|const.*=.*[0-9]",
+  relative_path="{ARTIFACT_FOLDER}",
+  paths_include_glob="**/*.{h,cpp}"
 )
 → Stałe z nazwą = udokumentowane ograniczenia biznesowe
 → Magic numbers = nieudokumentowane ograniczenia (wymagają opisu)
@@ -75,8 +101,10 @@ Serena: search_for_pattern(
 **5. QSettings klucze:**
 ```
 Serena: search_for_pattern(
-  pattern="QSettings.*value|QSettings.*setValue",
-  path="{ARTIFACT_FOLDER}"
+  substring_pattern="QSettings.*value|QSettings.*setValue",
+  relative_path="{ARTIFACT_FOLDER}",
+  paths_include_glob="**/*.cpp",
+  context_lines_after=1
 )
 → Każdy klucz = opcja konfiguracyjna (reguła z domyślną wartością)
 ```
@@ -91,17 +119,18 @@ Serena: search_for_pattern(
 
 **Cel:** Wyciągnąć use cases i edge cases z testów — to jest source of truth.
 
-```bash
+```
 # Znajdź pliki testowe dla tego artifaktu
-find . -name "*test*" -o -name "*Test*" | \
-  grep -i "{ARTIFACT_NAME}" | grep "\.cpp$"
+Serena: find_file(file_mask="*test*.cpp", relative_path=".")
+Serena: find_file(file_mask="*Test*.cpp", relative_path=".")
+→ Przefiltruj wyniki po {ARTIFACT_NAME}
 ```
 
 ### Czego szukać w testach
 
 **1. Nazwy metod testowych = use cases:**
 ```
-Serena: get_symbols_overview(file="{TEST_FILE}")
+Serena: get_symbols_overview(relative_path="{TEST_FILE}", depth=1)
 → Każda metoda testowa opisuje jeden scenariusz
 → Nazwy typu: test_should_reject_when_empty → reguła: "odrzuć gdy puste"
 ```
@@ -109,24 +138,35 @@ Serena: get_symbols_overview(file="{TEST_FILE}")
 **2. QTest::addColumn + QTest::newRow = dane testowe z edge cases:**
 ```
 Serena: search_for_pattern(
-  pattern="QTest::newRow",
-  path="{TEST_FOLDER}"
+  substring_pattern="QTest::newRow",
+  relative_path="{TEST_FOLDER}",
+  paths_include_glob="**/*.cpp",
+  context_lines_after=3
 )
 → Każdy newRow to konkretny przypadek testowy z danymi wejściowymi
 → To są edge cases odkryte przez autorów
 ```
 
 **3. QCOMPARE i QVERIFY = oczekiwane zachowanie:**
-```bash
-grep -n "QCOMPARE\|QVERIFY\|QFAIL\|QEXPECT_FAIL" \
-  --include="*.cpp" -r {TEST_FOLDER}
+```
+Serena: search_for_pattern(
+  substring_pattern="QCOMPARE|QVERIFY|QFAIL|QEXPECT_FAIL",
+  relative_path="{TEST_FOLDER}",
+  paths_include_glob="**/*.cpp",
+  context_lines_before=2,
+  context_lines_after=2
+)
 → Każde QCOMPARE(actual, expected) = specyfikacja zachowania
 ```
 
 **4. Testy negatywne = co system ODRZUCA:**
-```bash
-grep -n "QFAIL\|QEXPECT_FAIL\|should.*fail\|invalid\|error" \
-  --include="*.cpp" -ri {TEST_FOLDER}
+```
+Serena: search_for_pattern(
+  substring_pattern="(?i)QFAIL|QEXPECT_FAIL|should.*fail|invalid|error",
+  relative_path="{TEST_FOLDER}",
+  paths_include_glob="**/*.cpp",
+  context_lines_before=3
+)
 ```
 
 Dla każdego testu zapisz w Gherkin:
@@ -150,23 +190,22 @@ Scenario: {nazwa testu sformatowana jako zdanie}
 ### Strategia czytania PDF
 
 ```bash
+# PDF wymaga bash — Serena nie obsługuje plików PDF
 # Znajdź strony dotyczące tego artifaktu
 pdftotext -layout {PDF_FILE} - | \
   grep -n "{ARTIFACT_NAME}\|{ARTIFACT_FULL_NAME}" | \
   head -20
-# → Zidentyfikuj zakres stron
-```
 
-```bash
 # Wyciągnij tekst z tych stron
 pdftotext -f {START_PAGE} -l {END_PAGE} -layout {PDF_FILE} -
-```
 
-```bash
 # Rasteryzuj strony z diagramami/UI screenshots
 pdftoppm -jpeg -r 150 -f {PAGE} -l {PAGE} {PDF_FILE} /tmp/rdlib-page
-ls /tmp/rdlib-page*.jpg
-# → Przeczytaj wizualnie przez Serena: read_file(/tmp/rdlib-page-N.jpg)
+```
+```
+# Przeczytaj wizualnie (Read tool obsługuje obrazy):
+Read: /tmp/rdlib-page-{N}.jpg
+→ Opisz co widać na screenshotach
 ```
 
 ### Czego szukać w dokumentacji
@@ -200,10 +239,10 @@ FAKT-{NR}:
 **Cel:** Porównać fakty z trzech źródeł i wykryć rozbieżności.
 
 ```
-Wczytaj:
-  Serena: read_memory("facts-code") LUB read_file("_partials/facts-code.md")
-  Serena: read_memory("facts-tests") LUB read_file("_partials/facts-tests.md")
-  Serena: read_memory("facts-pdf") LUB read_file("_partials/facts-pdf.md")
+# Wczytaj partial pliki — to są pliki .md, nie kod źródłowy
+Read: .analysis/{ARTIFACT_ID}/_partials/facts-code.md
+Read: .analysis/{ARTIFACT_ID}/_partials/facts-tests.md
+Read: .analysis/{ARTIFACT_ID}/_partials/facts-pdf.md
 ```
 
 ### Typy rozbieżności do wykrycia

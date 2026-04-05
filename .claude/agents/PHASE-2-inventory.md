@@ -1,5 +1,5 @@
 # PHASE-2 — Inventory Build Agent (Orchestrator)
-## Wersja: 1.0.0 | Faza: 2 | Scope: per artifact
+## Wersja: 1.1.0 | Faza: 2 | Scope: per artifact
 
 ---
 
@@ -58,10 +58,12 @@ Priorytet kolejności sub-agentów:
 ### Krok 3 — Poczekaj na ukończenie wszystkich sub-agentów
 
 Sprawdź że wszystkie pliki `_partials/inv-*.md` istnieją:
-```bash
-EXPECTED=$(wc -l < lista_par_plikow.txt)
-ACTUAL=$(ls .analysis/{ARTIFACT_ID}/_partials/inv-*.md 2>/dev/null | wc -l)
-echo "Oczekiwane: $EXPECTED, Ukończone: $ACTUAL"
+```
+Serena: find_file(
+  file_mask="inv-*.md",
+  relative_path=".analysis/{ARTIFACT_ID}/_partials"
+)
+→ Zlicz wyniki i porównaj z oczekiwaną liczbą par plików
 ```
 
 ### Krok 4 — Wywołaj Merge Agent

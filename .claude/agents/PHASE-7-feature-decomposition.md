@@ -1,5 +1,5 @@
 # PHASE-7 — Feature Decomposition Agent
-## Wersja: 1.0.0 | Faza: 7 | Scope: per artifact
+## Wersja: 1.1.0 | Faza: 7 | Scope: per artifact
 
 ---
 

@@ -1,5 +1,22 @@
 # PHASE-3 — UI Extraction Agent
-## Wersja: 1.0.0 | Faza: 3 | Scope: per artifact
+## Wersja: 1.1.0 | Faza: 3 | Scope: per artifact
+
+---
+
+## Toolbox — Serena MCP First
+
+> **Twarda reguła:** Używaj Serena MCP do pracy z kodem C++/Qt.
+> Pliki .ui (XML) i .qml czytaj przez **Read** tool (Serena LSP ich nie obsługuje).
+>
+> | Potrzebujesz | Użyj | NIE używaj |
+> |---|---|---|
+> | Szukanie plików .ui/.qml | `Serena: find_file` | `find` |
+> | Szukanie setupUi/connect w .cpp | `Serena: search_for_pattern` | `grep` |
+> | Referencje do widgetu w C++ | `Serena: find_referencing_symbols` | `grep` |
+> | Symbole klasy okna | `Serena: find_symbol`, `get_symbols_overview` | `cat` |
+> | Czytanie pliku .ui (XML) | **Read** tool | — |
+> | Czytanie pliku .qml | **Read** tool | — |
+> | Przetwarzanie PDF | **bash** (`pdftoppm`) + **Read** (obraz) | — |
 
 ---
 
@@ -25,11 +42,15 @@ Opcjonalne: pliki .ui, pliki .qml, PDF dokumentacja
 ### Krok 1 — Znajdź wszystkie pliki UI
 
 ```
-Serena: find_file(pattern="*.ui", path="{ARTIFACT_FOLDER}")
-Serena: find_file(pattern="*.qml", path="{ARTIFACT_FOLDER}")
+Serena: find_file(file_mask="*.ui", relative_path="{ARTIFACT_FOLDER}")
+Serena: find_file(file_mask="*.qml", relative_path="{ARTIFACT_FOLDER}")
 
 # Połącz z klasami z inventory.md które używają setupUi()
-Serena: search_for_pattern(pattern="setupUi", path="{ARTIFACT_FOLDER}")
+Serena: search_for_pattern(
+  substring_pattern="setupUi",
+  relative_path="{ARTIFACT_FOLDER}",
+  paths_include_glob="**/*.cpp"
+)
 ```
 
 Zbuduj mapowanie: `okno (klasa) ↔ plik .ui`
@@ -40,7 +61,8 @@ Zbuduj mapowanie: `okno (klasa) ↔ plik .ui`
 
 Dla każdego pliku .ui:
 ```
-Serena: read_file(path="{FILE}.ui")
+# .ui to XML — Serena nie ma symbolicznego parsera XML, użyj Read tool
+Read: {FILE}.ui
 → Parsuj XML Qt Designer
 ```
 
@@ -59,14 +81,27 @@ Z XML wyciągnij:
 
 Dla każdego widgetu z akcją (QPushButton, QAction, QMenu):
 ```
-Serena: find_referencing_symbols("{BUTTON_NAME}")
-→ Znajdź slot podłączony do tego buttona w .cpp
+# Znajdź connect() lub slot podłączony do tego widgetu
+Serena: search_for_pattern(
+  substring_pattern="{BUTTON_NAME}",
+  relative_path="{ARTIFACT_FOLDER}",
+  paths_include_glob="**/*.cpp",
+  context_lines_after=3
+)
+→ Znajdź slot podłączony do tego buttona
+
+# Jeśli button name to symbol C++:
+Serena: find_referencing_symbols(
+  name_path="{BUTTON_NAME}",
+  relative_path="{ARTIFACT_SOURCE_FILE}"
+)
 ```
 
 **Sub-agent B: per QML komponent**
 
 ```
-Serena: read_file(path="{FILE}.qml")
+# QML nie jest obsługiwany przez LSP Sereny — użyj Read tool
+Read: {FILE}.qml
 → Wyciągnij: komponenty, bindingi, sygnały, stany (State{})
 → Mapuj: property binding → dane które komponent wyświetla
 → Mapuj: onClicked/onActivated → co się dzieje po interakcji
@@ -75,11 +110,14 @@ Serena: read_file(path="{FILE}.qml")
 **Sub-agent C: PDF UI screenshots (jeśli PDF dostępny)**
 
 ```bash
-# Dla każdej strony PDF z UI (screenshoty okien)
+# Rasteryzacja PDF wymaga bash (Serena nie obsługuje PDF)
 pdftoppm -jpeg -r 150 -f {PAGE} -l {PAGE} {PDF_FILE} /tmp/page
-# Następnie: read_file(/tmp/page-{NR}.jpg) przez Serena
-# → opisz wizualnie co widać: układ, przyciski, pola, menu
-# → zmapuj na klasy z inventory.md
+```
+```
+# Następnie odczytaj wizualnie:
+Read: /tmp/page-{NR}.jpg
+→ Opisz wizualnie co widać: układ, przyciski, pola, menu
+→ Zmapuj na klasy z inventory.md
 ```
 
 Każdy sub-agent zapisuje:

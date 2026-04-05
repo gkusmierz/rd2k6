@@ -1,5 +1,20 @@
 # PHASE-1 — Artifact Structure Scan Agent
-## Wersja: 1.0.0 | Faza: 1 | Scope: per artifact
+## Wersja: 1.1.0 | Faza: 1 | Scope: per artifact
+
+---
+
+## Toolbox — Serena MCP First
+
+> **Twarda reguła:** Używaj Serena MCP jako PRIMARY tool do interakcji z kodem źródłowym.
+> Bash dopuszczalny TYLKO dla operacji systemowych (mkdir, wc -l).
+>
+> | Potrzebujesz | Użyj Serena | NIE używaj |
+> |---|---|---|
+> | Listowanie plików | `list_dir`, `find_file` | `find`, `ls` |
+> | Szukanie wzorców w kodzie | `search_for_pattern` | `grep`, `rg` |
+> | Przeglądanie symboli | `get_symbols_overview` | `cat`, `head` |
+> | Czytanie kodu symbolu | `find_symbol(include_body=true)` | `Read`, `cat` |
+> | Referencje do symbolu | `find_referencing_symbols` | `grep` |
 
 ---
 
@@ -50,78 +65,98 @@ mkdir -p .analysis/{ARTIFACT_ID}/Features/
 ### Krok 3 — Skan plików źródłowych
 
 ```
-Serena: list_dir(path="{ARTIFACT_FOLDER}", recursive=true)
-→ Pobierz pełną listę plików
-```
+Serena: list_dir(relative_path="{ARTIFACT_FOLDER}", recursive=true)
+→ Pobierz pełną listę plików i katalogów
 
-```bash
-# Wylistuj pliki z podziałem na typy
-find {ARTIFACT_FOLDER} -type f \
-  \( -name "*.cpp" -o -name "*.h" -o -name "*.ui" \
-     -o -name "*.qml" -o -name "*.qrc" -o -name "*.ts" \) \
-  | sort
-
-# Zlicz per typ
-for ext in cpp h ui qml qrc ts; do
-  COUNT=$(find {ARTIFACT_FOLDER} -name "*.$ext" | wc -l)
-  echo "$ext: $COUNT"
-done
+# Zlicz pliki per typ
+Serena: find_file(file_mask="*.cpp", relative_path="{ARTIFACT_FOLDER}")
+Serena: find_file(file_mask="*.h", relative_path="{ARTIFACT_FOLDER}")
+Serena: find_file(file_mask="*.ui", relative_path="{ARTIFACT_FOLDER}")
+Serena: find_file(file_mask="*.qml", relative_path="{ARTIFACT_FOLDER}")
+Serena: find_file(file_mask="*.qrc", relative_path="{ARTIFACT_FOLDER}")
+Serena: find_file(file_mask="*.ts", relative_path="{ARTIFACT_FOLDER}")
+→ Zlicz wyniki każdego wywołania
 ```
 
 ### Krok 4 — Identyfikacja głównych klas Qt
 
 Dla każdego pliku .h użyj Sereny:
 ```
-Serena: get_symbols_overview(file="{FILE}.h")
+Serena: get_symbols_overview(relative_path="{FILE}.h")
 → Zidentyfikuj klasy które dziedziczą z Qt
 ```
 
-Szukaj wzorców (Serena: search_for_pattern):
-```bash
+Szukaj wzorców dziedziczenia i Q_OBJECT:
+```
 # Klasy dziedziczące z Qt
-grep -rh "class.*:.*public.*Q" --include="*.h" {ARTIFACT_FOLDER} | \
-  grep -v "^//" | sort
+Serena: search_for_pattern(
+  substring_pattern="class\\s+\\w+.*:\\s*public\\s+Q",
+  relative_path="{ARTIFACT_FOLDER}",
+  paths_include_glob="**/*.h"
+)
 
 # Klasy z Q_OBJECT (uczestniczą w sygnałach/slotach)
-grep -rhl "Q_OBJECT" --include="*.h" {ARTIFACT_FOLDER}
+Serena: search_for_pattern(
+  substring_pattern="Q_OBJECT",
+  relative_path="{ARTIFACT_FOLDER}",
+  paths_include_glob="**/*.h"
+)
 ```
 
 ### Krok 5 — Identyfikacja entry points
 
-```bash
+```
 # main() funkcja
-grep -rn "^int main\|^int main(" --include="*.cpp" {ARTIFACT_FOLDER}
+Serena: search_for_pattern(
+  substring_pattern="^int main",
+  relative_path="{ARTIFACT_FOLDER}",
+  paths_include_glob="**/*.cpp"
+)
 
 # QApplication / QCoreApplication
-grep -rn "QApplication\|QCoreApplication\|QGuiApplication" \
-  --include="*.cpp" {ARTIFACT_FOLDER}
+Serena: search_for_pattern(
+  substring_pattern="QApplication|QCoreApplication|QGuiApplication",
+  relative_path="{ARTIFACT_FOLDER}",
+  paths_include_glob="**/*.cpp"
+)
 
 # QMainWindow subclass (główne okno)
-grep -rh "class.*:.*public.*QMainWindow" --include="*.h" {ARTIFACT_FOLDER}
+Serena: search_for_pattern(
+  substring_pattern="class\\s+\\w+.*:\\s*public\\s+QMainWindow",
+  relative_path="{ARTIFACT_FOLDER}",
+  paths_include_glob="**/*.h"
+)
 ```
 
 ### Krok 6 — CMake target dla tego artifaktu
 
-```bash
+```
 # Znajdź CMakeLists.txt dla tego artifaktu
-find {ARTIFACT_FOLDER} -name "CMakeLists.txt" | head -3
+Serena: find_file(file_mask="CMakeLists.txt", relative_path="{ARTIFACT_FOLDER}")
 
 # Wyciągnij target definition
-grep -A 20 "add_executable\|add_library" \
-  {ARTIFACT_FOLDER}/CMakeLists.txt 2>/dev/null | head -40
+Serena: search_for_pattern(
+  substring_pattern="add_executable|add_library",
+  relative_path="{ARTIFACT_FOLDER}",
+  paths_include_glob="**/CMakeLists.txt",
+  context_lines_after=20
+)
 ```
 
 ### Krok 7 — Identyfikacja plików testowych
 
-```bash
+```
 # Pliki testowe (QTest)
-find . -name "*test*" -o -name "*Test*" | \
-  grep -i "{ARTIFACT_NAME}\|{ARTIFACT_ID}" | \
-  grep -E "\.cpp$|\.h$"
+Serena: find_file(file_mask="*test*.cpp", relative_path=".")
+Serena: find_file(file_mask="*Test*.cpp", relative_path=".")
+Serena: find_file(file_mask="*test*.h", relative_path=".")
+→ Przefiltruj wyniki szukając {ARTIFACT_NAME} lub {ARTIFACT_ID}
 
-# Klasy dziedziczące z QTest
-grep -rh "class.*:.*public.*QObject" --include="*.h" . | \
-  grep -i "test"
+# Klasy testowe dziedziczące z QObject
+Serena: search_for_pattern(
+  substring_pattern="(?i)class.*test.*:.*public.*QObject",
+  paths_include_glob="**/*.h"
+)
 ```
 
 ### Krok 8 — Zapisz discovery-state.md

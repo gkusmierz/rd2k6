@@ -1,5 +1,20 @@
 # PHASE-4 — Signal & Call Graph Agent
-## Wersja: 1.0.0 | Faza: 4 | Scope: per artifact
+## Wersja: 1.1.0 | Faza: 4 | Scope: per artifact
+
+---
+
+## Toolbox — Serena MCP First
+
+> **Twarda reguła:** Używaj Serena MCP jako PRIMARY tool do interakcji z kodem źródłowym.
+> NIGDY nie używaj `grep`, `cat`, `Read` do szukania wzorców w plikach C++/Qt.
+>
+> | Potrzebujesz | Użyj Serena | NIE używaj |
+> |---|---|---|
+> | Szukanie connect()/emit() | `search_for_pattern` | `grep`, `rg` |
+> | Referencje do klasy | `find_referencing_symbols` | `grep` |
+> | Symbole pliku | `get_symbols_overview` | `cat`, `Read` |
+> | Ciało metody | `find_symbol(include_body=true)` | `Read` |
+> | Listowanie plików | `find_file`, `list_dir` | `find`, `ls` |
 
 ---
 
@@ -24,40 +39,43 @@ Wymagane:   .analysis/{ARTIFACT_ID}/inventory.md (phase=2, status=done)
 ### Krok 1 — Zbierz wszystkie punkty connect()
 
 ```
+# Qt5-style connect (pointer-to-member)
 Serena: search_for_pattern(
-  pattern="connect(",
-  path="{ARTIFACT_FOLDER}",
-  file_pattern="*.cpp"
+  substring_pattern="connect\\(",
+  relative_path="{ARTIFACT_FOLDER}",
+  paths_include_glob="**/*.cpp",
+  context_lines_after=3
 )
 → Lista wszystkich wywołań connect()
-```
+→ context_lines_after=3 łapie multi-line connect() calls
 
-```bash
-# Backup przez grep dla Qt4-style connect
-grep -rn "connect(" --include="*.cpp" {ARTIFACT_FOLDER} | \
-  grep -v "^//\|\/\*" | \
-  grep "SIGNAL\|&.*::" | \
-  sort
+# Jeśli potrzebujesz odfiltrować Qt4-style (SIGNAL/SLOT makra):
+Serena: search_for_pattern(
+  substring_pattern="SIGNAL\\(|SLOT\\(",
+  relative_path="{ARTIFACT_FOLDER}",
+  paths_include_glob="**/*.cpp"
+)
 ```
 
 ### Krok 2 — Zbierz wszystkie emit()
 
 ```
 Serena: search_for_pattern(
-  pattern="emit ",
-  path="{ARTIFACT_FOLDER}",
-  file_pattern="*.cpp"
+  substring_pattern="emit ",
+  relative_path="{ARTIFACT_FOLDER}",
+  paths_include_glob="**/*.cpp",
+  context_lines_before=2
 )
-→ Lista wszystkich emisji sygnałów
+→ Lista wszystkich emisji sygnałów (kontekst przed = warunek emisji)
 ```
 
 ### Krok 3 — Zbierz wszystkie Q_PROPERTY z NOTIFY
 
 ```
 Serena: search_for_pattern(
-  pattern="Q_PROPERTY",
-  path="{ARTIFACT_FOLDER}",
-  file_pattern="*.h"
+  substring_pattern="Q_PROPERTY",
+  relative_path="{ARTIFACT_FOLDER}",
+  paths_include_glob="**/*.h"
 )
 → Dla każdego Q_PROPERTY z NOTIFY: to jest automatyczny connect w QML
 ```
@@ -78,19 +96,26 @@ Parametry:
 Dla tej klasy:
 ```
 # Jako NADAWCA (co ta klasa emituje)
-Serena: search_for_pattern(pattern="emit ", file="{CLASS_FILE}")
+Serena: search_for_pattern(
+  substring_pattern="emit ",
+  relative_path="{CLASS_FILE}",
+  context_lines_before=3
+)
 → Lista sygnałów które ta klasa emituje
-→ Dla każdego emit: w jakiej metodzie, przy jakim warunku
+→ Kontekst: w jakiej metodzie, przy jakim warunku
 
 # Jako ODBIORCA (kto łączy się z tą klasą)
-Serena: find_referencing_symbols("{CLASS_NAME}")
+Serena: find_referencing_symbols(
+  name_path="{CLASS_NAME}",
+  relative_path="{CLASS_HEADER_FILE}"
+)
 → Kto tworzy instancje tej klasy
 → W których miejscach jest connect() z tą klasą jako src lub dst
 
 # Wewnętrzne połączenia (self-connections)
 Serena: search_for_pattern(
-  pattern="connect(this",
-  file="{CLASS_FILE}"
+  substring_pattern="connect\\(this",
+  relative_path="{CLASS_FILE}"
 )
 ```
 

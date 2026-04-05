@@ -1,5 +1,20 @@
 # PHASE-0 — Project Discovery Agent
-## Wersja: 1.0.0 | Faza: 0 | Scope: cały projekt
+## Wersja: 1.1.0 | Faza: 0 | Scope: cały projekt
+
+---
+
+## Toolbox — Serena MCP First
+
+> **Twarda reguła:** Używaj Serena MCP jako PRIMARY tool do interakcji z kodem źródłowym.
+> Bash dopuszczalny TYLKO dla operacji systemowych (mkdir, wc -l, cmake) i przetwarzania tekstu.
+>
+> | Potrzebujesz | Użyj Serena | NIE używaj |
+> |---|---|---|
+> | Listowanie plików | `list_dir`, `find_file` | `find`, `ls` |
+> | Szukanie wzorców w kodzie | `search_for_pattern` | `grep`, `rg` |
+> | Przeglądanie symboli | `get_symbols_overview` | `cat`, `head` |
+> | Czytanie kodu symbolu | `find_symbol(include_body=true)` | `Read`, `cat` |
+> | Referencje do symbolu | `find_referencing_symbols` | `grep` |
 
 ---
 
@@ -39,25 +54,27 @@ Serena: list_dir(path=".", recursive=true, depth=2)
 ### Krok 2 — Analiza build system
 
 **Dla CMake:**
-```bash
-# Wylistuj wszystkie CMakeLists.txt
-find . -name "CMakeLists.txt" | sort
+```
+Serena: find_file(file_mask="CMakeLists.txt", relative_path=".")
+→ Lista wszystkich CMakeLists.txt w projekcie
 
-# Z każdego wyciągnij add_executable i add_library
-grep -rh "add_executable\|add_library" --include="CMakeLists.txt" | \
-  grep -v "^#" | sort | uniq
+Serena: search_for_pattern(
+  substring_pattern="add_executable|add_library",
+  paths_include_glob="**/CMakeLists.txt"
+)
+→ Wszystkie definicje targetów (executables i libraries)
 ```
 
 **Dla qmake:**
-```bash
-# Znajdź .pro pliki (każdy = osobna aplikacja/biblioteka)
-find . -name "*.pro" | sort
+```
+Serena: find_file(file_mask="*.pro", relative_path=".")
+→ Lista .pro plików (każdy = osobna aplikacja/biblioteka)
 
-# Z każdego wyciągnij TEMPLATE i TARGET
-for pro in $(find . -name "*.pro"); do
-  echo "=== $pro ==="
-  grep "^TEMPLATE\|^TARGET\|^SUBDIRS" "$pro"
-done
+Serena: search_for_pattern(
+  substring_pattern="^TEMPLATE|^TARGET|^SUBDIRS",
+  paths_include_glob="**/*.pro"
+)
+→ Typ i nazwa każdego targetu
 ```
 
 ### Krok 3 — Klasyfikacja artifaktów
@@ -92,13 +109,15 @@ Unikaj ID które kolidują z powszechnymi skrótami (SQL, API, etc.)
 
 ### Krok 5 — Dependency graph
 
-```bash
-# CMake — inter-target dependencies
-grep -rh "target_link_libraries" --include="CMakeLists.txt" | \
-  grep -v "^#"
+```
+Serena: search_for_pattern(
+  substring_pattern="target_link_libraries",
+  paths_include_glob="**/CMakeLists.txt"
+)
+→ Inter-target dependencies (CMake)
 
-# Znajdź shared headers używane przez wiele targetów
-find . -name "*.h" -path "*/include/*" | head -20
+Serena: find_file(file_mask="*.h", relative_path=".")
+→ Zidentyfikuj shared headers (te w */include/*)
 ```
 
 Zbuduj tabelę: który artifact → używa których bibliotek.
@@ -106,35 +125,48 @@ Zbuduj tabelę: który artifact → używa których bibliotek.
 ### Krok 6 — Identyfikacja Linux-specific komponentów
 
 Szukaj w CMakeLists.txt i plikach źródłowych:
-```bash
+```
 # Audio
-grep -r "jack\|alsa\|oss\|pulse" --include="CMakeLists.txt" -i | head -10
-grep -r "JACK\|ALSA\|PulseAudio" --include="*.h" --include="*.cpp" | head -10
+Serena: search_for_pattern(
+  substring_pattern="(?i)jack|alsa|oss|pulse|PulseAudio",
+  paths_include_glob="**/{CMakeLists.txt,*.h,*.cpp}"
+)
 
 # IPC
-grep -r "dbus\|DBus" --include="CMakeLists.txt" -i | head -10
+Serena: search_for_pattern(
+  substring_pattern="(?i)dbus|DBus",
+  paths_include_glob="**/{CMakeLists.txt,*.h,*.cpp}"
+)
 
 # CD
-grep -r "cdparanoia\|libcdio" --include="CMakeLists.txt" -i | head -5
+Serena: search_for_pattern(
+  substring_pattern="(?i)cdparanoia|libcdio",
+  paths_include_glob="**/CMakeLists.txt"
+)
 
 # Database
-grep -r "mysql\|postgresql\|sqlite" --include="CMakeLists.txt" -i | head -5
+Serena: search_for_pattern(
+  substring_pattern="(?i)mysql|postgresql|sqlite",
+  paths_include_glob="**/CMakeLists.txt"
+)
 ```
 
 ### Krok 7 — Zlicz rozmiar projektu
 
+```
+# Zlicz pliki per typ — używaj Serena find_file
+Serena: find_file(file_mask="*.cpp", relative_path=".")  → zlicz wyniki (pomiń build/, moc_*)
+Serena: find_file(file_mask="*.h", relative_path=".")    → zlicz wyniki
+Serena: find_file(file_mask="*.ui", relative_path=".")   → zlicz wyniki
+Serena: find_file(file_mask="*.qml", relative_path=".")  → zlicz wyniki
+Serena: find_file(file_mask="*.pro", relative_path=".")  → zlicz wyniki
+```
+
 ```bash
-# Linie kodu per język
+# Linie kodu — to wymaga bash (Serena nie liczy LOC)
 find . \( -name "*.cpp" -o -name "*.h" \) \
   ! -path "*/build/*" ! -path "*/.build/*" ! -path "*/moc_*" \
   | xargs wc -l | sort -rn | head -20
-
-# Łączna liczba plików per typ
-echo "CPP: $(find . -name '*.cpp' ! -path '*/build/*' | wc -l)"
-echo "H:   $(find . -name '*.h' ! -path '*/build/*' | wc -l)"
-echo "UI:  $(find . -name '*.ui' | wc -l)"
-echo "QML: $(find . -name '*.qml' | wc -l)"
-echo "PRO: $(find . -name '*.pro' | wc -l)"
 ```
 
 ### Krok 8 — Zapisz manifest
