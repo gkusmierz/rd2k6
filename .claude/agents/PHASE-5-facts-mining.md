@@ -1,5 +1,5 @@
 # PHASE-5 — Facts Mining Agent
-## Wersja: 1.2.0 | Faza: 5 | Scope: per artifact
+## Wersja: 1.3.0 | Faza: 5 | Scope: per artifact
 
 ---
 

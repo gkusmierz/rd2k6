@@ -68,7 +68,23 @@ Rule: {Nazwa reguły}
 
 ## Data Model (tabele DB w scope)
 
-> Z SPEC.md Sekcja 3 — tylko tabele dotyczące tego FEAT.
+> Z data-model.md — tylko tabele dotyczące tego FEAT.
+> Pełny schemat: `data-model.md`
+
+### ERD dla tej feature
+
+```mermaid
+erDiagram
+    {TABELA_A} {
+        int PK_COL PK
+        varchar COL1
+    }
+    {TABELA_B} {
+        int PK_COL PK
+        int FK_COL FK
+    }
+    {TABELA_A} ||--o{ {TABELA_B} : "relacja"
+```
 
 ### Tabela: {NAZWA}
 
@@ -78,9 +94,9 @@ Rule: {Nazwa reguły}
 
 ### Relacje FK
 
-```
-{TABELA_A}.{kolumna} → {TABELA_B}.{PK}
-```
+| Źródło | Kolumna | → Cel | PK |
+|--------|---------|-------|-----|
+| {CHILD} | {fk} | {PARENT} | {pk} |
 
 Jeśli feature nie operuje na DB: "Brak bezpośrednich operacji DB."
 
@@ -153,6 +169,20 @@ Jeśli feature nie ma UI: "Brak — feature jest backend-only."
 ---
 
 ## Sygnały integracji (z call-graph.md)
+
+### Sequence diagram — główny flow tej feature
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant {Klasa1}
+    participant {Klasa2}
+    participant {External}
+
+    User->>{Klasa1}: {akcja}
+    {Klasa1}->>{Klasa2}: {sygnał/wywołanie}
+    {Klasa2}-->>{Klasa1}: {odpowiedź/sygnał}
+```
 
 **Emitowane (ta feature → inne):**
 | Sygnał | Klasa | Odbiorca | Slot | Kontekst |

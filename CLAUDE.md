@@ -82,9 +82,10 @@ Nie wiesz co dalej?
 ├── {PROJECT}.manifest.md          ← FAZA 0 output, entry point
 └── {ARTIFACT}/                    ← per artifact (np. RDLIBRARY/)
     ├── discovery-state.md         ← FAZA 1
-    ├── inventory.md               ← FAZA 2
+    ├── inventory.md               ← FAZA 2 (klasy + diagramy klas Mermaid)
+    ├── data-model.md              ← FAZA 2 (tabele DB + ERD Mermaid)
     ├── ui-contracts.md            ← FAZA 3
-    ├── call-graph.md              ← FAZA 4
+    ├── call-graph.md              ← FAZA 4 (+ sequence diagrams Mermaid)
     ├── facts.md                   ← FAZA 5
     ├── SPEC.md                    ← FAZA 6
     ├── _partials/                 ← sub-agent outputs (audit trail)
@@ -155,6 +156,7 @@ Kopiujesz go do root projektu C++/Qt i masz gotowy zestaw narzędzi.
 │   ├── manifest.md
 │   ├── discovery-state.md
 │   ├── inventory.md
+│   ├── data-model.md
 │   ├── ui-contracts.md
 │   ├── call-graph.md
 │   ├── facts.md
@@ -183,3 +185,4 @@ v1.2.0 — 2026-04-05 — Self-contained .claude/. Agents, templates, docs przen
 v1.3.0 — 2026-04-05 — Phase 3: 3 tryby UI (XML/Code/QML) + screenshots→mockupy. Phase 2: skan plain C++. Spot-check we wszystkich fazach. Nowy agent QA.
 v1.4.0 — 2026-04-05 — Pętla QA: changelog per artifact, QA-fix agent, QA-loop orkiestrator. Verify→Fix→Verify do stabilności.
 v1.5.0 — 2026-04-05 — Przełamanie łańcucha zależności. SPEC=nawigacyjny PRD (nie superdokument). FEAT czyta fazy 2-5 bezpośrednio. Nowe sekcje: Data Model (DB), API/Protocol Contracts.
+v1.6.0 — 2026-04-05 — Data Model: ekstrakcja schematu DB w Phase 2, ERD Mermaid, mapowanie tabela↔klasa CRUD. Diagramy: class diagrams (P2), sequence diagrams + dependency graph (P4), state machines (P5).

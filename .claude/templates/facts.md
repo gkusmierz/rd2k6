@@ -60,7 +60,9 @@ Rule: {Nazwa reguły 1}
 
 ## Stany encji
 
-<!-- Dla każdej encji ze statusem/stanem — pełna maszyna stanów -->
+> Dla każdej encji ze statusem/stanem — pełna maszyna stanów w Mermaid.
+> **OBOWIĄZKOWE:** Każda encja z enum Status/State MUSI mieć diagram.
+> Źródło: szukaj enum z wartościami stanów + metody które zmieniają stan.
 
 ### {NazwaEncji} — stany
 
@@ -70,11 +72,15 @@ stateDiagram-v2
     {StanA} --> {StanB} : {trigger}
     {StanB} --> {StanC} : {trigger}
     {StanC} --> [*]
+    
+    note right of {StanA}
+        {warunek wejścia}
+    end note
 ```
 
-| Przejście | Trigger | Warunek | Efekt uboczny |
-|-----------|---------|---------|--------------|
-| {A → B} | {zdarzenie} | {warunek} | {co się dzieje} |
+| Przejście | Trigger | Warunek | Efekt uboczny | Źródło |
+|-----------|---------|---------|--------------|--------|
+| {A → B} | {zdarzenie} | {warunek} | {co się dzieje} | {plik}:{linia} |
 
 ---
 

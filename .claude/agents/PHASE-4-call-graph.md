@@ -1,5 +1,5 @@
 # PHASE-4 — Signal & Call Graph Agent
-## Wersja: 1.2.0 | Faza: 4 | Scope: per artifact
+## Wersja: 1.3.0 | Faza: 4 | Scope: per artifact
 
 ---
 
@@ -187,6 +187,86 @@ Czy jest cykl A→B→A w grafie?
 Oznacz jako WARNING — mogą być intencjonalne (feedback loops) lub bugi
 ```
 
+### Krok 7 — Generuj diagramy Mermaid ← NOWE
+
+**7a — Sequence diagrams dla kluczowych przepływów**
+
+Zidentyfikuj 3-5 najważniejszych przepływów zdarzeń (np. playback, import, notification).
+Dla każdego wygeneruj diagram sekwencyjny:
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant LogPlay as RDLogPlay
+    participant Deck as RDPlayDeck
+    participant CAE as RDCae
+    participant Server as caed
+
+    User->>LogPlay: play(line)
+    LogPlay->>LogPlay: StartEvent(line)
+    LogPlay->>Deck: play(handle, length)
+    Deck->>CAE: play(handle, length, speed)
+    CAE->>Server: "PL handle length speed pitch"
+    Server-->>CAE: "PY handle"
+    CAE-->>Deck: playing(handle)
+    Deck-->>LogPlay: stateChanged(Playing)
+    LogPlay-->>User: played(line)
+```
+
+**Reguły generowania sequence diagrams:**
+- Max 6-8 participantów na diagram
+- Pokaż sygnały/sloty jako strzałki (→ wywołanie, -->> asynchroniczny sygnał)
+- Oznacz cross-artifact komunikację (TCP/HTTP) innym kolorem/stylem
+- Dodaj noty (Note) dla warunków i side-effects
+- Wygeneruj minimum 3 diagramy: happy path, error path, cross-artifact
+
+**7b — Dependency graph (kto od kogo zależy)**
+
+```mermaid
+graph TD
+    RDLogPlay --> RDPlayDeck
+    RDLogPlay --> RDCae
+    RDLogPlay --> RDRipc
+    RDLogPlay --> RDMacroEvent
+    RDSoundPanel --> RDPlayDeck
+    RDSoundPanel --> RDCae
+    RDPlayDeck --> RDCae
+    RDCae -.->|TCP| caed
+    RDRipc -.->|TCP| ripcd
+    
+    style caed fill:#f96
+    style ripcd fill:#f96
+```
+
+**Reguły generowania dependency graph:**
+- Strzałka A→B = "A tworzy lub connect'uje B"
+- Strzałka przerywana = cross-process/cross-artifact
+- Koloruj: wewnętrzne (niebieskie), cross-artifact (pomarańczowe), external (czerwone)
+- Klastruj grupy logiczne (subgraph Communication, subgraph Playback, etc.)
+
+**7c — Dodaj diagramy do call-graph.md**
+
+Na początku call-graph.md (po statystykach) dodaj:
+
+```markdown
+## Diagramy
+
+### Sequence: Odtwarzanie elementu logu
+```mermaid
+{diagram}
+```
+
+### Sequence: {kolejny flow}
+```mermaid
+{diagram}
+```
+
+### Graf zależności
+```mermaid
+{diagram}
+```
+```
+
 ---
 
 ## Warunek done
@@ -196,6 +276,8 @@ call-graph.md istnieje z frontmatter phase=4, status=done
 Każdy connect() z kodu ma krawędź w grafie
 Każdy emit() jest zmapowany do connect() odbiorców
 Cross-artifact połączenia (TCP/IPC) są oznaczone
+Minimum 3 sequence diagrams Mermaid w call-graph.md
+Dependency graph Mermaid w call-graph.md
 Spot-check 3 klas przeszedł
 Kolumna P4 w manifest.md → done
 ```

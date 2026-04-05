@@ -8,7 +8,7 @@ partial_count: ~
 conflicts_found: 0
 missing_coverage: 0
 spot_check_issues: 0
-agent_version: 1.2.0
+agent_version: 1.3.0
 ---
 
 # Inventory: {ARTIFACT_NAME}
@@ -25,6 +25,25 @@ agent_version: 1.2.0
 | QAbstractItemModel subclassy | ~ |
 | QThread subclassy | ~ |
 | Plain C++ (non-Qt) klasy | ~ |
+| Active Record (CRUD) klasy | ~ |
+
+---
+
+## Diagram klas — dziedziczenie
+
+```mermaid
+classDiagram
+    direction TB
+    {diagram dziedziczenia z Qt base classes}
+```
+
+## Diagram klas — zależności domenowe
+
+```mermaid
+classDiagram
+    direction LR
+    {diagram zależności między klasami domenowymi z publicznym API}
+```
 
 ---
 
@@ -35,9 +54,10 @@ agent_version: 1.2.0
 
 ### {NazwaKlasy}
 
-**Typ Qt:** {QMainWindow / QDialog / QWidget / QObject / etc.}
+**Typ Qt:** {QMainWindow / QDialog / QWidget / QObject / Plain C++ / Active Record}
 **Plik:** `{klasa.h}` + `{klasa.cpp}`
 **Odpowiedzialność:** {1-2 zdania WHAT bez HOW}
+**Tabela DB:** {NAZWA_TABELI lub "brak" — z data-model.md}
 
 **Sygnały:**
 | Sygnał | Parametry | Znaczenie biznesowe |
@@ -66,7 +86,6 @@ agent_version: 1.2.0
 
 **Reguły biznesowe (z implementacji):**
 - {reguła 1 w języku naturalnym}
-- {reguła 2}
 
 **Linux-specific:**
 | Komponent | Użycie | Priorytet zastąpienia |
@@ -83,18 +102,12 @@ agent_version: 1.2.0
 
 ## Missing Coverage
 
-<!-- Klasy z discovery-state.md które nie mają wpisu w inventory -->
-<!-- Generowane przez Merge Agent -->
-
 | Klasa | Plik | Powód braku |
 |-------|------|-------------|
 
 ---
 
 ## Conflicts
-
-<!-- Konflikty które wymagają ludzkiej decyzji -->
-<!-- Generowane przez Merge Agent -->
 
 | ID | Klasa | Opis konfliktu | Status |
 |----|-------|----------------|--------|

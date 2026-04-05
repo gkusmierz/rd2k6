@@ -1,5 +1,5 @@
 # PHASE-2 — Inventory Build Agent (Orchestrator)
-## Wersja: 1.2.0 | Faza: 2 | Scope: per artifact
+## Wersja: 1.3.0 | Faza: 2 | Scope: per artifact
 
 ---
 
@@ -16,8 +16,13 @@
 
 ## Cel
 
-Zbudować pełny inwentarz klas, metod, sygnałów i slotów dla jednego artifaktu.
+Zbudować pełny inwentarz: klasy, metody, sygnały, sloty, **schemat DB**, **diagramy klas i ERD**.
 Uruchamia sub-agentów równolegle (jeden per para .h/.cpp), merge agent konsoliduje.
+
+**Outputy Phase 2:**
+- `inventory.md` — inwentarz klas z API, sygnałami, regułami
+- **`data-model.md`** — schemat DB (tabele, kolumny, FK, ERD) ← NOWE
+- **Diagramy Mermaid** wbudowane w oba pliki ← NOWE
 
 ---
 
@@ -62,20 +67,16 @@ Serena: search_for_pattern(
 → LISTA_WSZYSTKIE
 
 # Porównaj z listą Q_OBJECT klas z discovery-state.md
-# Różnica = plain C++ klasy do dodania do inwentarza
 PLAIN_CPP = LISTA_WSZYSTKIE - LISTA_QOBJECT
-
-# Dla każdej plain C++ klasy: uruchom sub-agenta tak samo jak dla Q_OBJECT
-# Sub-agent automatycznie ustawi "Sygnały: Brak" i "Sloty: Brak"
 ```
 
 **Kategoryzacja plain C++ klas:**
 ```
-Klasa z getterami/setterami + SQL → Active Record (model domenowy)
-Klasa z samymi metodami statycznymi → Utility
-Klasa z enum'ami i stałymi → Value Object / Constants
-Klasa z algorytmami → Service (non-Qt)
-struct / klasa z samymi polami → Data Transfer Object
+Klasa z getterami/setterami + SQL            → Active Record (CRUD model)
+Klasa z samymi metodami statycznymi          → Utility
+Klasa z enum'ami i stałymi                   → Value Object / Constants
+Klasa z algorytmami                          → Service (non-Qt)
+struct / klasa z samymi polami               → Data Transfer Object
 ```
 
 ### Krok 2 — Uruchom sub-agenty równolegle
@@ -98,18 +99,202 @@ Priorytet kolejności sub-agentów:
 2. Klasy dziedziczące z QDialog/QMainWindow (UI)
 3. Klasy utility i helper
 
-### Krok 3 — Poczekaj na ukończenie wszystkich sub-agentów
+### Krok 3 — Ekstrakcja Data Model (schemat DB) ← NOWE
 
-Sprawdź że wszystkie pliki `_partials/inv-*.md` istnieją:
+> Osobny krok — nie jest częścią sub-agentów per klasa.
+> Wyciąga schemat bazy danych i mapuje tabele na klasy C++.
+
+**3a — Znajdź definicje tabel**
+
 ```
-Serena: find_file(
-  file_mask="inv-*.md",
-  relative_path=".analysis/{ARTIFACT_ID}/_partials"
+# Szukaj CREATE TABLE w całym projekcie (schemat może być poza artifact folder)
+Serena: search_for_pattern(
+  substring_pattern="create table",
+  paths_include_glob="**/*.{cpp,sql,h}",
+  context_lines_after=30
 )
-→ Zlicz wyniki i porównaj z oczekiwaną liczbą par plików
+→ Lista tabel z kolumnami
+
+# Typowa lokalizacja schematu w projektach Rivendell:
+# utils/rddbmgr/create.cpp (schema version managed)
+# Ale szukaj też w artifact folder (embedded SQL)
 ```
 
-### Krok 4 — Wywołaj Merge Agent
+**3b — Mapuj tabele na klasy CRUD**
+
+```
+# Dla każdej znalezionej tabeli, szukaj klas które ją używają
+Serena: search_for_pattern(
+  substring_pattern="from {TABLE_NAME}|into {TABLE_NAME}|update {TABLE_NAME}",
+  relative_path="{ARTIFACT_FOLDER}",
+  paths_include_glob="**/*.cpp"
+)
+→ Mapowanie: TABELA → lista klas C++ które robią CRUD na niej
+```
+
+**3c — Zidentyfikuj wzorzec persystencji**
+
+Dla każdej klasy Active Record (z Kroku 1b):
+```
+Serena: search_for_pattern(
+  substring_pattern="QSqlQuery|RDSqlQuery",
+  relative_path="{SOURCE_FILE}",
+  context_lines_after=2
+)
+→ Wyciągnij: SELECT (read), INSERT (create), UPDATE (update), DELETE (delete)
+→ Które kolumny tabeli klasa odczytuje/zapisuje?
+```
+
+**3d — Generuj diagram ERD (Mermaid)**
+
+```mermaid
+erDiagram
+    CART {
+        int NUMBER PK
+        int TYPE
+        varchar GROUP_NAME FK
+        varchar TITLE
+    }
+    CUTS {
+        varchar CUT_NAME PK
+        int CART_NUMBER FK
+        int LENGTH
+        int START_POINT
+        int END_POINT
+    }
+    GROUPS {
+        varchar NAME PK
+        int DEFAULT_LOW_CART
+        int DEFAULT_HIGH_CART
+    }
+    CART ||--o{ CUTS : "contains"
+    GROUPS ||--o{ CART : "owns"
+```
+
+**3e — Zapisz data-model.md**
+
+Output: `.analysis/{ARTIFACT_ID}/data-model.md`
+
+```markdown
+---
+phase: 2
+artifact: {ARTIFACT_ID}
+status: done
+tables_total: {N}
+crud_classes: {N}
+---
+
+# Data Model: {ARTIFACT_NAME}
+
+## ERD — Entity Relationship Diagram
+
+```mermaid
+erDiagram
+    {pełny diagram}
+```
+
+## Tabele
+
+### {TABLE_NAME}
+
+| Kolumna | Typ | Null | Default | Opis |
+|---------|-----|------|---------|------|
+| {col} | {typ} | YES/NO | {def} | {opis} |
+
+**Klasy CRUD:** {lista klas C++ operujących na tej tabeli}
+**Operacje:** CREATE / READ / UPDATE / DELETE
+
+### Relacje FK
+
+| Tabela źródłowa | Kolumna | → Tabela docelowa | Kolumna PK |
+|-----------------|---------|-------------------|-----------|
+
+## Mapowanie Tabela ↔ Klasa C++
+
+| Tabela DB | Klasa C++ | Wzorzec | Operacje |
+|-----------|-----------|---------|----------|
+| CART | RDCart | Active Record | CRUD |
+| CUTS | RDCut | Active Record | CRUD |
+| USERS | RDUser | Active Record | CRUD |
+| LOG_LINES | RDLogLine | Value Object (read-only w librd) | R |
+```
+
+### Krok 4 — Generuj diagramy klas (Mermaid) ← NOWE
+
+Po zebraniu wszystkich partial plików, wygeneruj diagram klas.
+
+**4a — Diagram dziedziczenia (per kategoria)**
+
+```mermaid
+classDiagram
+    direction TB
+    
+    class QObject
+    class QDialog
+    class QWidget
+    
+    QObject <|-- RDCae
+    QObject <|-- RDRipc
+    QObject <|-- RDLogPlay
+    
+    QDialog <|-- RDCartDialog
+    QDialog <|-- RDEditAudio
+    QDialog <|-- RDImportAudio
+    
+    QWidget <|-- RDSoundPanel
+    QWidget <|-- RDCartSlot
+```
+
+**4b — Diagram zależności (klasy domenowe)**
+
+```mermaid
+classDiagram
+    direction LR
+    
+    class RDCart {
+        +selectCut() QString
+        +addCut() bool
+        +remove() void
+        +type() Type
+    }
+    class RDCut {
+        +isValid() bool
+        +logPlayout() void
+        +startPoint() int
+    }
+    class RDGroup {
+        +nextFreeCart() int
+        +enforceCartRange() bool
+    }
+    
+    RDCart "1" --> "*" RDCut : contains
+    RDGroup "1" --> "*" RDCart : owns
+    RDCart ..> RDWaveData : uses
+```
+
+**Reguły generowania diagramu klas:**
+- Pokaż TYLKO publiczne metody z znaczeniem biznesowym (nie gettery/settery)
+- Pokaż relacje: dziedziczenie (`<|--`), kompozycja (`-->`), użycie (`..>`)
+- Pogrupuj klasy per kategoria (Communication, Audio, Model, UI, Utility)
+- Nie rysuj klas z <5 członkami jako osobny prostokąt — zbyt zagracone
+- Max ~20 klas na diagram — podziel na osobne jeśli więcej
+
+**4c — Dodaj diagramy do inventory.md**
+
+Na początku inventory.md (po statystykach) dodaj sekcje:
+```markdown
+## Diagram klas — dziedziczenie
+```mermaid
+{diagram 4a}
+```
+
+## Diagram klas — zależności domenowe
+```mermaid
+{diagram 4b}
+```
+```
+
+### Krok 5 — Wywołaj Merge Agent
 
 Uruchom `.claude/agents/MERGE-AGENT.md` z parametrami:
 ```
@@ -120,24 +305,23 @@ OUTPUT_FILE:     inventory.md
 TEMPLATE:        .claude/templates/inventory.md
 ```
 
-### Krok 5 — Walidacja output
+### Krok 6 — Walidacja output
 
 Po merge sprawdź inventory.md:
 ```
 - Każda klasa z discovery-state.md ma wpis w inventory.md?
 - Żadna klasa nie jest zduplikowana?
 - Każda klasa z Q_OBJECT ma sekcję sygnałów i slotów?
-- Każdy Q_PROPERTY jest wylistowany?
 - Liczba klas w inventory >= liczba klas ze skanu (Krok 1b)?
+- data-model.md istnieje z ERD?
+- Diagramy klas Mermaid są w inventory.md?
 ```
 
 Jeśli brakuje klas → uruchom ponownie sub-agenta dla tych par.
 
-### Krok 6 — Spot-check (OBOWIĄZKOWY)
+### Krok 7 — Spot-check (OBOWIĄZKOWY)
 
-> Losowa weryfikacja 3 klas zapobiega propagacji błędów do kolejnych faz.
-
-Wybierz **3 losowe klasy** z wygenerowanego inventory.md (preferuj mix: 1 QObject, 1 Dialog, 1 plain C++).
+Wybierz **3 losowe klasy** (mix: 1 QObject, 1 Dialog, 1 plain C++).
 
 Dla każdej:
 ```
@@ -147,20 +331,16 @@ Serena: search_for_pattern(
   relative_path="{HEADER_FILE}",
   context_lines_after=30
 )
-→ Porównaj z sekcją "Sygnały" w inventory
-→ Czy brakuje jakiegoś sygnału? Czy jakiś jest nadmiarowy?
 
-# Zweryfikuj typ socketu / komunikacji (jeśli klasa komunikacyjna)
-Serena: find_symbol(
-  name_path_pattern="{CLASS}/connectHost",
-  relative_path="{SOURCE_FILE}",
-  include_body=true
+# Zweryfikuj CRUD mapowanie (dla Active Record klas)
+Serena: search_for_pattern(
+  substring_pattern="from {TABLE}|into {TABLE}",
+  relative_path="{SOURCE_FILE}"
 )
-→ Czy opis w inventory odpowiada faktycznej implementacji?
-→ TCP vs UDP? Synchroniczny vs asynchroniczny?
+→ Czy tabela w data-model.md jest prawidłowo zmapowana na tę klasę?
 ```
 
-Jeśli >=1 rozbieżność → przeglądnij powiązane klasy i popraw.
+Jeśli >=1 rozbieżność → popraw.
 
 ---
 
@@ -168,9 +348,10 @@ Jeśli >=1 rozbieżność → przeglądnij powiązane klasy i popraw.
 
 ```
 inventory.md istnieje z frontmatter phase=2, status=done
-Liczba klas w inventory >= liczba klas z discovery-state.md (uwzględnia plain C++)
-Zero duplikatów
-Spot-check 3 klas przeszedł bez rozbieżności
+data-model.md istnieje z ERD Mermaid i mapowaniem tabela↔klasa
+Diagramy klas (dziedziczenie + zależności) w inventory.md
+Liczba klas w inventory >= z discovery-state.md
+Spot-check 3 klas przeszedł
 Kolumna P2 w manifest.md → done
 ```
 
