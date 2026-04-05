@@ -39,7 +39,7 @@ project_name: rivendell
 
 | ID | Nazwa | Typ | Prefix | Pri | P1 | P2 | P3 | P4 | P5 | P6 | P7 |
 |----|-------|-----|--------|-----|----|----|----|----|----|----|-----|
-| LIB | librd | library | LIB | 0 | done | done | done | done | pending | pending | pending |
+| LIB | librd | library | LIB | 0 | done | done | done | done | done | pending | pending |
 | HPI | librdhpi | library | HPI | 0 | pending | pending | pending | pending | pending | pending | pending |
 | CAE | caed (Core Audio Engine) | daemon | CAE | 1 | pending | pending | pending | pending | pending | pending | pending |
 | RPC | ripcd (RPC/IPC Daemon) | daemon | RPC | 1 | pending | pending | pending | pending | pending | pending | pending |
@@ -141,3 +141,4 @@ Rekomendacja: skip lub analizuj wybiórczo (rddbmgr ma 10k+ LOC — kluczowy dla
 | LIB | 2 | 2026-04-05 | 2026-04-05 | Inventory Build — 193 klas, 82 tabele DB, ERD + class diagrams |
 | LIB | 3 | 2026-04-05 | 2026-04-05 | UI Extraction — 43 UI contracts (24 dialogs, 7 widgets, 12 controls), TRYB B, 11 screenshotów zmapowanych, spot-check 3/3 PASS |
 | LIB | 4 | 2026-04-06 | 2026-04-06 | Signal & Call Graph — 97 connect(), 78 sygnałów, 28 klas emitujących, 9 cross-artifact (TCP/IPC/UDP), 2 circular deps (intentional), 4 sequence diagrams + dependency graph Mermaid, spot-check 3/3 PASS |
+| LIB | 5 | 2026-04-06 | 2026-04-06 | Facts Mining — 3 źródła (kod+testy+docs XML), 135 faktów, 40+ reguł Gherkin, 3 state machines, 2 konflikty kod↔doc, 14 edge cases z testów, 32 potwierdzone cross-source, spot-check 3/3 PASS |
