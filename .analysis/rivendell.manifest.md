@@ -40,7 +40,7 @@ project_name: rivendell
 | ID | Nazwa | Typ | Prefix | Pri | P1 | P2 | P3 | P4 | P5 | P6 | P7 |
 |----|-------|-----|--------|-----|----|----|----|----|----|----|-----|
 | LIB | librd | library | LIB | 0 | done | done | done | done | done | done | done |
-| HPI | librdhpi | library | HPI | 0 | pending | pending | pending | pending | pending | pending | pending |
+| HPI | librdhpi | library | HPI | 0 | done | done | done | done | done | done | done |
 | CAE | caed (Core Audio Engine) | daemon | CAE | 1 | pending | pending | pending | pending | pending | pending | pending |
 | RPC | ripcd (RPC/IPC Daemon) | daemon | RPC | 1 | pending | pending | pending | pending | pending | pending | pending |
 | SVC | rdservice (Service Manager) | daemon | SVC | 2 | pending | pending | pending | pending | pending | pending | pending |
@@ -144,3 +144,10 @@ Rekomendacja: skip lub analizuj wybiórczo (rddbmgr ma 10k+ LOC — kluczowy dla
 | LIB | 5 | 2026-04-06 | 2026-04-06 | Facts Mining — 3 źródła (kod+testy+docs XML), 135 faktów, 40+ reguł Gherkin, 3 state machines, 2 konflikty kod↔doc, 14 edge cases z testów, 32 potwierdzone cross-source, spot-check 3/3 PASS |
 | LIB | 6 | 2026-04-06 | 2026-04-06 | SPEC Synthesis — nawigacyjny PRD, 16 sekcji, 21 use cases, 10 kluczowych reguł Gherkin, 3 state machines, 4 protokoły TCP (CAE/RIPC/Catch + metering UDP), 45 RDXport HTTP komend, 3 E2E scenariusze, 4/4 Quality Gates PASS |
 | LIB | 7 | 2026-04-06 | 2026-04-06 | Feature Decomposition — 9 FEAT plików (LIB-001..LIB-009), 21 UC pokrytych, topological sort bez cykli, ~260KB łącznie, ~57 Working Packages |
+| HPI | 1 | 2026-04-06 | 2026-04-06 | Structure Scan — 5 klas (RDHPISoundCard, RDHPIPlayStream, RDHPIRecordStream, RDHPISoundSelector, RDHPIInformation), 10 plików źródłowych, ~3480 LOC, warunkowa kompilacja (ifdef HPI), brak testów |
+| HPI | 2 | 2026-04-06 | 2026-04-06 | Inventory Build — 5 klas (3 QObject, 1 Q3ListBox, 1 plain C++), 0 tabel DB, class diagrams Mermaid, spot-check 3/3 PASS |
+| HPI | 3 | 2026-04-06 | 2026-04-06 | UI Extraction — 1 widget (RDHPISoundSelector Q3ListBox), TRYB B, brak .ui/.qml, spot-check 1/1 PASS |
+| HPI | 4 | 2026-04-06 | 2026-04-06 | Signal & Call Graph — 5 connect(), 34 emit(), 23 sygnaly, 4 klasy emitujace, 2 cross-artifact (CAE/RPC via #ifdef HPI), 0 circular deps, 3 sequence diagrams + dependency graph, spot-check 3/3 PASS |
+| HPI | 5 | 2026-04-06 | 2026-04-06 | Facts Mining — 1 zrodlo (kod), 42 fakty, 18 regul Gherkin, 2 state machines, 6 edge cases, 0 konfliktow, spot-check 3/3 PASS |
+| HPI | 6 | 2026-04-06 | 2026-04-06 | SPEC Synthesis — nawigacyjny PRD, 16 sekcji, 8 use cases, 8 regul Gherkin, 2 state machines, 0 protokolow (pure library), 3 E2E scenariusze, 4/4 Quality Gates PASS |
+| HPI | 7 | 2026-04-06 | 2026-04-06 | Feature Decomposition — 3 FEAT pliki (HPI-001..HPI-003), 8 UC pokrytych, topological sort bez cykli, ~14 Working Packages |
