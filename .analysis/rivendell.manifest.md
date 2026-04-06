@@ -43,7 +43,7 @@ project_name: rivendell
 | HPI | librdhpi | library | HPI | 0 | done | done | done | done | done | done | done |
 | CAE | caed (Core Audio Engine) | daemon | CAE | 1 | done | done | done | done | done | done | done |
 | RPC | ripcd (RPC/IPC Daemon) | daemon | RPC | 1 | done | done | done | done | done | done | done |
-| SVC | rdservice (Service Manager) | daemon | SVC | 2 | pending | pending | pending | pending | pending | pending | pending |
+| SVC | rdservice (Service Manager) | daemon | SVC | 2 | done | done | done | done | done | done | done |
 | ADM | rdadmin | application | ADM | 3 | pending | pending | pending | pending | pending | pending | pending |
 | AIR | rdairplay | application | AIR | 3 | pending | pending | pending | pending | pending | pending | pending |
 | RLB | rdlibrary | application | RLB | 3 | pending | pending | pending | pending | pending | pending | pending |
@@ -165,3 +165,10 @@ Rekomendacja: skip lub analizuj wybiórczo (rddbmgr ma 10k+ LOC — kluczowy dla
 | RPC | 5 | 2026-04-06 | 2026-04-06 | Facts Mining — 2 zrodla (kod + docs/apis/ripc.xml), 58 faktow, 14 use cases, 10+ regul Gherkin, 3 state machines, 17 ograniczen/limitow, 9 komponentow Linux-specific, 0 konfliktow, spot-check 3/3 PASS |
 | RPC | 6 | 2026-04-06 | 2026-04-06 | SPEC Synthesis — nawigacyjny PRD, 16 sekcji, 14 use cases, 5 kluczowych regul Gherkin, 3 state machines, pelna referencja protokolow RIPC (13 komend) + RML (27 komend), 8 komponentow Platform Independence Map, 3 E2E scenariusze, 4/4 Quality Gates PASS |
 | RPC | 7 | 2026-04-06 | 2026-04-06 | Feature Decomposition — 6 FEAT plikow (RPC-001..RPC-006), 14 UC pokrytych, topological sort bez cykli, ~37 Working Packages |
+| SVC | 1 | 2026-04-06 | 2026-04-06 | Structure Scan — 1 klasa (MainObject), 4 .cpp + 1 .h, ~869 LOC, autotools target, brak testow |
+| SVC | 2 | 2026-04-06 | 2026-04-06 | Inventory Build — 1 klasa (QObject), 5 tabel DB (read-only: VERSION, SYSTEM, REPLICATORS, DROPBOXES, DROPBOX_SCHED_CODES), class diagram + ERD Mermaid, spot-check 1/1 PASS |
+| SVC | 3 | 2026-04-06 | 2026-04-06 | UI Extraction — N/A (headless daemon, QCoreApplication), 0 okien/dialogow/widgetow |
+| SVC | 4 | 2026-04-06 | 2026-04-06 | Signal & Call Graph — 3 connect(), 0 emit(), 1 klasa, 8+ cross-artifact (QProcess child management), 0 circular deps, 4 sequence diagrams + dependency graph Mermaid, spot-check 3/3 PASS |
+| SVC | 5 | 2026-04-06 | 2026-04-06 | Facts Mining — 2 zrodla (kod + docs/manpages/rdservice.xml), 34 fakty, 14 regul Gherkin, 2 state machines, 2 konflikty kod-docs (typo + missing option), 0 edge cases z testow, spot-check 3/3 PASS |
+| SVC | 6 | 2026-04-06 | 2026-04-06 | SPEC Synthesis — nawigacyjny PRD, 16 sekcji, 8 use cases, 5 kluczowych regul Gherkin, 2 state machines, 0 protokolow sieciowych (Unix signals + SQL + QProcess), 8 komponentow Platform Independence Map, 3 E2E scenariusze, 4/4 Quality Gates PASS |
+| SVC | 7 | 2026-04-06 | 2026-04-06 | Feature Decomposition — 3 FEAT pliki (SVC-001..SVC-003), 8 UC pokrytych, topological sort bez cykli, ~16 Working Packages |
