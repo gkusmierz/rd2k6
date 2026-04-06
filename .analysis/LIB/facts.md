@@ -729,7 +729,7 @@ Rivendell NIE używa QSettings. Konfiguracja przez RDProfile (INI-style) + MySQL
 
 ### TYP 3 — Sprzeczność kod ↔ dokumentacja
 
-| Kod mówi | PDF mówi | Źródło kod | Źródło doc | Rozstrzygnięcie |
+| Kod mówi | Docs mówi | Źródło kod | Źródło doc | Rozstrzygnięcie |
 |----------|----------|-----------|-----------|----------------|
 | M4A/AAC format (WAVE_FORMAT_M4A=0xFFFD) zdefiniowany w kodzie | Docs wymieniają WAV/MPEG/OGG/FLAC — brak M4A | lib/rdwavefile.h:1371 | rdlibrary.xml:importing_audio | kod_wins — M4A zdefiniowany ale prawdopodobnie eksperymentalny |
 | Cart validity: 5 poziomów (NeverValid→EvergreenValid) | Docs: 4 kolory UI (NO COLOR/CYAN/RED/GREEN) | lib/rdcart.cpp:1131-1196 | rdlibrary.xml:color_coding | kod_wins — docs upraszczają do wizualnej prezentacji |

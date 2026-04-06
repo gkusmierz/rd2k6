@@ -25,6 +25,7 @@ agent_version: 1.3.0
 | `ui-contracts.md` | 43 kontrakty UI, widgety, stany, walidacje | Potrzebujesz detali UI |
 | `call-graph.md` | 97 connect(), 78 sygnałów, 4 sequence diagramy | Potrzebujesz grafu zdarzeń |
 | `facts.md` | 135 faktów, 40+ reguł Gherkin, 3 state machines | Potrzebujesz reguł z dowodami |
+| `design-tokens.json` | Kolory, fonty, spacing (design system) | Implementujesz UI |
 
 ---
 
@@ -424,25 +425,37 @@ stateDiagram-v2
 
 > 43 komponenty UI: 24 dialogi, 7 widgetów, 12 kontrolek. Tryb B (Code-first).
 
+### Design System
+- **Design Tokens:** `../design-tokens.json`
+- **Galeria mockupów:** `mockups/_index.html`
+
+> Agenty kodujące MUSZĄ załadować design-tokens.json aby zachować
+> spójność kolorów, fontów i spacingu cross-artifact.
+
 ### RDCartDialog — wybór carta z biblioteki
 Modalny dialog z filtrowaniem po grupie, scheduler code i tekście. Lista cartów z 13 kolumnami, embedded player do odsłuchu, możliwość importu z pliku.
+- **Mockup:** `mockups/RDCartDialog.html`
 - **Kontrakt:** `ui-contracts.md#RDCartDialog`
 - **Features:** LIB-xxx (cart management)
 
 ### RDCutDialog — wybór cuta
 Modalny dialog z dwupanelowym widokiem (carty + cuty wybranego carta). Filtrowanie, voice track exclusion.
+- **Mockup:** `mockups/RDCutDialog.html`
 - **Kontrakt:** `ui-contracts.md#RDCutDialog`
 
 ### RDEditAudio — edytor markerów audio
 Zaawansowany edytor z wizualizacją waveformu, 11 typów markerów (Start/End/Talk/Segue/Hook/Fade), zoom, playback z looping.
+- **Mockup:** `mockups/RDEditAudio.html`
 - **Kontrakt:** `ui-contracts.md#RDEditAudio`
 
 ### RDImportAudio — import/eksport audio
 Dialog importu/eksportu z wyborem pliku, normalizacją, autotrim, konfiguracja kanałów.
+- **Mockup:** `mockups/RDImportAudio.html`
 - **Kontrakt:** `ui-contracts.md#RDImportAudio`
 
 ### RDSoundPanel — panel dźwiękowy
 Grid programowalnych przycisków odtwarzających carty audio/macro. Selector paneli, play mode switching, konfiguracja przycisków.
+- **Mockup:** `mockups/RDSoundPanel.html`
 - **Kontrakt:** `ui-contracts.md#RDSoundPanel`
 
 ### RDCartSlot — slot carta
@@ -459,21 +472,27 @@ Dialog edycji metadanych carta (title, artist, album, composer, etc.).
 
 ### RDSchedCodesDialog — kody schedulera
 Dialog wyboru scheduler codes przypisanych do carta.
+- **Mockup:** `mockups/RDSchedCodesDialog.html`
 - **Kontrakt:** `ui-contracts.md#RDSchedCodesDialog`
 
 ### RDListLogs — wybór logu
 Dialog wyboru logu z filtrowaniem po serwisie i tekście.
+- **Mockup:** `mockups/RDListLogs.html`
 - **Kontrakt:** `ui-contracts.md#RDListLogs`
 
 ### RDDiscLookup / RDCddbLookup / RDMbLookup — lookup CD
 Dialogi wyszukiwania metadanych CD (CDDB protocol, MusicBrainz API).
+- **Mockup:** `mockups/RDDiscLookup.html`
 - **Kontrakt:** `ui-contracts.md#RDDiscLookup`
 
 ### Pozostałe dialogi (13)
 RDAddCart, RDAddLog, RDGetPasswd, RDPasswd, RDGetAth, RDEditPanelName, RDButtonDialog, RDExportSettingsDialog, RDDateDialog, RDCueEditDialog, RDBusyDialog, RDListGroups, RDListSvcs — proste formularze, selektory, busy indicators.
+- **Mockup RDDateDialog:** `mockups/RDDateDialog.html`
+- **Mockup RDSlotDialog:** `mockups/RDSlotDialog.html`
 
 ### Kontrolki wielokrotnego użytku (12)
 RDStereoMeter (level meter), RDSegMeter, RDSimplePlayer (play/stop), RDTimeEdit, RDTransportButton, RDPanelButton, RDPushButton (flash), RDComboBox, RDLogFilter (SQL WHERE generator), RDCardSelector, RDListSelector (dual-list), RDGpioSelector.
+- **Mockup RDStereoMeter:** `mockups/RDStereoMeter.html`
 
 → Pełna dokumentacja UI: `ui-contracts.md`
 
