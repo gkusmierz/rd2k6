@@ -41,8 +41,8 @@ project_name: rivendell
 |----|-------|-----|--------|-----|----|----|----|----|----|----|-----|
 | LIB | librd | library | LIB | 0 | done | done | done | done | done | done | done |
 | HPI | librdhpi | library | HPI | 0 | done | done | done | done | done | done | done |
-| CAE | caed (Core Audio Engine) | daemon | CAE | 1 | pending | pending | pending | pending | pending | pending | pending |
-| RPC | ripcd (RPC/IPC Daemon) | daemon | RPC | 1 | pending | pending | pending | pending | pending | pending | pending |
+| CAE | caed (Core Audio Engine) | daemon | CAE | 1 | done | done | done | done | done | done | done |
+| RPC | ripcd (RPC/IPC Daemon) | daemon | RPC | 1 | done | done | done | done | done | done | done |
 | SVC | rdservice (Service Manager) | daemon | SVC | 2 | pending | pending | pending | pending | pending | pending | pending |
 | ADM | rdadmin | application | ADM | 3 | pending | pending | pending | pending | pending | pending | pending |
 | AIR | rdairplay | application | AIR | 3 | pending | pending | pending | pending | pending | pending | pending |
@@ -151,3 +151,17 @@ Rekomendacja: skip lub analizuj wybiórczo (rddbmgr ma 10k+ LOC — kluczowy dla
 | HPI | 5 | 2026-04-06 | 2026-04-06 | Facts Mining — 1 zrodlo (kod), 42 fakty, 18 regul Gherkin, 2 state machines, 6 edge cases, 0 konfliktow, spot-check 3/3 PASS |
 | HPI | 6 | 2026-04-06 | 2026-04-06 | SPEC Synthesis — nawigacyjny PRD, 16 sekcji, 8 use cases, 8 regul Gherkin, 2 state machines, 0 protokolow (pure library), 3 E2E scenariusze, 4/4 Quality Gates PASS |
 | HPI | 7 | 2026-04-06 | 2026-04-06 | Feature Decomposition — 3 FEAT pliki (HPI-001..HPI-003), 8 UC pokrytych, topological sort bez cykli, ~14 Working Packages |
+| CAE | 1 | 2026-04-06 | 2026-04-06 | Structure Scan — 3 klasy (MainObject, CaeServer, CaeServerConnection), 7 plikow zrodlowych, ~7423 LOC, 3 audio drivers (ALSA/JACK/HPI), brak testow |
+| CAE | 2 | 2026-04-06 | 2026-04-06 | Inventory Build — 3 klasy (2 QObject, 1 plain C++), 0 wlasnych tabel DB (3 uzywane z librd), 27 sygnalow CaeServer, ~30 slotow MainObject, 3 drivery audio z identycznym interfejsem, class diagrams + ERD Mermaid, spot-check 3/3 PASS |
+| CAE | 3 | 2026-04-06 | 2026-04-06 | UI Extraction — N/A (headless daemon, QCoreApplication), 0 okien/dialogow/widgetow, brak .ui/.qml, protokol TCP/UDP jako jedyny interfejs |
+| CAE | 4 | 2026-04-06 | 2026-04-06 | Signal & Call Graph — 31 connect(), 27 sygnalow CaeServer, 1 klasa emitujaca, 1 cross-artifact (TCP protocol), 0 circular deps, 4 sequence diagrams + dependency graph Mermaid, pelna referencja protokolu CAE (26 komend), spot-check 3/3 PASS |
+| CAE | 5 | 2026-04-06 | 2026-04-06 | Facts Mining — 1 zrodlo (kod), 52 fakty, 14 use cases, 8 regul Gherkin, 3 state machines (Playback/Recording/Connection), 14 ograniczen/limitow, 11 komponentow Linux-specific, 0 konfliktow, spot-check 3/3 PASS |
+| CAE | 6 | 2026-04-06 | 2026-04-06 | SPEC Synthesis — nawigacyjny PRD, 16 sekcji, 14 use cases, 5 regul Gherkin, 3 state machines, pelna referencja protokolu CAE (26 komend TCP + 4 typy UDP), 14 komponentow Platform Independence Map, 3 E2E scenariusze, 4/4 Quality Gates PASS |
+| CAE | 7 | 2026-04-06 | 2026-04-06 | Feature Decomposition — 6 FEAT plikow (CAE-001..CAE-006), 14 UC pokrytych, topological sort bez cykli, ~38 Working Packages |
+| RPC | 1 | 2026-04-06 | 2026-04-06 | Structure Scan — 47 klas (MainObject, Switcher base, 42 drivery, RipcdConnection, 2 DTOs), 51 .cpp + 49 .h, ~18801 LOC, autotools target, brak testow wlasnych |
+| RPC | 2 | 2026-04-06 | 2026-04-06 | Inventory Build — 47 klas (2 QObject core, 42 Switcher subclass, 3 plain C++), 7 tabel DB (MATRICES, GPIS, GPOS, TTYS, INPUTS, OUTPUTS, VGUEST_RESOURCES), class diagrams + ERD Mermaid, spot-check 3/3 PASS |
+| RPC | 3 | 2026-04-06 | 2026-04-06 | UI Extraction — N/A (headless daemon, QApplication false), 0 okien/dialogow/widgetow, protokol TCP/UDP jako jedyny interfejs |
+| RPC | 4 | 2026-04-06 | 2026-04-06 | Signal & Call Graph — ~120 connect(), ~300+ emit(), 43 klasy emitujace, 4 cross-artifact (RIPC TCP, RML UDP x3, multicast), 0 circular deps, 4 sequence diagrams + dependency graph Mermaid, pelna referencja protokolow RIPC + RML, spot-check 3/3 PASS |
+| RPC | 5 | 2026-04-06 | 2026-04-06 | Facts Mining — 2 zrodla (kod + docs/apis/ripc.xml), 58 faktow, 14 use cases, 10+ regul Gherkin, 3 state machines, 17 ograniczen/limitow, 9 komponentow Linux-specific, 0 konfliktow, spot-check 3/3 PASS |
+| RPC | 6 | 2026-04-06 | 2026-04-06 | SPEC Synthesis — nawigacyjny PRD, 16 sekcji, 14 use cases, 5 kluczowych regul Gherkin, 3 state machines, pelna referencja protokolow RIPC (13 komend) + RML (27 komend), 8 komponentow Platform Independence Map, 3 E2E scenariusze, 4/4 Quality Gates PASS |
+| RPC | 7 | 2026-04-06 | 2026-04-06 | Feature Decomposition — 6 FEAT plikow (RPC-001..RPC-006), 14 UC pokrytych, topological sort bez cykli, ~37 Working Packages |
