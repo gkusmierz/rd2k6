@@ -44,7 +44,7 @@ project_name: rivendell
 | CAE | caed (Core Audio Engine) | daemon | CAE | 1 | done | done | done | done | done | done | done |
 | RPC | ripcd (RPC/IPC Daemon) | daemon | RPC | 1 | done | done | done | done | done | done | done |
 | SVC | rdservice (Service Manager) | daemon | SVC | 2 | done | done | done | done | done | done | done |
-| ADM | rdadmin | application | ADM | 3 | done | done | done | pending | pending | pending | pending |
+| ADM | rdadmin | application | ADM | 3 | done | done | done | done | done | done | pending |
 | AIR | rdairplay | application | AIR | 3 | pending | pending | pending | pending | pending | pending | pending |
 | RLB | rdlibrary | application | RLB | 3 | pending | pending | pending | pending | pending | pending | pending |
 | LGE | rdlogedit | application | LGE | 3 | pending | pending | pending | pending | pending | pending | pending |
@@ -175,3 +175,6 @@ Rekomendacja: skip lub analizuj wybiórczo (rddbmgr ma 10k+ LOC — kluczowy dla
 | ADM | 1 | 2026-04-06 | 2026-04-06 | Structure Scan — 81 klas (79 RDDialog, 1 RDWidget main, 1 RDWidget widget), 84 .cpp + 81 .h, ~36007 LOC, autotools target, brak testow |
 | ADM | 2 | 2026-04-06 | 2026-04-06 | Inventory Build — 80 klas (79 RDDialog, 2 RDWidget), 0 sygnalow, 0 Q_PROPERTY, 37 tabel DB (bezposredni SQL), 0 plain C++, ERD + class diagrams Mermaid, spot-check 3/3 PASS |
 | ADM | 3 | 2026-04-06 | 2026-04-06 | UI Extraction — 80 UI contracts (78 dialogs, 2 widgets), TRYB B (Code-first), ~35 screenshotow zmapowanych, 80 mockupow HTML/Tailwind, design-tokens.json reused, spot-check 3/3 PASS |
+| ADM | 4 | 2026-04-06 | 2026-04-06 | Signal & Call Graph — 448 connect(), 22 unikalne sygnaly, 0 emit (brak wlasnych sygnalow), 80 klas z connect(), 5 cross-artifact (RIPC TCP x3, LiveWire TCP x1, MySQL x1), 0 circular deps, 4 sequence diagrams + dependency graph Mermaid, 8 wzorcow polaczen zidentyfikowanych, spot-check 3/3 PASS |
+| ADM | 5 | 2026-04-06 | 2026-04-06 | Facts Mining — 2 zrodla (kod + docs/opsguide/rdadmin.xml), 89 faktow, 28 use cases, 20+ regul Gherkin, 2 state diagrams (CRUD lifecycle + Dropbox notification), 13 ograniczen/limitow, 9 komponentow Linux-specific, 1 konflikt kod-docs (group delete behavior), 0 testow QTest, spot-check 3/3 PASS |
+| ADM | 6 | 2026-04-06 | 2026-04-06 | SPEC Synthesis — nawigacyjny PRD, 16 sekcji, 28 use cases, 10 kluczowych regul Gherkin, 2 state machines (CRUD lifecycle + Dropbox notification), 9 komend RIPC + 5 LiveWire, 37 tabel DB, 12 komponentow Platform Independence Map, 3 E2E scenariusze, 4/4 Quality Gates PASS |
