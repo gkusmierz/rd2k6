@@ -44,7 +44,7 @@ project_name: rivendell
 | CAE | caed (Core Audio Engine) | daemon | CAE | 1 | done | done | done | done | done | done | done |
 | RPC | ripcd (RPC/IPC Daemon) | daemon | RPC | 1 | done | done | done | done | done | done | done |
 | SVC | rdservice (Service Manager) | daemon | SVC | 2 | done | done | done | done | done | done | done |
-| ADM | rdadmin | application | ADM | 3 | pending | pending | pending | pending | pending | pending | pending |
+| ADM | rdadmin | application | ADM | 3 | done | done | pending | pending | pending | pending | pending |
 | AIR | rdairplay | application | AIR | 3 | pending | pending | pending | pending | pending | pending | pending |
 | RLB | rdlibrary | application | RLB | 3 | pending | pending | pending | pending | pending | pending | pending |
 | LGE | rdlogedit | application | LGE | 3 | pending | pending | pending | pending | pending | pending | pending |
@@ -172,3 +172,5 @@ Rekomendacja: skip lub analizuj wybiórczo (rddbmgr ma 10k+ LOC — kluczowy dla
 | SVC | 5 | 2026-04-06 | 2026-04-06 | Facts Mining — 2 zrodla (kod + docs/manpages/rdservice.xml), 34 fakty, 14 regul Gherkin, 2 state machines, 2 konflikty kod-docs (typo + missing option), 0 edge cases z testow, spot-check 3/3 PASS |
 | SVC | 6 | 2026-04-06 | 2026-04-06 | SPEC Synthesis — nawigacyjny PRD, 16 sekcji, 8 use cases, 5 kluczowych regul Gherkin, 2 state machines, 0 protokolow sieciowych (Unix signals + SQL + QProcess), 8 komponentow Platform Independence Map, 3 E2E scenariusze, 4/4 Quality Gates PASS |
 | SVC | 7 | 2026-04-06 | 2026-04-06 | Feature Decomposition — 3 FEAT pliki (SVC-001..SVC-003), 8 UC pokrytych, topological sort bez cykli, ~16 Working Packages |
+| ADM | 1 | 2026-04-06 | 2026-04-06 | Structure Scan — 81 klas (79 RDDialog, 1 RDWidget main, 1 RDWidget widget), 84 .cpp + 81 .h, ~36007 LOC, autotools target, brak testow |
+| ADM | 2 | 2026-04-06 | 2026-04-06 | Inventory Build — 80 klas (79 RDDialog, 2 RDWidget), 0 sygnalow, 0 Q_PROPERTY, 37 tabel DB (bezposredni SQL), 0 plain C++, ERD + class diagrams Mermaid, spot-check 3/3 PASS |
