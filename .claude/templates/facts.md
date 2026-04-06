@@ -4,7 +4,7 @@ artifact: {ARTIFACT_ID}
 artifact_name: {pełna nazwa}
 status: done
 completed_at: ~
-sources_used: [code, tests, pdf]
+sources_used: [code, tests, docs]
 facts_total: ~
 conflicts_found: 0
 agent_version: 1.0.0
@@ -18,7 +18,7 @@ agent_version: 1.0.0
 |--------|-------|--------|
 | Kod źródłowy | tak/nie | wysoka/średnia/niska |
 | Testy QTest | tak/nie | liczba plików testowych |
-| Dokumentacja PDF | tak/nie | strony {N}-{M} |
+| Dokumentacja (docs/opsguide/) | tak/nie | pliki XML użyte |
 
 ---
 
@@ -52,7 +52,7 @@ Rule: {Nazwa reguły 1}
     When  {akcja}
     Then  {oczekiwane zachowanie}
 
-  # Źródło: {kod/test/pdf} | {plik:linia lub PDF strona N}
+  # Źródło: {kod/test/docs} | {plik:linia lub docs/opsguide/{plik.xml}:{sekcja}}
   # Pewność: potwierdzone/przypuszczalne
 ```
 
@@ -121,9 +121,9 @@ stateDiagram-v2
 
 ### TYP 1 — W dokumentacji, brak w kodzie
 
-| Fakt z PDF | Strona | Status |
-|------------|--------|--------|
-| {opis} | {N} | undocumented_gap / removed_feature |
+| Fakt z docs/ | Plik XML | Status |
+|--------------|----------|--------|
+| {opis} | {docs/opsguide/plik.xml} | undocumented_gap / removed_feature |
 
 ### TYP 2 — W kodzie, brak w dokumentacji
 
@@ -133,9 +133,9 @@ stateDiagram-v2
 
 ### TYP 3 — Sprzeczność kod ↔ dokumentacja
 
-| Kod mówi | PDF mówi | Strona | Rozstrzygnięcie |
-|----------|----------|--------|----------------|
-| {opis} | {opis} | {N} | kod_wins / pdf_wins / requires_review |
+| Kod mówi | Docs mówi | Plik XML | Rozstrzygnięcie |
+|----------|-----------|----------|----------------|
+| {opis} | {opis} | {docs/opsguide/plik.xml} | kod_wins / docs_wins / requires_review |
 
 ### TYP 4 — Edge cases tylko w testach (undocumented constraints)
 

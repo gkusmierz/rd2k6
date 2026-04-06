@@ -144,6 +144,10 @@ Jeśli feature nie komunikuje się przez protokoły: "Brak — feature nie używ
 
 > Referencje do pełnych kontraktów + kluczowe widgety dla tego FEAT.
 > Agent kodujący MUSI przeczytać pełne kontrakty i otworzyć mockupy.
+> **OBOWIĄZKOWE:** Załaduj `design-tokens.json` do konfiguracji UI frameworka
+> aby zachować spójność kolorów, fontów i spacingu z innymi artefaktami.
+
+**Design Tokens:** `../design-tokens.json`
 
 ### {NazwaOkna} — {krótki opis}
 

@@ -148,26 +148,35 @@ PRZEJŚCIE
 
 ```
 WEJŚCIE
-  Typ:        inventory.md + pliki .ui + pliki .qml + PDF (opcjonalnie)
+  Typ:        inventory.md + pliki .ui + pliki .qml + docs/ (opcjonalnie)
   Ścieżka:    .analysis/{ARTIFACT}/inventory.md
-  Wymagane:   inventory.md (tak), .ui/.qml (jeśli istnieją), PDF (opcjonalnie)
+  Wymagane:   inventory.md (tak), .ui/.qml (jeśli istnieją), docs/ (opcjonalnie)
   Walidacja:  frontmatter phase=2, status=done
 
 SUB-AGENCI (równolegle)
   Jeden sub-agent per .ui plik (Qt Designer XML)
   Jeden sub-agent per główny .qml komponent
-  Jeden sub-agent per sekcja PDF z UI screenshots (jeśli PDF dostępny)
+  Jeden sub-agent per sekcja docs/ z UI screenshots (jeśli docs/opsguide/ dostępny)
   Każdy pisze: .analysis/{ARTIFACT}/_partials/ui-{NR}-{WINDOWNAME}.md
   Merge Agent: konsoliduje do ui-contracts.md
+
+SCREENSHOT-TO-MOCK (po merge, jeśli screenshoty dostępne)
+  Wyciąga design tokens → .analysis/design-tokens.json (cross-artifact)
+  Generuje HTML/Tailwind mockupy → .analysis/{ARTIFACT}/mockups/
+  Generuje galerię → mockups/_index.html
+  Crosscheck: mockup ↔ kod (rozbieżności → UI Contract)
 
 WYJŚCIE
   Plik:       .analysis/{ARTIFACT}/ui-contracts.md
   Szablon:    .claude/templates/ui-contracts.md
+  Opcjonalne: .analysis/design-tokens.json (cross-artifact)
+  Opcjonalne: .analysis/{ARTIFACT}/mockups/*.html
 
 WARUNEK DONE
   Każde okno/dialog ma UI Contract
   Każdy widget z interakcją ma zdefiniowany event handler
   Każdy stan widoku (loading/error/empty/success) jest opisany
+  Jeśli screenshoty: design-tokens.json + mockupy/*.html + _index.html
 
 PRZEJŚCIE
   Następna faza:  PHASE-5 (razem z PHASE-4)
@@ -210,9 +219,9 @@ PRZEJŚCIE
 
 ```
 WEJŚCIE
-  Typ:        inventory.md + call-graph.md + ui-contracts.md + testy + PDF
+  Typ:        inventory.md + call-graph.md + ui-contracts.md + testy + docs/
   Ścieżki:    .analysis/{ARTIFACT}/*.md
-  Wymagane:   inventory.md, call-graph.md (tak); testy, PDF (jeśli istnieją)
+  Wymagane:   inventory.md, call-graph.md (tak); testy, docs/ (jeśli istnieją)
   Walidacja:
     - phase-2 status=done
     - phase-3 status=done
@@ -221,7 +230,7 @@ WEJŚCIE
 SUB-AGENCI (sekwencja z częściowym overlappem)
   Sub-agent CODE:      analizuje implementację pod kątem reguł biznesowych
   Sub-agent TESTS:     ekstrahuje use cases z QTest (jeśli istnieją)
-  Sub-agent PDF:       ekstrahuje fakty z dokumentacji (jeśli istnieje)
+  Sub-agent DOCS:      ekstrahuje fakty z docs/opsguide/ (jeśli istnieje)
   Sub-agent CROSSCHECK: porównuje wyniki 3 powyższych, flaguje rozbieżności
   Każdy pisze: .analysis/{ARTIFACT}/_partials/facts-{source}.md
   Merge Agent: konsoliduje do facts.md

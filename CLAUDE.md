@@ -80,6 +80,7 @@ Nie wiesz co dalej?
 ```
 .analysis/
 ├── {PROJECT}.manifest.md          ← FAZA 0 output, entry point
+├── design-tokens.json             ← FAZA 3 output, cross-artifact design system
 └── {ARTIFACT}/                    ← per artifact (np. RDLIBRARY/)
     ├── discovery-state.md         ← FAZA 1
     ├── inventory.md               ← FAZA 2 (klasy + diagramy klas Mermaid)
@@ -92,6 +93,9 @@ Nie wiesz co dalej?
     │   ├── inv-*.md
     │   ├── sig-*.md
     │   └── ui-*.md
+    ├── mockups/                   ← FAZA 3 output (HTML/Tailwind mockupy)
+    │   ├── _index.html            ← galeria wszystkich mockupów
+    │   └── {ClassName}.html       ← per okno/dialog
     ├── Features/                  ← FAZA 7
     │   ├── {PREFIX}-001.md
     │   ├── {PREFIX}-002.md

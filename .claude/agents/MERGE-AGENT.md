@@ -100,8 +100,8 @@ Identyfikator: (sender_class, signal_name, receiver_class, slot_name)
 
 **Faza 5 (Facts):**
 ```
-Te same reguły biznesowe mogą być znalezione w kodzie I w testach I w PDF.
-Reguła: jeden fakt = jeden wpis z polem "Potwierdzony przez: kod/test/pdf"
+Te same reguły biznesowe mogą być znalezione w kodzie I w testach I w docs/.
+Reguła: jeden fakt = jeden wpis z polem "Potwierdzony przez: kod/test/docs"
 Identyfikator: treść Gherkin (jeśli Given/When/Then identyczne → merge)
 ```
 

@@ -316,6 +316,8 @@ Read: {FILE}.qml
 
 > Ten krok działa z KAŻDYM trybem (A/B/C).
 > Wymaga podania SCREENSHOTS_DIR lub DOC_URL.
+> **Cel:** dać agentom kodującym WIZUALNĄ KOTWICĘ — deterministic UI reference
+> zamiast interpretacji prozy. Eliminuje rozbieżności kolorów, fontów, layoutów.
 
 ### Krok 2a — Pozyskaj screenshoty
 
@@ -333,7 +335,103 @@ WebFetch: {DOC_URL}
 → Pobierz obrazy do .analysis/{ARTIFACT_ID}/_screenshots/
 ```
 
-### Krok 2b — Mapuj screenshoty na klasy
+### Krok 2b — Wyciągnij Design Tokens (PIERWSZY ARTIFACT = definicja, kolejne = dziedziczenie)
+
+> **design-tokens.json** zapewnia spójność wizualną CROSS-ARTIFACT.
+> Pierwszy artifact definiuje tokeny, kolejne je dziedziczą i rozszerzają.
+
+**Jeśli `.analysis/design-tokens.json` NIE istnieje (pierwszy artifact):**
+
+Przeanalizuj wizualnie 3-5 screenshotów i wyciągnij:
+```
+Dla każdego screenshota:
+  Read: {screenshot.png}
+  → Kolory: tło okna, tło pól, kolor tekstu, kolor przycisków, akcent
+  → Fonty: rozmiar tekstu, rozmiar etykiet, rozmiar tytułów
+  → Spacing: padding wewnętrzny, gap między elementami, marginesy grup
+  → Proporcje: szerokość etykiet vs pól, wysokość przycisków
+  → Styl: border radius, cienie, separator style
+```
+
+Zapisz `.analysis/design-tokens.json`:
+```json
+{
+  "_meta": {
+    "generated_by": "QTRE Phase-3 v1.2.0",
+    "source_artifact": "{ARTIFACT_ID}",
+    "source_screenshots": ["{lista plików}"]
+  },
+  "colors": {
+    "bg-window": "#f0f0f0",
+    "bg-panel": "#ffffff",
+    "bg-input": "#ffffff",
+    "bg-button-primary": "#3b82f6",
+    "bg-button-secondary": "#e5e7eb",
+    "bg-titlebar": "#1d4ed8",
+    "text-primary": "#1f2937",
+    "text-secondary": "#6b7280",
+    "text-button": "#ffffff",
+    "text-titlebar": "#ffffff",
+    "border-input": "#d1d5db",
+    "border-group": "#e5e7eb",
+    "accent": "#2563eb",
+    "error": "#dc2626",
+    "success": "#16a34a",
+    "warning": "#d97706"
+  },
+  "typography": {
+    "font-family": "system-ui, -apple-system, sans-serif",
+    "text-xs": "0.75rem",
+    "text-sm": "0.875rem",
+    "text-base": "1rem",
+    "text-label": "0.875rem",
+    "text-title": "0.875rem",
+    "font-weight-label": "400",
+    "font-weight-title": "700"
+  },
+  "spacing": {
+    "padding-panel": "1rem",
+    "padding-input": "0.25rem 0.5rem",
+    "gap-form-row": "0.5rem",
+    "gap-button-bar": "0.5rem",
+    "label-width": "8rem",
+    "margin-group": "1rem"
+  },
+  "borders": {
+    "radius-input": "0.25rem",
+    "radius-button": "0.25rem",
+    "radius-panel": "0.375rem",
+    "width-input": "1px",
+    "width-group": "1px"
+  },
+  "shadows": {
+    "panel": "0 1px 3px rgba(0,0,0,0.12)",
+    "dialog": "0 4px 6px rgba(0,0,0,0.1)"
+  },
+  "tailwind_overrides": {
+    "theme": {
+      "extend": {
+        "colors": {
+          "app-primary": "#3b82f6",
+          "app-accent": "#2563eb",
+          "app-bg": "#f0f0f0"
+        }
+      }
+    }
+  }
+}
+```
+
+**Jeśli `.analysis/design-tokens.json` ISTNIEJE (kolejny artifact):**
+```
+Read: .analysis/design-tokens.json
+→ Użyj istniejących tokenów
+→ Jeśli screenshoty tego artifaktu wskazują na NOWE kolory/style
+   → DODAJ do tokenów (nie nadpisuj istniejących)
+   → Zaktualizuj plik z nowym source_artifact w historii
+```
+
+### Krok 2c — Mapuj screenshoty na klasy
 
 Strategia mapowania:
 1. **Po nazwie pliku**: `rdcartslots.select_cart_dialog.png` → RDCartDialog
@@ -348,10 +446,13 @@ Dla każdego screenshota:
   → Zmapuj na klasę z inventory.md
 ```
 
-### Krok 2c — Generuj mockup HTML/Tailwind
+### Krok 2d — Generuj mockup HTML/Tailwind
 
 Dla każdego zmapowanego okna utwórz:
 `.analysis/{ARTIFACT_ID}/mockups/{CLASSNAME}.html`
+
+> **KRYTYCZNE:** Każdy mockup MUSI ładować design-tokens.json i aplikować tokeny
+> przez Tailwind config. To gwarantuje spójność wizualną między artefaktami.
 
 ```html
 <!DOCTYPE html>
@@ -360,15 +461,44 @@ Dla każdego zmapowanego okna utwórz:
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    // Design tokens — załadowane z design-tokens.json
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'app-primary': '{bg-button-primary}',
+            'app-accent': '{accent}',
+            'app-bg': '{bg-window}',
+            'app-panel': '{bg-panel}',
+            'app-titlebar': '{bg-titlebar}',
+            'app-border': '{border-input}',
+            'app-text': '{text-primary}',
+            'app-text-secondary': '{text-secondary}',
+            'app-error': '{error}',
+            'app-success': '{success}'
+          },
+          borderRadius: {
+            'app': '{radius-input}'
+          },
+          fontSize: {
+            'app-label': '{text-label}',
+            'app-title': '{text-title}'
+          }
+        }
+      }
+    }
+  </script>
   <title>{WINDOW_TITLE} — UI Mockup</title>
   <!-- Screenshot source: {screenshot_filename} -->
   <!-- Class: {CLASS_NAME} -->
+  <!-- Design tokens: ../../design-tokens.json -->
   <!-- Generated by QTRE Phase-3 v1.2.0 -->
 </head>
-<body class="bg-gray-200 p-6 font-sans text-sm">
-  <div class="bg-white rounded shadow-lg max-w-2xl mx-auto overflow-hidden">
+<body class="bg-app-bg p-6 font-sans text-sm text-app-text">
+  <div class="bg-app-panel rounded-app shadow-lg max-w-2xl mx-auto overflow-hidden">
     <!-- Title bar -->
-    <div class="bg-gradient-to-r from-blue-700 to-blue-500 text-white px-4 py-2 text-sm font-bold">
+    <div class="bg-app-titlebar text-white px-4 py-2 text-app-title font-bold">
       {WINDOW_TITLE}
     </div>
     <!-- Content -->
@@ -378,21 +508,21 @@ Dla każdego zmapowanego okna utwórz:
       
       <!-- Przykład: pole z etykietą -->
       <div data-widget="{widget_name}" class="flex items-center gap-2">
-        <label class="w-32 text-right text-gray-700">{Label}:</label>
-        <input type="text" class="border rounded px-2 py-1 flex-1"
+        <label class="w-32 text-right text-app-text-secondary text-app-label">{Label}:</label>
+        <input type="text" class="border border-app-border rounded-app px-2 py-1 flex-1"
                placeholder="{placeholder}">
       </div>
       
       <!-- Przykład: przycisk -->
       <button data-widget="{btn_name}" 
-              class="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700">
+              class="bg-app-primary text-white px-4 py-1 rounded-app hover:opacity-90">
         {Button Label}
       </button>
     </div>
     <!-- Button bar -->
-    <div class="border-t px-4 py-3 flex justify-end gap-2 bg-gray-50">
-      <button data-widget="ok_button" class="bg-blue-600 text-white px-6 py-1 rounded">OK</button>
-      <button data-widget="cancel_button" class="bg-gray-300 px-6 py-1 rounded">Cancel</button>
+    <div class="border-t border-app-border px-4 py-3 flex justify-end gap-2 bg-gray-50">
+      <button data-widget="ok_button" class="bg-app-primary text-white px-6 py-1 rounded-app">OK</button>
+      <button data-widget="cancel_button" class="bg-gray-300 px-6 py-1 rounded-app">Cancel</button>
     </div>
   </div>
 </body>
@@ -401,12 +531,43 @@ Dla każdego zmapowanego okna utwórz:
 
 **Reguły generowania mockupu:**
 - Zachowaj proporcje i układ ze screenshota
+- Używaj klas `app-*` z design tokens (NIE hardcode'uj kolorów)
 - Użyj `data-widget="{name}"` na każdym interaktywnym elemencie
 - Użyj realistycznych danych (nazwy z inventory, etykiety z kodu)
 - Dodaj komentarz HTML z nazwą pliku screenshota i klasy
-- Nie dodawaj JavaScript — to jest STATYCZNY mockup
+- Nie dodawaj JavaScript (poza Tailwind config) — to jest STATYCZNY mockup
 
-### Krok 2d — Crosscheck: mockup ↔ kod
+### Krok 2e — Generuj _index.html (galeria mocków)
+
+Utwórz `.analysis/{ARTIFACT_ID}/mockups/_index.html`:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <title>{ARTIFACT_NAME} — UI Mockups Gallery</title>
+</head>
+<body class="bg-gray-100 p-8 font-sans">
+  <h1 class="text-2xl font-bold mb-6">{ARTIFACT_NAME} — UI Mockups</h1>
+  <p class="text-gray-600 mb-8">
+    Wygenerowane z screenshotów: {SCREENSHOTS_DIR}.
+    Design tokens: <a href="../../design-tokens.json">design-tokens.json</a>
+  </p>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <!-- Per mockup: -->
+    <a href="{CLASSNAME}.html" class="block bg-white rounded-lg shadow hover:shadow-md p-4">
+      <h2 class="font-semibold text-lg">{WINDOW_TITLE}</h2>
+      <p class="text-gray-500 text-sm">{CLASS_NAME} — {window_type}</p>
+      <p class="text-gray-400 text-xs mt-1">Screenshot: {screenshot_filename}</p>
+    </a>
+  </div>
+</body>
+</html>
+```
+
+### Krok 2f — Crosscheck: mockup ↔ kod
 
 Dla każdego mockupu:
 ```
@@ -563,7 +724,9 @@ Spot-check wykonany (3 losowe weryfikacje z kodem)
 Kolumna P3 w manifest.md → done
 
 Jeśli SCREENSHOTS_DIR podany:
-  Folder mockups/ istnieje z plikami HTML
+  .analysis/design-tokens.json istnieje (lub zaktualizowany)
+  Folder mockups/ istnieje z plikami HTML + _index.html
+  Każdy mockup używa klas app-* z design tokens (nie hardcoded kolorów)
   Sekcja "Źródła ekstrakcji" wypełniona dla każdego contractu
   Sekcja "Rozbieżności screenshot ↔ kod" wypełniona (lub "brak")
 ```

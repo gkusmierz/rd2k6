@@ -17,7 +17,7 @@
 ## Toolbox — Serena MCP First
 
 > **Twarda reguła:** Używaj Serena MCP jako PRIMARY tool do interakcji z kodem źródłowym.
-> Bash dopuszczalny TYLKO dla: operacji na PDF (pdftotext, pdftoppm), LOC counting (wc -l).
+> Bash dopuszczalny TYLKO dla: LOC counting (wc -l).
 >
 > | Potrzebujesz | Użyj Serena | NIE używaj |
 > |---|---|---|
@@ -25,7 +25,7 @@
 > | Symbole pliku testowego | `get_symbols_overview` | `cat`, `head` |
 > | Listowanie plików testowych | `find_file` | `find` |
 > | Ciało metody testowej | `find_symbol(include_body=true)` | `Read` |
-> | PDF → tekst/obraz | **bash** (`pdftotext`, `pdftoppm`) | — |
+> | Pliki docs/ (XML, PNG) | **Read** tool + **Glob** | — |
 > | Pliki .md (analysis outputs) | **Read** tool | — |
 
 ---
@@ -33,7 +33,7 @@
 ## Cel
 
 Wydobyć wszystkie fakty biznesowe i funkcjonalne z trzech źródeł równolegle:
-kodu, testów QTest i dokumentacji PDF. Sub-agent Crosscheck porównuje
+kodu, testów QTest i dokumentacji projektowej (docs/opsguide/). Sub-agent Crosscheck porównuje
 wyniki i flaguje rozbieżności — to jest najważniejsza faza całego procesu.
 
 ---
@@ -48,7 +48,7 @@ Wymagane:
 
 Opcjonalne (użyj jeśli dostępne):
   - pliki testowe QTest
-  - plik PDF dokumentacji
+  - folder docs/ (szczególnie docs/opsguide/ — pliki XML z dokumentacją operacyjną)
 ```
 
 ---
@@ -128,8 +128,8 @@ Serena: search_for_pattern(
 Format source reference:
   Kod:  {plik}:{linia} lub {plik}:{zakres_linii}
   Test: {plik_testowy}::{metoda_testowa}
-  PDF:  PDF:{strona}
   Doc:  docs/opsguide/{plik.xml}:{sekcja}
+  Doc:  docs/{ścieżka}:{sekcja}
 
 Pewność:
   potwierdzone   — fakt jednoznacznie wynika z kodu/testu
@@ -209,31 +209,29 @@ Scenario: {nazwa testu sformatowana jako zdanie}
 
 ---
 
-## Sub-agent C — PDF Documentation Miner
+## Sub-agent C — Documentation Miner (docs/)
 
-**Parametry:** ARTIFACT_ID, PDF_FILE, sekcje dotyczące tego artifaktu
+**Parametry:** ARTIFACT_ID, folder docs/ (szczególnie docs/opsguide/)
 
 **Cel:** Wyciągnąć fakty z dokumentacji użytkownika — perspektywa operatora.
 
-### Strategia czytania PDF
+### Strategia czytania dokumentacji
 
-```bash
-# PDF wymaga bash — Serena nie obsługuje plików PDF
-# Znajdź strony dotyczące tego artifaktu
-pdftotext -layout {PDF_FILE} - | \
-  grep -n "{ARTIFACT_NAME}\|{ARTIFACT_FULL_NAME}" | \
-  head -20
-
-# Wyciągnij tekst z tych stron
-pdftotext -f {START_PAGE} -l {END_PAGE} -layout {PDF_FILE} -
-
-# Rasteryzuj strony z diagramami/UI screenshots
-pdftoppm -jpeg -r 150 -f {PAGE} -l {PAGE} {PDF_FILE} /tmp/rdlib-page
 ```
-```
-# Przeczytaj wizualnie (Read tool obsługuje obrazy):
-Read: /tmp/rdlib-page-{N}.jpg
-→ Opisz co widać na screenshotach
+# 1. Znajdź pliki XML/PNG dotyczące tego artifaktu w docs/opsguide/
+Glob: docs/opsguide/**/*.xml
+Glob: docs/opsguide/**/*.png
+Glob: docs/**/{ARTIFACT_NAME}*
+
+# 2. Przeszukaj pliki XML pod kątem odniesień do artifaktu
+Grep: pattern="{ARTIFACT_NAME}|{ARTIFACT_FULL_NAME}", path="docs/opsguide/"
+
+# 3. Przeczytaj znalezione pliki XML (to jest DocBook XML — czytelny tekst)
+Read: docs/opsguide/{znaleziony_plik}.xml
+
+# 4. Screenshoty PNG — Read tool obsługuje obrazy:
+Read: docs/opsguide/{screenshot}.png
+→ Opisz co widać na screenshotach, mapuj na ui-contracts.md
 ```
 
 ### Czego szukać w dokumentacji
@@ -245,18 +243,19 @@ Read: /tmp/rdlib-page-{N}.jpg
 - Ostrzeżenia i uwagi (to są edge cases i reguły biznesowe)
 - Tabele z opcjami (to są konfiguracje)
 - Screenshoty z UI (mapuj na ui-contracts.md)
+- Sekcje <note>, <warning>, <tip> w XML — to są reguły biznesowe
 ```
 
 Dla każdego znalezionego faktu:
 ```markdown
 FAKT-{NR}:
-  Źródło: PDF strona {N}
+  Źródło: docs/opsguide/{plik.xml}:{sekcja}
   Treść:  {co mówi dokumentacja}
   Typ:    use_case | business_rule | constraint | edge_case | configuration
   Zmapowany na: {klasa/metoda z inventory.md lub "nie zmapowany"}
 ```
 
-**Output:** `.analysis/{ARTIFACT_ID}/_partials/facts-pdf.md`
+**Output:** `.analysis/{ARTIFACT_ID}/_partials/facts-docs.md`
 
 ---
 
@@ -270,7 +269,7 @@ FAKT-{NR}:
 # Wczytaj partial pliki — to są pliki .md, nie kod źródłowy
 Read: .analysis/{ARTIFACT_ID}/_partials/facts-code.md
 Read: .analysis/{ARTIFACT_ID}/_partials/facts-tests.md
-Read: .analysis/{ARTIFACT_ID}/_partials/facts-pdf.md
+Read: .analysis/{ARTIFACT_ID}/_partials/facts-docs.md
 ```
 
 ### Typy rozbieżności do wykrycia

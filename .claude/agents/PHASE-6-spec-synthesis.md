@@ -176,8 +176,16 @@ Mapowanie: CART → encja Cart (inventory.md#RDCart)
 - **NIE kopiuj** tabel z ui-contracts.md
 - Zamiast tego: lista okien z bezpośrednimi linkami
 - Dla każdego okna: 1-2 zdania CO robi + link do pełnego kontraktu + link do mockupu
+- **Referencja do design tokens** — jeśli `design-tokens.json` istnieje, linkuj
 
 ```markdown
+### Design System
+- **Design Tokens:** `../design-tokens.json`
+- **Galeria mockupów:** `mockups/_index.html`
+
+> Agenty kodujące MUSZĄ załadować design-tokens.json aby zachować
+> spójność kolorów, fontów i spacingu cross-artifact.
+
 ### RDCartDialog — wybór carta z biblioteki
 Modalny dialog umożliwiający filtrowanie i wybór carta z biblioteki audio.
 - **Pełny kontrakt:** `ui-contracts.md#RDCartDialog`

@@ -145,6 +145,13 @@ stateDiagram-v2
 
 > Referencje do pełnych kontraktów. NIE kopiuj tabel widgetów.
 
+### Design System
+- **Design Tokens:** `../design-tokens.json`
+- **Galeria mockupów:** `mockups/_index.html`
+
+> Agenty kodujące MUSZĄ załadować design-tokens.json aby zachować
+> spójność kolorów, fontów i spacingu cross-artifact.
+
 ### {NazwaOkna} — {krótki opis}
 {1-2 zdania co robi to okno}
 - **Kontrakt:** `ui-contracts.md#{KLASA}`

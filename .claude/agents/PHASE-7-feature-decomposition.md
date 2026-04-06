@@ -40,7 +40,8 @@ NOWA architektura (v1.3):
 
 > **Reguła:** FEAT musi zawierać WSZYSTKO co agent kodujący potrzebuje.
 > Agent kodujący NIE POWINIEN musieć czytać inventory.md czy call-graph.md.
-> Ale MUSI mieć referencje do ui-contracts.md i mockupów (bo są za duże do skopiowania).
+> Ale MUSI mieć referencje do ui-contracts.md, mockupów i design-tokens.json
+> (bo są za duże do skopiowania, ale KRYTYCZNE dla spójności UI).
 
 ---
 
@@ -99,6 +100,7 @@ ZBYT DUŻE → podziel (jeśli feature ma > 8 use cases lub > 2 okna UI)
    - Pełne kontrakty okien/dialogów w scope (widgety, sloty, walidacje, stany)
    - Ścieżki do mockupów HTML
    - Navigation flow
+   - **Ścieżka do design-tokens.json** (jeśli istnieje)
 
 4. **Z call-graph.md** wyciągnąć:
    - Połączenia connect() między klasami w scope

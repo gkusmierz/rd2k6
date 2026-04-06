@@ -195,7 +195,7 @@ Fazy 0, 1, 6 są monolityczne (jeden agent, brak sub-agentów).
 - Faza 2: jeden sub-agent per para .h/.cpp
 - Faza 3: jeden sub-agent per .ui file / QML komponent
 - Faza 4: jeden sub-agent per cluster connect() wywołań
-- Faza 5: osobne sub-agenty dla kodu, testów, PDF, crosscheck
+- Faza 5: osobne sub-agenty dla kodu, testów, docs/, crosscheck
 - Faza 7: jeden sub-agent per feature cluster
 
 ---
