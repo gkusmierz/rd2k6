@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>EditTtys - Edit Serial Ports</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: { extend: { colors: {
+    'app-bg':'#d4d0c8','app-panel':'#ffffff','app-input':'#ffffff',
+    'app-btn':'#d4d0c8','app-btn-hover':'#e0dcd4','app-titlebar':'#4a6ea5',
+    'app-text':'#000000','app-border':'#808080','app-border-light':'#ffffff','app-border-dark':'#404040'
+  }, borderRadius: { 'app':'0px' }, fontSize: { 'app-label':'0.8125rem','app-title':'0.875rem' } } }
+}
+</script>
+<style>
+  .qt-btn { box-shadow: inset -1px -1px 0 #404040, inset 1px 1px 0 #ffffff; }
+  .qt-sunken { box-shadow: inset 1px 1px 0 #808080, inset -1px -1px 0 #ffffff; }
+  .qt-input { box-shadow: inset 1px 1px 0 #808080, inset -1px -1px 0 #ffffff; border: none; background: #fff; }
+  .form-row { display: flex; align-items: center; margin-bottom: 4px; font-size: 0.8125rem; }
+  .form-label { width: 120px; text-align: right; padding-right: 4px; font-weight: 700; }
+</style>
+</head>
+<body class="bg-app-bg p-0 m-0 font-['Helvetica','Arial',system-ui,sans-serif] text-app-text text-app-label">
+<div class="w-[300px] h-[290px] bg-app-bg border border-app-border" data-widget="EditTtys">
+  <div class="bg-app-titlebar text-white text-app-title font-bold px-2 py-0.5">RDAdmin - Edit Serial Ports</div>
+  <div class="p-2">
+    <!-- Top row: Port ID + Enabled -->
+    <div class="flex items-center gap-4 mb-3">
+      <div class="flex items-center gap-1">
+        <label class="font-bold">Port ID:</label>
+        <select class="qt-sunken w-[100px] h-[24px]" data-widget="edit_port_box">
+          <option>Serial0</option><option>Serial1</option><option>Serial2</option><option>Serial3</option>
+        </select>
+      </div>
+      <div class="flex items-center gap-1">
+        <label class="font-bold">Enabled</label>
+        <input type="checkbox" checked data-widget="edit_enable_button">
+      </div>
+    </div>
+
+    <!-- Port settings -->
+    <div class="form-row"><span class="form-label">TTY Device:</span><input type="text" class="qt-input w-[100px] h-[20px]" data-widget="edit_port_edit" value="/dev/ttyS0"></div>
+    <div class="form-row"><span class="form-label">Baud Rate:</span><select class="qt-sunken w-[90px] h-[24px]" data-widget="edit_baudrate_box"><option>9600</option><option>19200</option><option>38400</option><option>57600</option><option>115200</option></select></div>
+    <div class="form-row"><span class="form-label">Parity:</span><select class="qt-sunken w-[90px] h-[24px]" data-widget="edit_parity_box"><option selected>None</option><option>Even</option><option>Odd</option></select></div>
+    <div class="form-row"><span class="form-label">Data Bits:</span><select class="qt-sunken w-[60px] h-[24px]" data-widget="edit_databits_box"><option>5</option><option>6</option><option>7</option><option selected>8</option></select></div>
+    <div class="form-row"><span class="form-label">Stop Bits:</span><select class="qt-sunken w-[60px] h-[24px]" data-widget="edit_stopbits_box"><option selected>1</option><option>2</option></select></div>
+    <div class="form-row"><span class="form-label">Terminator:</span><select class="qt-sunken w-[90px] h-[24px]" data-widget="edit_termination_box"><option selected>None</option><option>CR</option><option>LF</option><option>CR/LF</option></select></div>
+
+    <div class="flex justify-end mt-2">
+      <button class="qt-btn bg-app-btn w-[80px] h-[50px]" data-widget="close_button">&amp;Close</button>
+    </div>
+  </div>
+</div>
+</body>
+</html>

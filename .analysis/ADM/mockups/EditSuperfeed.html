@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>EditSuperfeed – RSS Superfeed</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: Helvetica, Arial, sans-serif; font-size: 0.875rem; background: #d4d0c8; color: #000; }
+  .window { width: 400px; margin: 20px auto; background: #d4d0c8; border: 2px outset #d4d0c8; }
+  .titlebar { background: #4a6ea5; color: #fff; padding: 3px 6px; font-weight: 700; font-size: 0.875rem; }
+  .content { padding: 10px; }
+  .dual-list { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; }
+  .list-col { flex: 1; }
+  .list-col label { font-size: 0.8125rem; font-weight: 700; display: block; margin-bottom: 2px; }
+  .list-box { width: 100%; height: 100px; border: 2px inset #d4d0c8; background: #fff; padding: 2px; font-size: 0.8125rem; overflow-y: auto; }
+  .list-box .item { padding: 1px 4px; cursor: pointer; }
+  .list-box .item.selected { background: #0a246a; color: #fff; }
+  .arrows { display: flex; flex-direction: column; gap: 4px; }
+  .arrows button { min-width: 30px; min-height: 24px; font-size: 0.75rem; padding: 2px; }
+  .button-bar { display: flex; justify-content: flex-end; gap: 10px; }
+  button { font-family: Helvetica, Arial, sans-serif; font-size: 0.8125rem; padding: 4px 16px; min-width: 80px; min-height: 50px; background: #d4d0c8; border: 2px outset #d4d0c8; cursor: pointer; }
+</style>
+</head>
+<body>
+<div class="window">
+  <div class="titlebar">RDAdmin - RSS Superfeed: SUPER1</div>
+  <div class="content">
+    <div class="dual-list">
+      <div class="list-col">
+        <label>Available Feeds</label>
+        <div class="list-box">
+          <div class="item">FEED_A</div>
+          <div class="item selected">FEED_B</div>
+          <div class="item">FEED_C</div>
+        </div>
+      </div>
+      <div class="arrows">
+        <button>&rarr;</button>
+        <button>&larr;</button>
+      </div>
+      <div class="list-col">
+        <label>Member Feeds</label>
+        <div class="list-box">
+          <div class="item">MYPOD</div>
+        </div>
+      </div>
+    </div>
+    <div class="button-bar">
+      <button>&amp;OK</button>
+      <button>&amp;Cancel</button>
+    </div>
+  </div>
+</div>
+</body>
+</html>

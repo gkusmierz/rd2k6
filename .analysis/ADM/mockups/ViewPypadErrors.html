@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>ViewPypadErrors - Script Error Log</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwindcss.config = {
+  theme: { extend: {
+    colors: { 'app-bg':'#d4d0c8','app-btn':'#d4d0c8','app-btn-hover':'#e0dcd4','app-titlebar':'#4a6ea5','app-border':'#808080','app-text':'#000000' },
+    borderRadius: { 'app':'0px' }, fontSize: { 'app-label':'0.8125rem','app-title':'0.875rem' }
+  }}
+}
+</script>
+<style>
+  body { font-family:'Helvetica','Arial',system-ui,sans-serif; font-size:0.8125rem; }
+  .qt-textarea { border:2px inset #808080; background:#fff; padding:4px; font-size:0.8125rem; border-radius:0; font-family:monospace; resize:none; }
+  .qt-btn-big { border:2px outset #d4d0c8; background:#d4d0c8; padding:8px 20px; font-size:0.875rem; border-radius:0; cursor:pointer; min-width:80px; min-height:50px; }
+  .qt-btn-big:hover { background:#e0dcd4; }
+</style>
+</head>
+<body class="bg-app-bg text-app-text p-0 m-0">
+<div style="width:600px; height:400px;" class="bg-app-bg border-2 border-app-border">
+  <div class="bg-app-titlebar text-white px-2 py-1 text-app-title font-bold">Script Error Log [ID: 13]</div>
+  <div style="padding:8px; position:relative; height:calc(100% - 28px);">
+    <textarea class="qt-textarea" style="width:580px; height:310px;" readonly>Traceback (most recent call last):
+  File "/usr/lib64/rivendell/pypad/pypad_icecast2.py", line 42
+    connection refused
+ConnectionError: Unable to connect to icecast server</textarea>
+
+    <div style="position:absolute; bottom:10px; right:10px;">
+      <button class="qt-btn-big">Close</button>
+    </div>
+  </div>
+</div>
+</body>
+</html>

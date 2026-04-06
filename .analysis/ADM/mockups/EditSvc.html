@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EditSvc - RDAdmin - Edit Service</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwindcss.config = {
+  theme: { extend: {
+    colors: { 'app-bg':'#d4d0c8','app-panel':'#ffffff','app-input':'#ffffff','app-btn':'#d4d0c8','app-btn-hover':'#e0dcd4','app-titlebar':'#4a6ea5','app-selection':'#0a246a','app-text':'#000000','app-text-sec':'#4a4a4a','app-border':'#808080','app-border-light':'#ffffff','app-border-dark':'#404040' },
+    borderRadius: { 'app':'0px' },
+    fontSize: { 'app-label':'0.8125rem','app-title':'0.875rem' }
+  }}
+}
+</script>
+<style>
+  .btn-3d { box-shadow: inset -1px -1px 0 #404040, inset 1px 1px 0 #ffffff; }
+  .input-sunken { box-shadow: inset 1px 1px 0 #808080, inset -1px -1px 0 #ffffff; }
+  .section-label { font-weight: bold; font-size: 0.875rem; }
+</style>
+</head>
+<body class="bg-app-bg font-['Helvetica','Arial',system-ui,sans-serif] text-app-text text-app-label">
+<div class="w-[870px] h-[691px] border border-app-border" data-widget="EditSvc" data-window-title="RDAdmin - Edit Service">
+  <div class="bg-app-titlebar text-white text-app-title font-bold px-2 py-1">RDAdmin - Edit Service</div>
+  <div class="p-2 overflow-auto h-[660px]">
+    <!-- General Section -->
+    <div class="section-label mb-1">General</div>
+    <div class="flex gap-4">
+      <!-- Left column: general fields -->
+      <div class="flex-1">
+        <div class="flex items-center mb-0.5">
+          <label class="w-[170px] text-right pr-2">Service Name:</label>
+          <input type="text" value="WXYZ" readonly class="w-[80px] border-2 border-app-border input-sunken bg-gray-200 text-app-label px-1 h-[19px]" data-widget="svc_name_edit">
+        </div>
+        <div class="flex items-center mb-0.5">
+          <label class="w-[170px] text-right pr-2">Service Description:</label>
+          <input type="text" value="WXYZ Radio" class="w-[240px] border-2 border-app-border input-sunken bg-app-input text-app-label px-1 h-[19px]" data-widget="svc_description_edit">
+        </div>
+        <div class="flex items-center mb-0.5">
+          <label class="w-[170px] text-right pr-2">Program Code:</label>
+          <input type="text" class="w-[240px] border-2 border-app-border input-sunken bg-app-input text-app-label px-1 h-[19px]" data-widget="svc_program_code_edit">
+        </div>
+        <div class="flex items-center mb-0.5">
+          <label class="w-[170px] text-right pr-2">Log Name Template:</label>
+          <input type="text" class="w-[240px] border-2 border-app-border input-sunken bg-app-input text-app-label px-1 h-[19px]" data-widget="svc_name_template_edit">
+        </div>
+        <div class="flex items-center mb-0.5">
+          <label class="w-[170px] text-right pr-2">Log Description Template:</label>
+          <input type="text" class="w-[240px] border-2 border-app-border input-sunken bg-app-input text-app-label px-1 h-[19px]" data-widget="svc_description_template_edit">
+        </div>
+        <div class="flex items-center mb-0.5">
+          <label class="w-[170px] text-right pr-2">Inline Event Start/Length:</label>
+          <select class="w-[240px] border border-app-border bg-app-input h-[19px]" data-widget="svc_sub_event_inheritance_box">
+            <option>From Relative Position</option>
+            <option>From Scheduler File</option>
+          </select>
+        </div>
+        <div class="flex items-center mb-0.5">
+          <label class="w-[170px] text-right pr-2">Voicetrack Group:</label>
+          <select class="w-[240px] border border-app-border bg-app-input h-[19px]" data-widget="svc_voice_group_box">
+            <option>[none]</option>
+            <option>MUSIC</option>
+          </select>
+        </div>
+        <div class="flex items-center mb-0.5">
+          <label class="w-[170px] text-right pr-2">AutoSpot Group:</label>
+          <select class="w-[240px] border border-app-border bg-app-input h-[19px]" data-widget="svc_autospot_group_box">
+            <option>[none]</option>
+          </select>
+        </div>
+        <div class="flex items-center gap-4 mb-1 ml-[20px]">
+          <label class="flex items-center gap-1"><input type="checkbox" data-widget="svc_chain_box"> Insert CHAIN TO at log end</label>
+          <label class="flex items-center gap-1"><input type="checkbox" data-widget="svc_autorefresh_box"> Enable AutoRefresh By Default</label>
+        </div>
+      </div>
+      <!-- Right column: buttons + options -->
+      <div class="w-[300px]">
+        <div class="flex gap-2 mb-2">
+          <button class="bg-app-btn btn-3d rounded-app px-3 py-3 text-app-label w-[150px] text-center" data-widget="autofill_button">Configure<br>Autofill Carts</button>
+          <button class="bg-app-btn btn-3d rounded-app px-3 py-3 text-app-label w-[150px] text-center" data-widget="enable_hosts_button">Enable Hosts</button>
+        </div>
+        <label class="flex items-center gap-1 mb-0.5"><input type="checkbox" data-widget="svc_loglife_box"> Set Logs to auto-delete
+          <input type="number" value="14" class="w-[50px] border border-app-border input-sunken bg-app-input h-[19px] text-center" data-widget="svc_loglife_spin"> days after
+          <select class="border border-app-border bg-app-input h-[19px]" data-widget="svc_loglifeorigin_box"><option>air date</option><option>creation</option></select>
+        </label>
+        <label class="flex items-center gap-1 mb-0.5"><input type="checkbox" data-widget="svc_shelflife_box"> Purge ELR Data
+          <input type="number" class="w-[50px] border border-app-border input-sunken bg-app-input h-[19px] text-center" data-widget="svc_shelflife_spin"> days after airing
+        </label>
+        <label class="flex items-center gap-1"><input type="checkbox" data-widget="svc_import_markers_check"> Include Import Markers in Finished Logs</label>
+      </div>
+    </div>
+
+    <!-- Horizontal separator -->
+    <hr class="my-2 border-app-border">
+
+    <!-- Traffic / Music Import side by side -->
+    <div class="flex gap-4">
+      <!-- Traffic Data Import -->
+      <div class="flex-1">
+        <div class="section-label mb-1">Traffic Data Import</div>
+        <div class="flex items-center mb-0.5">
+          <label class="w-[170px] text-right pr-2">Import Path:</label>
+          <input type="text" class="w-[240px] border-2 border-app-border input-sunken bg-app-input text-app-label px-1 h-[19px]" data-widget="svc_tfc_path_edit">
+        </div>
+        <div class="flex items-center mb-0.5">
+          <label class="w-[170px] text-right pr-2">Preimport Command:</label>
+          <input type="text" class="w-[240px] border-2 border-app-border input-sunken bg-app-input text-app-label px-1 h-[19px]" data-widget="svc_tfc_preimport_cmd_edit">
+        </div>
+        <div class="flex items-center mb-0.5">
+          <label class="w-[170px] text-right pr-2">Insert Marker String:</label>
+          <input type="text" class="w-[240px] border-2 border-app-border input-sunken bg-app-input text-app-label px-1 h-[19px]" data-widget="svc_tfc_label_cart_edit">
+        </div>
+        <div class="flex items-center mb-0.5">
+          <label class="w-[170px] text-right pr-2">Insert Voice Track String:</label>
+          <input type="text" class="w-[240px] border-2 border-app-border input-sunken bg-app-input text-app-label px-1 h-[19px]" data-widget="svc_tfc_track_edit">
+        </div>
+        <div class="flex items-center mb-0.5">
+          <label class="w-[170px] text-right pr-2">Import Template:</label>
+          <select class="w-[240px] border border-app-border bg-app-input h-[19px]" data-widget="svc_tfc_import_template_box">
+            <option>[custom]</option>
+          </select>
+        </div>
+        <!-- ImportFields embedded -->
+        <div class="ml-1 mt-1 text-[0.75rem]" data-widget="svc_tfc_fields">
+          <div class="flex items-center gap-1 mb-0.5"><span class="w-[125px] text-right">Cart Number:</span> <span>Offset:</span> <input type="number" class="w-10 border border-app-border input-sunken bg-app-input h-[18px] text-center" value="10"> <span>Length:</span> <input type="number" class="w-10 border border-app-border input-sunken bg-app-input h-[18px] text-center" value="6"></div>
+          <div class="flex items-center gap-1 mb-0.5"><span class="w-[125px] text-right">Title:</span> <span>Offset:</span> <input type="number" class="w-10 border border-app-border input-sunken bg-app-input h-[18px] text-center" value="25"> <span>Length:</span> <input type="number" class="w-10 border border-app-border input-sunken bg-app-input h-[18px] text-center" value="34"></div>
+        </div>
+        <div class="flex gap-1 mt-1">
+          <button class="bg-app-btn btn-3d rounded-app px-2 py-2 text-[0.75rem] w-[60px] text-center" data-widget="tfc_test_button">Test<br>Traffic</button>
+          <button class="bg-app-btn btn-3d rounded-app px-2 py-2 text-[0.75rem] w-[60px] text-center" data-widget="svc_tfc_copy_button">Copy To<br>Custom</button>
+        </div>
+      </div>
+      <!-- Music Data Import -->
+      <div class="flex-1">
+        <div class="section-label mb-1">Music Data Import</div>
+        <div class="flex items-center mb-0.5">
+          <label class="w-[165px] text-right pr-2">Import Path:</label>
+          <input type="text" class="w-[240px] border-2 border-app-border input-sunken bg-app-input text-app-label px-1 h-[19px]" data-widget="svc_mus_path_edit">
+        </div>
+        <div class="flex items-center mb-0.5">
+          <label class="w-[165px] text-right pr-2">Preimport Command:</label>
+          <input type="text" class="w-[240px] border-2 border-app-border input-sunken bg-app-input text-app-label px-1 h-[19px]" data-widget="svc_mus_preimport_cmd_edit">
+        </div>
+        <div class="flex items-center mb-0.5">
+          <label class="w-[165px] text-right pr-2">Insert Marker String:</label>
+          <input type="text" class="w-[240px] border-2 border-app-border input-sunken bg-app-input text-app-label px-1 h-[19px]" data-widget="svc_mus_label_cart_edit">
+        </div>
+        <div class="flex items-center mb-0.5">
+          <label class="w-[165px] text-right pr-2">Insert Voice Track String:</label>
+          <input type="text" class="w-[240px] border-2 border-app-border input-sunken bg-app-input text-app-label px-1 h-[19px]" data-widget="svc_mus_track_edit">
+        </div>
+        <div class="flex items-center mb-0.5">
+          <label class="w-[165px] text-right pr-2">Insert Traffic Break String:</label>
+          <input type="text" class="w-[240px] border-2 border-app-border input-sunken bg-app-input text-app-label px-1 h-[19px]" data-widget="svc_mus_break_edit">
+        </div>
+        <div class="flex items-center mb-0.5">
+          <label class="w-[165px] text-right pr-2">Import Template:</label>
+          <select class="w-[240px] border border-app-border bg-app-input h-[19px]" data-widget="svc_mus_import_template_box">
+            <option>[custom]</option>
+          </select>
+        </div>
+        <div class="ml-1 mt-1 text-[0.75rem]" data-widget="svc_mus_fields">
+          <div class="flex items-center gap-1 mb-0.5"><span class="w-[125px] text-right">Cart Number:</span> <span>Offset:</span> <input type="number" class="w-10 border border-app-border input-sunken bg-app-input h-[18px] text-center" value="0"> <span>Length:</span> <input type="number" class="w-10 border border-app-border input-sunken bg-app-input h-[18px] text-center" value="0"></div>
+        </div>
+        <div class="flex gap-1 mt-1">
+          <button class="bg-app-btn btn-3d rounded-app px-2 py-2 text-[0.75rem] w-[60px] text-center" data-widget="mus_test_button">Test<br>Music</button>
+          <button class="bg-app-btn btn-3d rounded-app px-2 py-2 text-[0.75rem] w-[60px] text-center" data-widget="svc_mus_copy_button">Copy To<br>Custom</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom buttons -->
+    <div class="flex justify-end gap-2 mt-4">
+      <button class="bg-app-btn btn-3d rounded-app px-4 py-3 text-app-label w-[80px]" data-widget="ok_button">OK</button>
+      <button class="bg-app-btn btn-3d rounded-app px-4 py-3 text-app-label w-[80px]" data-widget="cancel_button">Cancel</button>
+    </div>
+  </div>
+</div>
+</body>
+</html>

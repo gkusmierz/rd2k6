@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EditUser - RDAdmin - User: user</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: { extend: { colors: {
+    'app-bg':'#d4d0c8','app-panel':'#ffffff','app-input':'#ffffff',
+    'app-btn':'#d4d0c8','app-btn-hover':'#e0dcd4','app-titlebar':'#4a6ea5',
+    'app-text':'#000000','app-text-sec':'#4a4a4a','app-border':'#808080',
+    'app-border-light':'#ffffff','app-border-dark':'#404040','app-accent':'#0a246a'
+  }, borderRadius: { 'app':'0px' }, fontSize: { 'app-label':'0.8125rem','app-title':'0.875rem' } } }
+}
+</script>
+<style>
+  .qt-btn { box-shadow: inset -1px -1px 0 #404040, inset 1px 1px 0 #ffffff; }
+  .qt-btn:active { box-shadow: inset 1px 1px 0 #404040, inset -1px -1px 0 #ffffff; }
+  .qt-input { box-shadow: inset 1px 1px 0 #808080, inset -1px -1px 0 #ffffff; }
+  .qt-group { border: 1px solid #a0a0a0; padding: 8px; padding-top: 16px; position: relative; margin-top: 8px; }
+  .qt-group legend { position: absolute; top: -8px; left: 8px; background: #d4d0c8; padding: 0 4px; font-weight: bold; font-size: 0.8125rem; }
+  body { font-family: 'Helvetica','Arial',system-ui,sans-serif; }
+  .form-row { display: flex; align-items: center; gap: 4px; margin-bottom: 2px; }
+  .form-label { width: 125px; text-align: right; font-size: 0.8125rem; font-weight: bold; flex-shrink: 0; }
+  .form-input { flex: 1; }
+</style>
+</head>
+<body class="bg-app-bg p-0 m-0">
+<div style="width:375px;height:723px;" class="flex flex-col">
+  <div class="bg-app-titlebar text-white text-app-title font-bold px-2 py-1">RDAdmin - User: user</div>
+  <div class="flex-1 bg-app-bg p-2 overflow-auto text-app-label">
+    <!-- User fields -->
+    <div class="form-row"><label class="form-label">User Name:</label><input data-widget="user_name_edit" type="text" value="user" readonly class="qt-input form-input bg-gray-200 border border-app-border rounded-app px-1 py-0.5 text-app-label" /></div>
+    <div class="form-row"><label class="form-label">Full Name:</label><input data-widget="user_full_name_edit" type="text" value="Rivendell User" class="qt-input form-input bg-app-input border border-app-border rounded-app px-1 py-0.5 text-app-label" /></div>
+    <div class="form-row"><label class="form-label">Description:</label><input data-widget="user_description_edit" type="text" value="Default User Account" class="qt-input form-input bg-app-input border border-app-border rounded-app px-1 py-0.5 text-app-label" /></div>
+    <div class="form-row"><label class="form-label">E-Mail Address:</label><input data-widget="user_email_address_edit" type="text" class="qt-input form-input bg-app-input border border-app-border rounded-app px-1 py-0.5 text-app-label" /></div>
+    <div class="form-row"><label class="form-label">Phone:</label><input data-widget="user_phone_edit" type="text" maxlength="20" class="qt-input form-input bg-app-input border border-app-border rounded-app px-1 py-0.5 text-app-label" /></div>
+
+    <!-- Local Auth -->
+    <div class="flex items-center gap-2 mt-1 mb-1">
+      <input data-widget="user_localauth_check" type="checkbox" checked class="ml-4" />
+      <label class="text-app-label font-bold">Authenticate This User Locally</label>
+      <div class="flex-1"></div>
+      <button data-widget="user_password_button" class="qt-btn bg-app-btn text-app-text text-xs px-2 py-2 border border-app-border rounded-app hover:bg-app-btn-hover" style="width:75px;height:40px;">Change<br>Password</button>
+    </div>
+    <div class="form-row ml-2"><label class="form-label">PAM Service:</label><input data-widget="user_pamservice_edit" type="text" value="rivendell" disabled class="qt-input bg-gray-200 border border-app-border rounded-app px-1 py-0.5 text-app-label" style="width:140px;" /></div>
+
+    <!-- WebAPI -->
+    <div class="form-row"><label class="form-label">WebAPI Timeout:</label><input data-widget="user_webapi_auth_spin" type="number" value="3600" min="0" max="86400" class="qt-input bg-app-input border border-app-border rounded-app px-1 py-0.5 text-app-label" style="width:80px;" /></div>
+
+    <!-- Administrative Rights -->
+    <div class="qt-group relative mt-3">
+      <legend>Administrative Rights</legend>
+      <div class="flex gap-8">
+        <label class="flex items-center gap-1 text-app-label"><input data-widget="user_admin_config_button" type="checkbox" /> Administer System</label>
+        <label class="flex items-center gap-1 text-app-label"><input data-widget="user_admin_rss_button" type="checkbox" /> Administer RSS Feeds</label>
+      </div>
+    </div>
+
+    <!-- Production Rights -->
+    <div class="qt-group relative mt-3">
+      <legend>Production Rights</legend>
+      <div class="grid grid-cols-2 gap-y-1">
+        <label class="flex items-center gap-1 text-app-label"><input data-widget="user_create_carts_button" type="checkbox" checked /> Create Carts</label>
+        <label class="flex items-center gap-1 text-app-label"><input data-widget="user_delete_carts_button" type="checkbox" checked /> Delete Carts</label>
+        <label class="flex items-center gap-1 text-app-label"><input data-widget="user_modify_carts_button" type="checkbox" checked /> Modify Carts</label>
+        <label class="flex items-center gap-1 text-app-label"><input data-widget="user_edit_catches_button" type="checkbox" checked /> Edit Netcatch Schedule</label>
+        <label class="flex items-center gap-1 text-app-label"><input data-widget="user_edit_audio_button" type="checkbox" checked /> Edit Audio</label>
+        <label class="flex items-center gap-1 text-app-label"><input data-widget="user_voicetrack_log_button" type="checkbox" checked /> Voicetrack Logs</label>
+        <label class="flex items-center gap-1 text-app-label"><input data-widget="user_webget_login_button" type="checkbox" /> Allow WebGet Login</label>
+      </div>
+    </div>
+
+    <!-- Traffic Rights -->
+    <div class="qt-group relative mt-3">
+      <legend>Traffic Rights</legend>
+      <div class="grid grid-cols-2 gap-y-1">
+        <label class="flex items-center gap-1 text-app-label"><input data-widget="user_create_log_button" type="checkbox" checked /> Create Log</label>
+        <label class="flex items-center gap-1 text-app-label"><input data-widget="user_delete_log_button" type="checkbox" checked /> Delete Log</label>
+        <label class="flex items-center gap-1 text-app-label"><input data-widget="user_modify_template_button" type="checkbox" checked /> Modify Template</label>
+        <label class="flex items-center gap-1 text-app-label"><input data-widget="user_delete_rec_button" type="checkbox" checked /> Delete Report Data</label>
+      </div>
+    </div>
+
+    <!-- OnAir Rights -->
+    <div class="qt-group relative mt-3">
+      <legend>OnAir Rights</legend>
+      <div class="grid grid-cols-2 gap-y-1">
+        <label class="flex items-center gap-1 text-app-label"><input data-widget="user_playout_log_button" type="checkbox" checked /> Playout Logs</label>
+        <label class="flex items-center gap-1 text-app-label"><input data-widget="user_arrange_log_button" type="checkbox" checked /> Rearrange Log Items</label>
+        <label class="flex items-center gap-1 text-app-label"><input data-widget="user_addto_log_button" type="checkbox" checked /> Add Log Items</label>
+        <label class="flex items-center gap-1 text-app-label"><input data-widget="user_removefrom_log_button" type="checkbox" checked /> Delete Log Items</label>
+        <label class="flex items-center gap-1 text-app-label"><input data-widget="user_config_panels_button" type="checkbox" checked /> Configure System Panels</label>
+      </div>
+    </div>
+
+    <!-- Podcasting Rights -->
+    <div class="qt-group relative mt-3">
+      <legend>Podcasting Rights</legend>
+      <div class="grid grid-cols-2 gap-y-1">
+        <label class="flex items-center gap-1 text-app-label"><input data-widget="user_add_podcast_button" type="checkbox" /> Create Podcast</label>
+        <label class="flex items-center gap-1 text-app-label"><input data-widget="user_edit_podcast_button" type="checkbox" /> Edit Podcast</label>
+        <label class="flex items-center gap-1 text-app-label"><input data-widget="user_delete_podcast_button" type="checkbox" /> Delete Podcast</label>
+        <label class="flex items-center gap-1 text-app-label"><input data-widget="user_web_box" type="checkbox" /> Allow Web Login</label>
+      </div>
+    </div>
+
+    <!-- Permission buttons -->
+    <div class="flex gap-2 mt-3">
+      <button data-widget="user_assign_perms_button" class="qt-btn bg-app-btn text-app-text text-xs px-2 py-2 border border-app-border rounded-app hover:bg-app-btn-hover flex-1" style="height:45px;">Group<br>Permissions</button>
+      <button data-widget="user_assign_svcs_button" class="qt-btn bg-app-btn text-app-text text-xs px-2 py-2 border border-app-border rounded-app hover:bg-app-btn-hover flex-1" style="height:45px;">Service<br>Permissions</button>
+      <button data-widget="user_assign_feeds_button" class="qt-btn bg-app-btn text-app-text text-xs px-2 py-2 border border-app-border rounded-app hover:bg-app-btn-hover flex-1" style="height:45px;">Podcast Feed<br>Permissions</button>
+    </div>
+
+    <!-- OK / Cancel -->
+    <div class="flex justify-end gap-2 mt-3">
+      <button data-widget="ok_button" class="qt-btn bg-app-btn text-app-text text-app-label px-4 py-2 border border-app-border rounded-app hover:bg-app-btn-hover font-bold" style="width:80px;height:45px;">OK</button>
+      <button data-widget="cancel_button" class="qt-btn bg-app-btn text-app-text text-app-label px-4 py-2 border border-app-border rounded-app hover:bg-app-btn-hover" style="width:80px;height:45px;">Cancel</button>
+    </div>
+  </div>
+</div>
+</body>
+</html>

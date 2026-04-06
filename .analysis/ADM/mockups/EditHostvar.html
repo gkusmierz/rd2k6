@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EditHostvar - RDAdmin - Edit Host Variable</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwindcss.config = {
+  theme: { extend: {
+    colors: { 'app-bg':'#d4d0c8','app-panel':'#ffffff','app-input':'#ffffff','app-btn':'#d4d0c8','app-btn-hover':'#e0dcd4','app-titlebar':'#4a6ea5','app-text':'#000000','app-border':'#808080','app-border-light':'#ffffff','app-border-dark':'#404040' },
+    borderRadius: { 'app':'0px' },
+    fontSize: { 'app-label':'0.8125rem','app-title':'0.875rem' }
+  }}
+}
+</script>
+<style>
+  .btn-3d { box-shadow: inset -1px -1px 0 #404040, inset 1px 1px 0 #ffffff; }
+  .input-sunken { box-shadow: inset 1px 1px 0 #808080, inset -1px -1px 0 #ffffff; }
+</style>
+</head>
+<body class="bg-app-bg font-['Helvetica','Arial',system-ui,sans-serif] text-app-text text-app-label">
+<div class="w-[385px] h-[150px] border border-app-border" data-widget="EditHostvar" data-window-title="RDAdmin - Edit Host Variable">
+  <div class="bg-app-titlebar text-white text-app-title font-bold px-2 py-1">RDAdmin - Edit Host Variable</div>
+  <div class="p-2">
+    <div class="flex items-center mb-1">
+      <label class="w-[110px] text-right pr-2 font-bold">Variable Name:</label>
+      <input type="text" value="%MATRIX_NUM%" readonly class="w-[120px] border-2 border-app-border input-sunken bg-gray-200 text-app-label px-1 h-[19px]" data-widget="edit_name_edit">
+    </div>
+    <div class="flex items-center mb-1">
+      <label class="w-[110px] text-right pr-2 font-bold">Variable Value:</label>
+      <input type="text" value="1" maxlength="255" class="flex-1 border-2 border-app-border input-sunken bg-app-input text-app-label px-1 h-[19px]" data-widget="edit_varvalue_edit">
+    </div>
+    <div class="flex items-center mb-2">
+      <label class="w-[110px] text-right pr-2 font-bold">Remark:</label>
+      <input type="text" value="Matrix number for the TOC Switcher" maxlength="255" class="flex-1 border-2 border-app-border input-sunken bg-app-input text-app-label px-1 h-[19px]" data-widget="edit_remark_edit">
+    </div>
+    <div class="flex justify-end gap-2">
+      <button class="bg-app-btn btn-3d rounded-app px-4 py-3 text-app-label w-[80px]" data-widget="ok_button">OK</button>
+      <button class="bg-app-btn btn-3d rounded-app px-4 py-3 text-app-label w-[80px]" data-widget="cancel_button">Cancel</button>
+    </div>
+  </div>
+</div>
+</body>
+</html>

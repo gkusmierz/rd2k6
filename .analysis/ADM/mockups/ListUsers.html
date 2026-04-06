@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ListUsers - RDAdmin - Rivendell User List</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: { extend: { colors: {
+    'app-bg':'#d4d0c8','app-panel':'#ffffff','app-input':'#ffffff',
+    'app-btn':'#d4d0c8','app-btn-hover':'#e0dcd4','app-titlebar':'#4a6ea5',
+    'app-selection':'#0a246a','app-text':'#000000','app-text-sec':'#4a4a4a',
+    'app-border':'#808080','app-border-light':'#ffffff','app-border-dark':'#404040',
+    'app-accent':'#0a246a','app-error':'#cc0000'
+  }, borderRadius: { 'app':'0px' }, fontSize: { 'app-label':'0.8125rem','app-title':'0.875rem' } } }
+}
+</script>
+<style>
+  .qt-btn { box-shadow: inset -1px -1px 0 #404040, inset 1px 1px 0 #ffffff; }
+  .qt-btn:active { box-shadow: inset 1px 1px 0 #404040, inset -1px -1px 0 #ffffff; }
+  .qt-input { box-shadow: inset 1px 1px 0 #808080, inset -1px -1px 0 #ffffff; }
+  .qt-list { box-shadow: inset 1px 1px 0 #808080, inset -1px -1px 0 #ffffff; }
+  body { font-family: 'Helvetica','Arial',system-ui,sans-serif; }
+</style>
+</head>
+<body class="bg-app-bg p-0 m-0">
+<div class="flex flex-col" style="width:640px;height:480px;min-width:640px;min-height:480px;">
+  <!-- Title bar area (simulated by window manager) -->
+  <div class="bg-app-titlebar text-white text-app-title font-bold px-2 py-1 flex items-center gap-2">
+    <span>RDAdmin - Rivendell User List</span>
+  </div>
+
+  <div class="flex-1 bg-app-bg p-2 flex gap-2">
+    <!-- Left: list area -->
+    <div class="flex-1 flex flex-col">
+      <label class="text-app-label font-bold mb-1">Users:</label>
+      <div class="flex-1 bg-app-panel qt-list border border-app-border overflow-auto" data-widget="list_users_view">
+        <table class="w-full text-app-label">
+          <thead class="bg-app-bg border-b border-app-border sticky top-0">
+            <tr>
+              <th class="px-1 py-0.5 text-left w-6"></th>
+              <th class="px-1 py-0.5 text-left">Login Name</th>
+              <th class="px-1 py-0.5 text-left">Full Name</th>
+              <th class="px-1 py-0.5 text-left">Description</th>
+              <th class="px-1 py-0.5 text-left">E-Mail Address</th>
+              <th class="px-1 py-0.5 text-left">Phone Number</th>
+              <th class="px-1 py-0.5 text-center">Local Auth</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="hover:bg-app-selection hover:text-white">
+              <td class="px-1 py-0.5"><span title="admin">&#128274;</span></td>
+              <td class="px-1 py-0.5">admin</td>
+              <td class="px-1 py-0.5">Rivendell Administrator</td>
+              <td class="px-1 py-0.5">Default Administrator Account</td>
+              <td class="px-1 py-0.5"></td>
+              <td class="px-1 py-0.5"></td>
+              <td class="px-1 py-0.5 text-center">Y</td>
+            </tr>
+            <tr class="hover:bg-app-selection hover:text-white">
+              <td class="px-1 py-0.5"><span title="localuser">&#128100;</span></td>
+              <td class="px-1 py-0.5">casts</td>
+              <td class="px-1 py-0.5">Podcast User</td>
+              <td class="px-1 py-0.5"></td>
+              <td class="px-1 py-0.5"></td>
+              <td class="px-1 py-0.5"></td>
+              <td class="px-1 py-0.5 text-center">Y</td>
+            </tr>
+            <tr class="bg-app-selection text-white">
+              <td class="px-1 py-0.5"><span title="user">&#128100;</span></td>
+              <td class="px-1 py-0.5">user</td>
+              <td class="px-1 py-0.5">Rivendell User</td>
+              <td class="px-1 py-0.5">Default User Account</td>
+              <td class="px-1 py-0.5"></td>
+              <td class="px-1 py-0.5"></td>
+              <td class="px-1 py-0.5 text-center">Y</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Right: buttons -->
+    <div class="flex flex-col gap-2 pt-5" style="width:80px;">
+      <button data-widget="list_add_button" class="qt-btn bg-app-btn text-app-text text-app-label px-2 py-3 border border-app-border rounded-app hover:bg-app-btn-hover">Add</button>
+      <button data-widget="list_edit_button" class="qt-btn bg-app-btn text-app-text text-app-label px-2 py-3 border border-app-border rounded-app hover:bg-app-btn-hover">Edit</button>
+      <button data-widget="list_delete_button" class="qt-btn bg-app-btn text-app-text text-app-label px-2 py-3 border border-app-border rounded-app hover:bg-app-btn-hover">Delete</button>
+      <div class="flex-1"></div>
+      <button data-widget="list_close_button" class="qt-btn bg-app-btn text-app-text text-app-label px-2 py-3 border border-app-border rounded-app hover:bg-app-btn-hover font-bold">Close</button>
+    </div>
+  </div>
+</div>
+</body>
+</html>

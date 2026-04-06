@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>ListReports - RDAdmin</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        'app-bg': '#d4d0c8',
+        'app-btn': '#d4d0c8',
+        'app-text': '#000000',
+        'app-border': '#808080',
+        'app-selection': '#0a246a',
+      },
+      borderRadius: { 'app': '0px' },
+      fontSize: { 'app-label': '0.8125rem', 'app-title': '0.875rem' }
+    }
+  }
+}
+</script>
+<style>
+  .qt-btn { box-shadow: inset -1px -1px 0 #404040, inset 1px 1px 0 #ffffff; }
+  .qt-btn:active { box-shadow: inset 1px 1px 0 #404040, inset -1px -1px 0 #ffffff; }
+  .qt-listbox { box-shadow: inset 1px 1px 0 #808080, inset -1px -1px 0 #ffffff; }
+</style>
+</head>
+<body class="bg-app-bg flex items-start justify-center pt-8" style="font-family: Helvetica, Arial, system-ui, sans-serif;">
+
+<div class="bg-app-bg border border-app-border" style="width:500px; height:300px; position:relative;">
+  <!-- Title bar -->
+  <div class="bg-[#4a6ea5] text-white text-app-title font-bold px-2 py-1">
+    Rivendell Report List
+  </div>
+
+  <div class="p-3">
+    <!-- Label -->
+    <label class="text-app-label font-normal text-app-text block mb-1">Reports:</label>
+
+    <!-- List box -->
+    <div class="qt-listbox bg-white border border-app-border" style="position:absolute; left:10px; top:55px; right:110px; bottom:15px; overflow:auto;">
+      <div class="text-xs px-2 py-0.5 bg-app-selection text-white">Music Log Report</div>
+      <div class="text-xs px-2 py-0.5">Traffic Export</div>
+      <div class="text-xs px-2 py-0.5">Daily Airplay Summary</div>
+    </div>
+
+    <!-- Buttons -->
+    <div style="position:absolute; right:10px; top:55px; width:80px;">
+      <button class="qt-btn bg-app-btn text-app-text text-app-label w-full py-3 mb-2 rounded-app border border-app-border">Add</button>
+      <button class="qt-btn bg-app-btn text-app-text text-app-label w-full py-3 mb-2 rounded-app border border-app-border">Edit</button>
+      <button class="qt-btn bg-app-btn text-app-text text-app-label w-full py-3 mb-2 rounded-app border border-app-border">Delete</button>
+    </div>
+
+    <!-- Close -->
+    <div style="position:absolute; right:10px; bottom:15px; width:80px;">
+      <button class="qt-btn bg-app-btn text-app-text text-app-label w-full py-3 rounded-app border border-app-border font-bold">Close</button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

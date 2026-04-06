@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>EditHotkeys - Hot Key Configuration</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: { extend: { colors: {
+    'app-bg':'#d4d0c8','app-panel':'#ffffff','app-input':'#ffffff',
+    'app-btn':'#d4d0c8','app-btn-hover':'#e0dcd4','app-titlebar':'#4a6ea5',
+    'app-selection':'#0a246a','app-text':'#000000','app-border':'#808080','app-border-light':'#ffffff','app-border-dark':'#404040'
+  }, borderRadius: { 'app':'0px' }, fontSize: { 'app-label':'0.8125rem','app-title':'0.875rem' } } }
+}
+</script>
+<style>
+  .qt-btn { box-shadow: inset -1px -1px 0 #404040, inset 1px 1px 0 #ffffff; }
+  .qt-sunken { box-shadow: inset 1px 1px 0 #808080, inset -1px -1px 0 #ffffff; }
+  .qt-input { box-shadow: inset 1px 1px 0 #808080, inset -1px -1px 0 #ffffff; border: none; background: #fff; }
+  .list-header { display: flex; background: #d4d0c8; border-bottom: 1px solid #808080; font-weight: 700; font-size: 0.8125rem; }
+  .list-row { display: flex; font-size: 0.8125rem; padding: 1px 4px; }
+  .list-row:hover { background: #e0dcd4; }
+  .list-row.selected { background: #0a246a; color: #fff; }
+</style>
+</head>
+<body class="bg-app-bg p-0 m-0 font-['Helvetica','Arial',system-ui,sans-serif] text-app-text text-app-label">
+<div class="w-[400px] h-[500px] bg-app-bg border border-app-border" data-widget="EditHotkeys">
+  <div class="bg-app-titlebar text-white text-app-title font-bold px-2 py-0.5">RDAdmin - AIRPLAY Hot Key Configuration for gazerbeam</div>
+  <div class="p-2">
+    <label class="font-bold text-app-label">Host Hot Key Configurations</label>
+    <!-- List view -->
+    <div class="qt-sunken bg-app-panel w-[320px] h-[220px] overflow-auto mt-1" data-widget="list_view">
+      <div class="list-header">
+        <span class="w-[180px] px-1">Button / Function</span>
+        <span class="flex-1 px-1">KeyStroke</span>
+      </div>
+      <div class="list-row"><span class="w-[180px]">Start Line 1</span><span>F1</span></div>
+      <div class="list-row"><span class="w-[180px]">Stop Line 1</span><span></span></div>
+      <div class="list-row"><span class="w-[180px]">Pause Line 1</span><span></span></div>
+      <div class="list-row selected"><span class="w-[180px]">Start Line 2</span><span>F2</span></div>
+      <div class="list-row"><span class="w-[180px]">Stop Line 2</span><span></span></div>
+      <div class="list-row"><span class="w-[180px]">Pause Line 2</span><span></span></div>
+      <div class="list-row"><span class="w-[180px]">Start Line 3</span><span>F3</span></div>
+      <div class="list-row"><span class="w-[180px]">Stop Line 3</span><span></span></div>
+    </div>
+
+    <!-- Keystroke display -->
+    <div class="flex justify-center mt-2">
+      <input type="text" class="qt-input w-[200px] h-[35px] text-center text-base" data-widget="keystroke" value="F2" readonly>
+    </div>
+
+    <!-- Action buttons -->
+    <div class="flex justify-center gap-2 mt-2">
+      <button class="qt-btn bg-app-btn w-[60px] h-[30px]" data-widget="set_button">Set</button>
+      <button class="qt-btn bg-app-btn w-[60px] h-[30px]" data-widget="clear_button">Clear</button>
+      <button class="qt-btn bg-app-btn w-[130px] h-[30px]" data-widget="clear_all_button">Clear All Hotkeys</button>
+    </div>
+
+    <!-- Clone host -->
+    <div class="flex items-center gap-2 mt-3">
+      <label class="font-bold text-app-label w-[120px] text-right" data-widget="clone_from_host_label">Set From Host:</label>
+      <select class="qt-sunken w-[130px] h-[30px]" data-widget="clone_from_host_box">
+        <option selected>gazerbeam</option>
+        <option>rdpi</option>
+      </select>
+    </div>
+
+    <!-- Save / Cancel -->
+    <div class="flex justify-end gap-2 mt-3">
+      <button class="qt-btn bg-app-btn w-[80px] h-[50px]" data-widget="save_button">Save</button>
+      <button class="qt-btn bg-app-btn w-[80px] h-[50px]" data-widget="cancel_button">Cancel</button>
+    </div>
+  </div>
+</div>
+</body>
+</html>

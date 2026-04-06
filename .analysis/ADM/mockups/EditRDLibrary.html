@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>EditRDLibrary - Configure RDLibrary</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwindcss.config = {
+  theme: { extend: {
+    colors: { 'app-bg':'#d4d0c8','app-btn':'#d4d0c8','app-btn-hover':'#e0dcd4','app-titlebar':'#4a6ea5','app-border':'#808080','app-text':'#000000' },
+    borderRadius: { 'app':'0px' }, fontSize: { 'app-label':'0.8125rem','app-title':'0.875rem' }
+  }}
+}
+</script>
+<style>
+  body { font-family:'Helvetica','Arial',system-ui,sans-serif; font-size:0.8125rem; }
+  .qt-input { border:2px inset #808080; background:#fff; padding:1px 4px; font-size:0.8125rem; border-radius:0; }
+  .qt-combo { border:2px inset #808080; background:#fff; padding:1px 4px; font-size:0.8125rem; border-radius:0; }
+  .qt-btn-big { border:2px outset #d4d0c8; background:#d4d0c8; padding:8px 20px; font-size:0.875rem; border-radius:0; cursor:pointer; min-width:80px; min-height:50px; }
+  .qt-btn-big:hover { background:#e0dcd4; }
+  .qt-spin { border:2px inset #808080; background:#fff; padding:1px 4px; font-size:0.8125rem; border-radius:0; width:50px; }
+  .section-label { font-weight:700; font-size:0.875rem; }
+  .sub-label { font-size:0.8125rem; }
+  .form-row { display:flex; align-items:center; margin-bottom:3px; }
+  .form-row .label { width:165px; text-align:right; padding-right:5px; }
+</style>
+</head>
+<body class="bg-app-bg text-app-text p-0 m-0">
+<div style="width:405px; height:630px;" class="bg-app-bg border-2 border-app-border">
+  <div class="bg-app-titlebar text-white px-2 py-1 text-app-title font-bold">RDAdmin - Configure RDLibrary</div>
+  <div style="padding:8px; position:relative;">
+
+    <!-- Input / Output Card Selectors -->
+    <div class="flex justify-around mb-2">
+      <div class="text-center">
+        <div class="section-label">Input</div>
+        <div class="border border-app-border p-2 bg-app-bg">
+          <div class="form-row"><span class="sub-label">Card:</span><select class="qt-combo ml-1" style="width:55px;"><option>0</option></select></div>
+          <div class="form-row"><span class="sub-label">Port:</span><select class="qt-combo ml-1" style="width:55px;"><option>0</option></select></div>
+        </div>
+      </div>
+      <div class="text-center">
+        <div class="section-label">Output</div>
+        <div class="border border-app-border p-2 bg-app-bg">
+          <div class="form-row"><span class="sub-label">Card:</span><select class="qt-combo ml-1" style="width:55px;"><option>0</option></select></div>
+          <div class="form-row"><span class="sub-label">Port:</span><select class="qt-combo ml-1" style="width:55px;"><option>0</option></select></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Settings -->
+    <div class="section-label mb-1" style="margin-left:25px;">Settings</div>
+    <div class="form-row"><span class="label sub-label">Max Record Time:</span><input class="qt-input" style="width:85px;" value="00:00:00"></div>
+    <div class="form-row"><span class="label sub-label">VOX Threshold:</span><input class="qt-spin" type="number" min="-99" max="0" value="-50"><span class="sub-label ml-1">dbFS</span></div>
+    <div class="form-row"><span class="label sub-label">AutoTrim Threshold:</span><input class="qt-spin" type="number" min="-99" max="0" value="0"><span class="sub-label ml-1">dbFS</span></div>
+    <div class="form-row"><span class="label sub-label">Tail Preroll:</span><input class="qt-spin" type="number" min="0" max="10000" step="100" value="1500"><span class="sub-label ml-1">milliseconds</span></div>
+    <div class="form-row"><span class="label sub-label">Ripper Device:</span><input class="qt-input" style="width:100px;" value="/dev/cdrom"></div>
+    <div class="form-row"><span class="label sub-label">Paranoia Level:</span><select class="qt-combo" style="width:100px;"><option>Normal</option><option>Low</option><option>None</option></select></div>
+    <div class="form-row"><span class="label sub-label">Read ISRCs from CD:</span><select class="qt-combo" style="width:60px;"><option>No</option><option>Yes</option></select></div>
+    <div class="form-row"><span class="label sub-label">CD Metadata Source:</span><select class="qt-combo" style="width:120px;"><option>None</option><option>CDDB</option><option>MusicBrainz</option></select></div>
+    <div class="form-row"><span class="label sub-label">MusicBrainz Server:</span><input class="qt-input" style="width:160px;" value="musicbrainz.org"></div>
+    <div class="form-row"><span class="label sub-label">Format:</span><select class="qt-combo" style="width:150px;"><option>PCM16</option><option>PCM24</option><option>MPEG Layer 2</option></select></div>
+    <div class="form-row"><span class="label sub-label">Bitrate:</span><select class="qt-combo" style="width:130px;" disabled><option></option></select></div>
+    <div class="form-row"><span class="label sub-label">Allow External Editing:</span><select class="qt-combo" style="width:60px;"><option>No</option><option>Yes</option></select></div>
+    <div class="form-row"><span class="label sub-label">Sample Rate Converter:</span><select class="qt-combo" style="width:195px;"><option>Medium Sinc Interpolator</option></select></div>
+    <div class="form-row"><span class="label sub-label">Limit Searches at Startup:</span><select class="qt-combo" style="width:80px;"><option>No</option><option>Yes</option><option>Previous</option></select></div>
+
+    <!-- Defaults -->
+    <div class="section-label mb-1 mt-3" style="margin-left:25px;">Defaults</div>
+    <div class="form-row"><span class="label sub-label">Channels:</span><select class="qt-combo" style="width:60px;"><option>1</option><option selected>2</option></select></div>
+    <div class="form-row"><span class="label sub-label">Record Mode:</span><select class="qt-combo" style="width:100px;"><option>Manual</option><option>VOX</option></select></div>
+    <div class="form-row"><span class="label sub-label">AutoTrim:</span><select class="qt-combo" style="width:100px;"><option>On</option><option>Off</option></select></div>
+    <div class="form-row"><span class="label sub-label">Normalization Level:</span><input class="qt-spin" type="number" min="-99" max="0" value="-13"><span class="sub-label ml-1">dbFS</span></div>
+
+    <!-- OK/Cancel -->
+    <div style="position:absolute; bottom:10px; right:10px;" class="flex gap-2">
+      <button class="qt-btn-big">OK</button>
+      <button class="qt-btn-big">Cancel</button>
+    </div>
+  </div>
+</div>
+</body>
+</html>

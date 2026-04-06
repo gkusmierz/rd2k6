@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>EditCartSlots - Edit CartSlots</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: { extend: { colors: {
+    'app-bg':'#d4d0c8','app-panel':'#ffffff','app-input':'#ffffff',
+    'app-btn':'#d4d0c8','app-btn-hover':'#e0dcd4','app-titlebar':'#4a6ea5',
+    'app-text':'#000000','app-border':'#808080','app-border-light':'#ffffff','app-border-dark':'#404040'
+  }, borderRadius: { 'app':'0px' }, fontSize: { 'app-label':'0.8125rem','app-title':'0.875rem' } } }
+}
+</script>
+<style>
+  .qt-btn { box-shadow: inset -1px -1px 0 #404040, inset 1px 1px 0 #ffffff; }
+  .qt-sunken { box-shadow: inset 1px 1px 0 #808080, inset -1px -1px 0 #ffffff; }
+  .qt-input { box-shadow: inset 1px 1px 0 #808080, inset -1px -1px 0 #ffffff; border: none; background: #fff; }
+  .form-row { display: flex; align-items: center; margin-bottom: 2px; font-size: 0.8125rem; }
+  .form-label { width: 112px; text-align: right; padding-right: 4px; font-weight: 700; }
+  .section-label { font-weight: 700; font-size: 0.875rem; text-align: center; margin: 4px 0; }
+</style>
+</head>
+<body class="bg-app-bg p-0 m-0 font-['Helvetica','Arial',system-ui,sans-serif] text-app-text text-app-label">
+<div class="w-[300px] h-[455px] bg-app-bg border border-app-border" data-widget="EditCartSlots">
+  <div class="bg-app-titlebar text-white text-app-title font-bold px-2 py-0.5">RDAdmin - Edit CartSlots</div>
+  <div class="p-2">
+    <div class="section-label">Global Settings</div>
+    <div class="form-row"><span class="form-label">Slot Columns:</span><input type="number" class="qt-input w-[50px] h-[20px]" data-widget="edit_slot_columns_spin" value="1"></div>
+    <div class="form-row"><span class="form-label">Slot Rows:</span><input type="number" class="qt-input w-[50px] h-[20px]" data-widget="edit_slot_rows_spin" value="8"></div>
+
+    <div class="flex items-center gap-2 mt-2 mb-1">
+      <span class="font-bold text-right w-[92px]">Slot</span>
+      <select class="qt-sunken w-[60px] h-[20px]" data-widget="edit_slot_box"><option>1</option><option>2</option><option>3</option></select>
+      <span class="font-bold">Settings</span>
+    </div>
+
+    <div class="section-label">Channel Assignments</div>
+    <div class="form-row"><span class="form-label">Card:</span><input type="number" class="qt-input w-[50px] h-[20px]" data-widget="edit_card_spin" value="0"></div>
+    <div class="form-row"><span class="form-label">Input Port:</span><input type="number" class="qt-input w-[50px] h-[20px]" data-widget="edit_input_spin" value="-1"></div>
+    <div class="form-row"><span class="form-label">Output Port:</span><input type="number" class="qt-input w-[50px] h-[20px]" data-widget="edit_output_spin" value="0"></div>
+
+    <div class="section-label">Default Settings</div>
+    <div class="form-row"><span class="form-label">Service:</span><select class="qt-sunken w-[120px] h-[20px]" data-widget="edit_service_box"><option>Fred</option></select></div>
+    <div class="form-row"><span class="form-label">Slot Mode:</span><select class="qt-sunken w-[150px] h-[20px]" data-widget="edit_mode_box"><option>User previous mode</option><option>Cart Deck</option><option>Breakaway</option></select></div>
+    <div class="form-row"><span class="form-label">Play Mode:</span><select class="qt-sunken w-[150px] h-[20px]" data-widget="edit_play_mode_box"><option>Use previous mode</option><option>Full</option><option>Hook</option></select></div>
+    <div class="form-row"><span class="form-label">At Startup:</span><select class="qt-sunken w-[150px] h-[20px]" data-widget="edit_cartaction_box"><option>Use previous cart</option><option>Do Nothing</option><option>Load Specified Cart</option></select></div>
+    <div class="form-row"><span class="form-label">Cart:</span><input type="text" class="qt-input w-[60px] h-[20px]" data-widget="edit_cart_edit" disabled readonly><button class="qt-btn bg-app-btn text-xs px-1 ml-1" data-widget="edit_cart_button" disabled>Select</button></div>
+    <div class="form-row"><span class="form-label">At Playout End:</span><select class="qt-sunken w-[150px] h-[20px]" data-widget="edit_stop_action_box"><option>Use previous action</option></select></div>
+
+    <div class="flex justify-end mt-3">
+      <button class="qt-btn bg-app-btn w-[80px] h-[50px]" data-widget="close_button">Close</button>
+    </div>
+  </div>
+</div>
+</body>
+</html>

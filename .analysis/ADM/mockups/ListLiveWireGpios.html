@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>ListLiveWireGpios – Livewire GPIO Source Assignments</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: Helvetica, Arial, sans-serif; font-size: 0.875rem; background: #d4d0c8; color: #000; }
+  .window { width: 400px; margin: 20px auto; background: #d4d0c8; border: 2px outset #d4d0c8; }
+  .titlebar { background: #4a6ea5; color: #fff; padding: 3px 6px; font-weight: 700; font-size: 0.875rem; }
+  .content { padding: 10px; }
+  .list-label { font-size: 0.8125rem; font-weight: 700; margin-bottom: 2px; }
+  table.list { width: 100%; border-collapse: collapse; background: #fff; border: 2px inset #d4d0c8; margin-bottom: 10px; }
+  table.list th { background: #d4d0c8; border: 1px solid #808080; padding: 2px 5px; font-size: 0.8125rem; text-align: center; }
+  table.list td { border: 1px solid #e0e0e0; padding: 2px 5px; font-size: 0.8125rem; text-align: center; }
+  table.list tr.selected { background: #0a246a; color: #fff; }
+  .button-bar { display: flex; gap: 10px; }
+  .button-bar .spacer { flex: 1; }
+  button { font-family: Helvetica, Arial, sans-serif; font-size: 0.8125rem; padding: 4px 16px; min-width: 80px; min-height: 50px; background: #d4d0c8; border: 2px outset #d4d0c8; cursor: pointer; }
+  button:active { border-style: inset; }
+</style>
+</head>
+<body>
+<div class="window">
+  <div class="titlebar">RDAdmin - Livewire GPIO Source Assignments</div>
+  <div class="content">
+    <div class="list-label">Switchers:</div>
+    <table class="list" style="height:170px;">
+      <thead><tr><th>Lines</th><th>Source #</th><th>Surface Address</th></tr></thead>
+      <tbody>
+        <tr class="selected"><td>1 - 5</td><td>101</td><td>192.168.1.100</td></tr>
+        <tr><td>6 - 10</td><td>[none]</td><td>[all]</td></tr>
+        <tr><td>11 - 15</td><td>203</td><td>[all]</td></tr>
+      </tbody>
+    </table>
+    <div class="button-bar">
+      <button>&amp;Edit</button>
+      <span class="spacer"></span>
+      <button>&amp;OK</button>
+      <button>&amp;Cancel</button>
+    </div>
+  </div>
+</div>
+</body>
+</html>

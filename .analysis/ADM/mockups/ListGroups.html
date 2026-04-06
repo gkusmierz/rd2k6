@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ListGroups - RDAdmin - Rivendell Group List</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: { extend: { colors: {
+    'app-bg':'#d4d0c8','app-panel':'#ffffff','app-input':'#ffffff',
+    'app-btn':'#d4d0c8','app-btn-hover':'#e0dcd4','app-titlebar':'#4a6ea5',
+    'app-selection':'#0a246a','app-text':'#000000','app-border':'#808080',
+    'app-border-light':'#ffffff','app-border-dark':'#404040'
+  }, borderRadius: { 'app':'0px' }, fontSize: { 'app-label':'0.8125rem','app-title':'0.875rem' } } }
+}
+</script>
+<style>
+  .qt-btn { box-shadow: inset -1px -1px 0 #404040, inset 1px 1px 0 #ffffff; }
+  .qt-btn:active { box-shadow: inset 1px 1px 0 #404040, inset -1px -1px 0 #ffffff; }
+  .qt-list { box-shadow: inset 1px 1px 0 #808080, inset -1px -1px 0 #ffffff; }
+  body { font-family: 'Helvetica','Arial',system-ui,sans-serif; }
+</style>
+</head>
+<body class="bg-app-bg p-0 m-0">
+<div class="flex flex-col" style="width:640px;height:480px;min-width:640px;min-height:480px;">
+  <div class="bg-app-titlebar text-white text-app-title font-bold px-2 py-1">RDAdmin - Rivendell Group List</div>
+  <div class="flex-1 bg-app-bg p-2 flex gap-2">
+    <!-- Left: list -->
+    <div class="flex-1 flex flex-col">
+      <label class="text-app-label font-bold mb-1">Groups:</label>
+      <div class="flex-1 bg-app-panel qt-list border border-app-border overflow-auto" data-widget="list_groups_view">
+        <table class="w-full text-app-label">
+          <thead class="bg-app-bg border-b border-app-border sticky top-0">
+            <tr>
+              <th class="px-1 py-0.5 text-left">Name</th>
+              <th class="px-1 py-0.5 text-left">Description</th>
+              <th class="px-1 py-0.5 text-center">Start Cart</th>
+              <th class="px-1 py-0.5 text-center">End Cart</th>
+              <th class="px-1 py-0.5 text-center">Enforce Range</th>
+              <th class="px-1 py-0.5 text-center">Default Type</th>
+              <th class="px-1 py-0.5 text-center">Traffic Report</th>
+              <th class="px-1 py-0.5 text-center">Music Report</th>
+              <th class="px-1 py-0.5 text-center">Now &amp; Next</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="hover:bg-app-selection hover:text-white">
+              <td class="px-1 py-0.5 font-bold" style="color:#8b0000;">BEDS</td>
+              <td class="px-1 py-0.5">Music Bed Carts</td>
+              <td class="px-1 py-0.5 text-center">040000</td>
+              <td class="px-1 py-0.5 text-center">044999</td>
+              <td class="px-1 py-0.5 text-center">N</td>
+              <td class="px-1 py-0.5 text-center">Audio</td>
+              <td class="px-1 py-0.5 text-center">N</td>
+              <td class="px-1 py-0.5 text-center">N</td>
+              <td class="px-1 py-0.5 text-center">N</td>
+            </tr>
+            <tr class="hover:bg-app-selection hover:text-white">
+              <td class="px-1 py-0.5 font-bold" style="color:#ff8c00;">JINGLE-IDs</td>
+              <td class="px-1 py-0.5">Jingles &amp; IDs</td>
+              <td class="px-1 py-0.5 text-center">045000</td>
+              <td class="px-1 py-0.5 text-center">049999</td>
+              <td class="px-1 py-0.5 text-center">N</td>
+              <td class="px-1 py-0.5 text-center">Audio</td>
+              <td class="px-1 py-0.5 text-center">N</td>
+              <td class="px-1 py-0.5 text-center">N</td>
+              <td class="px-1 py-0.5 text-center">N</td>
+            </tr>
+            <tr class="bg-app-selection text-white">
+              <td class="px-1 py-0.5 font-bold">MUSIC</td>
+              <td class="px-1 py-0.5">Music Carts</td>
+              <td class="px-1 py-0.5 text-center">250001</td>
+              <td class="px-1 py-0.5 text-center">250000</td>
+              <td class="px-1 py-0.5 text-center">Y</td>
+              <td class="px-1 py-0.5 text-center">Audio</td>
+              <td class="px-1 py-0.5 text-center">N</td>
+              <td class="px-1 py-0.5 text-center">Y</td>
+              <td class="px-1 py-0.5 text-center">Y</td>
+            </tr>
+            <tr class="hover:bg-app-selection hover:text-white">
+              <td class="px-1 py-0.5 font-bold" style="color:#006400;">SPOTS</td>
+              <td class="px-1 py-0.5">Commercials (Traffic)</td>
+              <td class="px-1 py-0.5 text-center">000001</td>
+              <td class="px-1 py-0.5 text-center">009999</td>
+              <td class="px-1 py-0.5 text-center">Y</td>
+              <td class="px-1 py-0.5 text-center">Audio</td>
+              <td class="px-1 py-0.5 text-center">Y</td>
+              <td class="px-1 py-0.5 text-center">N</td>
+              <td class="px-1 py-0.5 text-center">Y</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!-- Right: buttons -->
+    <div class="flex flex-col gap-2 pt-5" style="width:80px;">
+      <button data-widget="list_add_button" class="qt-btn bg-app-btn text-app-text text-app-label px-2 py-3 border border-app-border rounded-app hover:bg-app-btn-hover">Add</button>
+      <button data-widget="list_edit_button" class="qt-btn bg-app-btn text-app-text text-app-label px-2 py-3 border border-app-border rounded-app hover:bg-app-btn-hover">Edit</button>
+      <button data-widget="list_rename_button" class="qt-btn bg-app-btn text-app-text text-app-label px-2 py-3 border border-app-border rounded-app hover:bg-app-btn-hover">Rename</button>
+      <button data-widget="list_delete_button" class="qt-btn bg-app-btn text-app-text text-app-label px-2 py-3 border border-app-border rounded-app hover:bg-app-btn-hover">Delete</button>
+      <div class="mt-2">
+        <button data-widget="list_report_button" class="qt-btn bg-app-btn text-app-text text-xs px-2 py-3 border border-app-border rounded-app hover:bg-app-btn-hover w-full">Generate<br>Report</button>
+      </div>
+      <div class="flex-1"></div>
+      <button data-widget="list_close_button" class="qt-btn bg-app-btn text-app-text text-app-label px-2 py-3 border border-app-border rounded-app hover:bg-app-btn-hover font-bold">Close</button>
+    </div>
+  </div>
+</div>
+</body>
+</html>

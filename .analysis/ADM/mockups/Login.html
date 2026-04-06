@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<!-- Source: rdadmin/login.cpp | Class: Login | Screenshot: docs/opsguide/rdadmin.login_dialog.png -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RDAdmin - Login</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        'app-bg': '#d4d0c8',
+        'app-panel': '#ffffff',
+        'app-input': '#ffffff',
+        'app-btn': '#d4d0c8',
+        'app-btn-hover': '#e0dcd4',
+        'app-titlebar': '#4a6ea5',
+        'app-text': '#000000',
+        'app-border': '#808080',
+        'app-border-light': '#ffffff',
+        'app-border-dark': '#404040',
+      },
+      borderRadius: { 'app': '0px' },
+      fontSize: { 'app-label': '0.8125rem', 'app-title': '0.875rem' },
+    }
+  }
+}
+</script>
+<style>
+  .qt-btn {
+    box-shadow: inset -1px -1px 0 #404040, inset 1px 1px 0 #ffffff;
+    font-family: 'Helvetica', 'Arial', system-ui, sans-serif;
+    font-size: 0.875rem;
+  }
+  .qt-input {
+    box-shadow: inset 1px 1px 0 #808080, inset -1px -1px 0 #ffffff;
+    font-family: 'Helvetica', 'Arial', system-ui, sans-serif;
+    font-size: 0.875rem;
+  }
+  body { font-family: 'Helvetica', 'Arial', system-ui, sans-serif; }
+</style>
+</head>
+<body class="bg-app-bg flex items-center justify-center min-h-screen">
+  <div class="bg-app-bg border border-app-border" style="width:230px; height:125px; position:relative;">
+    <!-- Title bar -->
+    <div class="bg-app-titlebar text-white text-app-title font-bold px-2 py-0.5" style="font-size:0.75rem;">
+      RDAdmin
+    </div>
+
+    <!-- User Name -->
+    <div style="position:absolute; top:22px; left:10px;" class="flex items-center gap-1">
+      <label class="text-app-label text-app-text text-right" style="width:85px;">User Name:</label>
+      <input data-widget="login_name_edit" type="text" class="qt-input bg-app-input border border-app-border rounded-app px-1" style="width:100px; height:19px;" value="admin">
+    </div>
+
+    <!-- Password -->
+    <div style="position:absolute; top:43px; left:10px;" class="flex items-center gap-1">
+      <label class="text-app-label text-app-text text-right" style="width:85px;">Password:</label>
+      <input data-widget="login_password_edit" type="password" class="qt-input bg-app-input border border-app-border rounded-app px-1" style="width:100px; height:19px;">
+    </div>
+
+    <!-- Buttons -->
+    <div style="position:absolute; top:70px; left:10px;">
+      <button data-widget="ok_button" class="qt-btn bg-app-btn hover:bg-app-btn-hover border-0 rounded-app text-app-text" style="width:100px;height:45px;">OK</button>
+    </div>
+    <div style="position:absolute; top:70px; left:120px;">
+      <button data-widget="cancel_button" class="qt-btn bg-app-btn hover:bg-app-btn-hover border-0 rounded-app text-app-text" style="width:100px;height:45px;">Cancel</button>
+    </div>
+  </div>
+</body>
+</html>

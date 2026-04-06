@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AddReport - RDAdmin</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        'app-bg': '#d4d0c8',
+        'app-btn': '#d4d0c8',
+        'app-text': '#000000',
+        'app-border': '#808080',
+      },
+      borderRadius: { 'app': '0px' },
+      fontSize: { 'app-label': '0.8125rem', 'app-title': '0.875rem' }
+    }
+  }
+}
+</script>
+<style>
+  .qt-btn { box-shadow: inset -1px -1px 0 #404040, inset 1px 1px 0 #ffffff; }
+  .qt-btn:active { box-shadow: inset 1px 1px 0 #404040, inset -1px -1px 0 #ffffff; }
+  .qt-input { box-shadow: inset 1px 1px 0 #808080, inset -1px -1px 0 #ffffff; }
+</style>
+</head>
+<body class="bg-app-bg flex items-start justify-center pt-8" style="font-family: Helvetica, Arial, system-ui, sans-serif;">
+
+<div class="bg-app-bg border border-app-border" style="width:500px; height:104px; position:relative;">
+  <!-- Title bar -->
+  <div class="bg-[#4a6ea5] text-white text-app-title font-bold px-2 py-1">
+    Add Report
+  </div>
+
+  <div class="p-2">
+    <!-- Report Name -->
+    <div class="flex items-center mb-2">
+      <label class="text-app-label text-right mr-1" style="width:155px;">Report Name:</label>
+      <input type="text" maxlength="64" class="qt-input bg-white border border-app-border text-xs px-1 flex-1" style="height:19px;">
+    </div>
+
+    <!-- Buttons -->
+    <div style="position:absolute; bottom:8px; right:8px; display:flex; gap:8px;">
+      <button class="qt-btn bg-app-btn text-app-text text-app-label border border-app-border font-bold" style="width:80px; height:40px;">OK</button>
+      <button class="qt-btn bg-app-btn text-app-text text-app-label border border-app-border" style="width:80px; height:40px;">Cancel</button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>EditReplicator - RDAdmin</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        'app-bg': '#d4d0c8',
+        'app-btn': '#d4d0c8',
+        'app-text': '#000000',
+        'app-border': '#808080',
+        'app-selection': '#0a246a',
+      },
+      borderRadius: { 'app': '0px' },
+      fontSize: { 'app-label': '0.8125rem', 'app-title': '0.875rem' }
+    }
+  }
+}
+</script>
+<style>
+  .qt-btn { box-shadow: inset -1px -1px 0 #404040, inset 1px 1px 0 #ffffff; }
+  .qt-btn:active { box-shadow: inset 1px 1px 0 #404040, inset -1px -1px 0 #ffffff; }
+  .qt-input { box-shadow: inset 1px 1px 0 #808080, inset -1px -1px 0 #ffffff; }
+  .qt-input-ro { box-shadow: inset 1px 1px 0 #808080, inset -1px -1px 0 #ffffff; background: #e8e4dc; }
+  .qt-listsel { box-shadow: inset 1px 1px 0 #808080, inset -1px -1px 0 #ffffff; }
+</style>
+</head>
+<body class="bg-app-bg flex items-start justify-center pt-4" style="font-family: Helvetica, Arial, system-ui, sans-serif;">
+
+<div class="bg-app-bg border border-app-border" style="width:500px; height:409px; position:relative;">
+  <!-- Title bar -->
+  <div class="bg-[#4a6ea5] text-white text-app-title font-bold px-2 py-1">
+    Replicator: XDS
+  </div>
+
+  <div class="px-2 pt-2" style="font-size:0.8125rem;">
+    <!-- Name (readonly) -->
+    <div class="flex items-center mb-1">
+      <label class="text-right mr-1" style="width:100px;">Name:</label>
+      <input type="text" value="XDS" readonly class="qt-input-ro border border-app-border text-xs px-1 flex-1" style="height:19px;">
+    </div>
+
+    <!-- Description -->
+    <div class="flex items-center mb-1">
+      <label class="text-right mr-1" style="width:100px;">Description:</label>
+      <input type="text" value="X-Digital Copysplit Feed" class="qt-input bg-white border border-app-border text-xs px-1 flex-1" style="height:19px;">
+    </div>
+
+    <!-- Type -->
+    <div class="flex items-center mb-1">
+      <label class="text-right mr-1" style="width:100px;">Type:</label>
+      <select class="bg-white border border-app-border text-xs px-1 flex-1" style="height:19px;">
+        <option selected>Citadel X-Digital Portal</option>
+      </select>
+    </div>
+
+    <!-- Host System -->
+    <div class="flex items-center mb-1">
+      <label class="text-right mr-1" style="width:150px;">Host System:</label>
+      <select class="bg-white border border-app-border text-xs px-1 flex-1" style="height:19px;">
+        <option selected>gazerbeam</option>
+      </select>
+    </div>
+
+    <!-- Audio Upload URL -->
+    <div class="flex items-center mb-1">
+      <label class="text-right mr-1" style="width:150px;">Audio Upload URL:</label>
+      <input type="text" value="http://upload.example.com/spots" class="qt-input bg-white border border-app-border text-xs px-1" style="height:19px; width:335px;">
+    </div>
+
+    <!-- Username / Password -->
+    <div class="flex items-center mb-1">
+      <label class="text-right mr-1" style="width:220px;">Username:</label>
+      <input type="text" value="username" class="qt-input bg-white border border-app-border text-xs px-1" style="height:19px; width:95px;">
+      <label class="text-right mx-1" style="width:70px;">Password:</label>
+      <input type="password" value="password" class="qt-input bg-white border border-app-border text-xs px-1" style="height:19px; width:95px;">
+    </div>
+
+    <!-- Upload Format -->
+    <div class="flex items-center mb-1">
+      <label class="text-right mr-1" style="width:150px;">Upload Format:</label>
+      <input type="text" value="PCM16, 48000 samp/sec, Stereo" readonly class="qt-input-ro border border-app-border text-xs px-1" style="height:19px; width:285px;">
+      <button class="qt-btn bg-app-btn text-xs border border-app-border ml-1 px-2" style="height:24px;">Set</button>
+    </div>
+
+    <!-- Normalize -->
+    <div class="flex items-center mb-2">
+      <div style="width:150px;"></div>
+      <input type="checkbox" checked class="mr-1">
+      <label class="text-xs mr-4">Normalize</label>
+      <label class="text-xs mr-1">Level:</label>
+      <input type="number" value="-1" class="qt-input bg-white border border-app-border text-xs text-center" style="width:40px; height:20px;">
+      <span class="text-xs ml-1">dBFS</span>
+    </div>
+
+    <!-- Groups Selector -->
+    <div class="flex justify-center gap-4" style="margin-top:4px;">
+      <div>
+        <div class="text-xs text-center mb-1">Available Groups</div>
+        <div class="qt-listsel bg-white border border-app-border" style="width:140px; height:100px; overflow:auto;">
+          <div class="text-xs px-1">BEDS</div>
+          <div class="text-xs px-1">FF/PROMO</div>
+          <div class="text-xs px-1 bg-app-selection text-white">IDENTS</div>
+          <div class="text-xs px-1">LEGAL</div>
+          <div class="text-xs px-1">LONGFORM</div>
+          <div class="text-xs px-1">MACROS</div>
+        </div>
+      </div>
+      <div class="flex flex-col justify-center gap-1">
+        <button class="qt-btn bg-app-btn text-xs border border-app-border px-3 py-1">Add &gt;&gt;</button>
+        <button class="qt-btn bg-app-btn text-xs border border-app-border px-3 py-1">&lt;&lt; Remove</button>
+      </div>
+      <div>
+        <div class="text-xs text-center mb-1">Active Groups</div>
+        <div class="qt-listsel bg-white border border-app-border" style="width:140px; height:100px; overflow:auto;">
+          <div class="text-xs px-1">TRAFFIC</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OK / Cancel -->
+    <div style="position:absolute; bottom:10px; right:10px; display:flex; gap:8px;">
+      <button class="qt-btn bg-app-btn text-app-text text-app-label border border-app-border font-bold" style="width:80px; height:50px;">OK</button>
+      <button class="qt-btn bg-app-btn text-app-text text-app-label border border-app-border" style="width:80px; height:50px;">Cancel</button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

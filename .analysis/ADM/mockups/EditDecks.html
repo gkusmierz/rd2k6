@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>EditDecks - Configure RDCatch</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: { extend: { colors: {
+    'app-bg':'#d4d0c8','app-panel':'#ffffff','app-input':'#ffffff',
+    'app-btn':'#d4d0c8','app-btn-hover':'#e0dcd4','app-titlebar':'#4a6ea5',
+    'app-text':'#000000','app-border':'#808080','app-border-light':'#ffffff','app-border-dark':'#404040'
+  }, borderRadius: { 'app':'0px' }, fontSize: { 'app-label':'0.8125rem','app-title':'0.875rem' } } }
+}
+</script>
+<style>
+  .qt-btn { box-shadow: inset -1px -1px 0 #404040, inset 1px 1px 0 #ffffff; }
+  .qt-sunken { box-shadow: inset 1px 1px 0 #808080, inset -1px -1px 0 #ffffff; }
+  .qt-input { box-shadow: inset 1px 1px 0 #808080, inset -1px -1px 0 #ffffff; border: none; background: #fff; }
+  .form-row { display: flex; align-items: center; margin-bottom: 2px; font-size: 0.8125rem; }
+  .form-label { width: 110px; text-align: right; padding-right: 4px; font-weight: 700; }
+  .section-label { font-weight: 700; font-size: 0.875rem; margin: 4px 0; }
+</style>
+</head>
+<body class="bg-app-bg p-0 m-0 font-['Helvetica','Arial',system-ui,sans-serif] text-app-text text-app-label">
+<div class="w-[710px] h-[454px] bg-app-bg border border-app-border" data-widget="EditDecks">
+  <div class="bg-app-titlebar text-white text-app-title font-bold px-2 py-0.5">RDAdmin - Configure RDCatch</div>
+  <div class="p-2 flex gap-4">
+    <!-- Left column: Record Deck -->
+    <div class="w-[380px]">
+      <div class="flex items-center gap-2 mb-1">
+        <span class="section-label">Record Deck</span>
+        <select class="qt-sunken w-[60px] h-[24px]" data-widget="edit_record_deck_box"><option>1</option><option>2</option><option>3</option></select>
+      </div>
+      <div class="section-label">Settings</div>
+      <div class="form-row"><span class="form-label">Card:</span><span data-widget="edit_record_selector">[Card selector]</span></div>
+      <div class="form-row"><span class="form-label">Port:</span><span>[Port selector]</span></div>
+      <div class="form-row"><span class="form-label">Monitor Port:</span><input type="number" class="qt-input w-[50px] h-[19px]" data-widget="edit_monitor_box" value="-1"> <span class="ml-2 font-bold">Monitor defaults to</span> <select class="qt-sunken w-[60px] h-[19px] ml-1" data-widget="edit_default_on_box"><option>Off</option><option>On</option></select></div>
+      <div class="form-row"><span class="form-label">Format:</span><select class="qt-sunken w-[150px] h-[24px]" data-widget="edit_format_box"><option>PCM16</option><option>PCM24</option><option>MPEG Layer 2</option></select></div>
+      <div class="form-row"><span class="form-label">Bit Rate:</span><select class="qt-sunken w-[140px] h-[24px]" data-widget="edit_bitrate_box" disabled><option>128 kbps/chan</option></select></div>
+      <div class="form-row"><span class="form-label">Switcher Host:</span><select class="qt-sunken w-[250px] h-[24px]" data-widget="edit_swstation_box"><option>[none]</option></select></div>
+      <div class="form-row"><span class="form-label">Switcher Matrix:</span><select class="qt-sunken w-[250px] h-[24px]" data-widget="edit_swmatrix_box" disabled></select></div>
+      <div class="form-row"><span class="form-label">Switcher Output:</span><select class="qt-sunken w-[250px] h-[24px]" data-widget="edit_swoutput_box" disabled></select></div>
+      <div class="section-label mt-2">Defaults</div>
+      <div class="form-row"><span class="form-label">Channels:</span><select class="qt-sunken w-[60px] h-[24px]" data-widget="edit_channels_box"><option>1</option><option selected>2</option></select></div>
+      <div class="form-row"><span class="form-label">Trim Threshold:</span><input type="number" class="qt-input w-[70px] h-[24px]" data-widget="edit_threshold_box" value="0"> dB</div>
+      <div class="section-label mt-2">Host-Wide Settings</div>
+      <div class="form-row"><span class="form-label">Error RML:</span><input type="text" class="qt-input w-[248px] h-[24px]" data-widget="edit_errorrml_edit"></div>
+    </div>
+
+    <!-- Right column: Play Deck + Event Carts -->
+    <div class="flex-1">
+      <div class="flex items-center gap-2 mb-1">
+        <span class="section-label">Play Deck</span>
+        <select class="qt-sunken w-[60px] h-[24px]" data-widget="edit_play_deck_box"><option>1</option></select>
+      </div>
+      <div class="form-row"><span class="w-[50px] text-right pr-1 font-bold">Card:</span><span data-widget="edit_play_selector">[Card]</span></div>
+      <div class="form-row"><span class="w-[50px] text-right pr-1 font-bold">Port:</span><span>[Port]</span></div>
+
+      <div class="section-label mt-2">Event Carts</div>
+      <div class="grid grid-cols-2 gap-x-2 gap-y-0.5 text-xs">
+        <div class="flex items-center gap-1"><span class="w-[20px] text-right font-bold">1:</span><input type="text" class="qt-input w-[60px] h-[20px]" data-widget="edit_event_edits_0"><button class="qt-btn bg-app-btn px-1 text-xs">Select</button></div>
+        <div class="flex items-center gap-1"><span class="w-[20px] text-right font-bold">2:</span><input type="text" class="qt-input w-[60px] h-[20px]"><button class="qt-btn bg-app-btn px-1 text-xs">Select</button></div>
+        <div class="flex items-center gap-1"><span class="w-[20px] text-right font-bold">3:</span><input type="text" class="qt-input w-[60px] h-[20px]"><button class="qt-btn bg-app-btn px-1 text-xs">Select</button></div>
+        <div class="flex items-center gap-1"><span class="w-[20px] text-right font-bold">4:</span><input type="text" class="qt-input w-[60px] h-[20px]"><button class="qt-btn bg-app-btn px-1 text-xs">Select</button></div>
+        <div class="flex items-center gap-1"><span class="w-[20px] text-right font-bold">5:</span><input type="text" class="qt-input w-[60px] h-[20px]"><button class="qt-btn bg-app-btn px-1 text-xs">Select</button></div>
+        <div class="flex items-center gap-1"><span class="w-[20px] text-right font-bold">6:</span><input type="text" class="qt-input w-[60px] h-[20px]"><button class="qt-btn bg-app-btn px-1 text-xs">Select</button></div>
+        <div class="flex items-center gap-1"><span class="w-[20px] text-right font-bold">7:</span><input type="text" class="qt-input w-[60px] h-[20px]"><button class="qt-btn bg-app-btn px-1 text-xs">Select</button></div>
+        <div class="flex items-center gap-1"><span class="w-[20px] text-right font-bold">8:</span><input type="text" class="qt-input w-[60px] h-[20px]"><button class="qt-btn bg-app-btn px-1 text-xs">Select</button></div>
+      </div>
+    </div>
+  </div>
+  <!-- Close button -->
+  <div class="absolute bottom-2 right-2">
+    <button class="qt-btn bg-app-btn w-[80px] h-[50px]" data-widget="close_button">&amp;Close</button>
+  </div>
+</div>
+</body>
+</html>

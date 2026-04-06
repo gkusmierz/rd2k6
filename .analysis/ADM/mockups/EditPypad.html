@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>EditPypad - Edit PyPAD Instance</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwindcss.config = {
+  theme: { extend: {
+    colors: { 'app-bg':'#d4d0c8','app-btn':'#d4d0c8','app-btn-hover':'#e0dcd4','app-titlebar':'#4a6ea5','app-border':'#808080','app-text':'#000000' },
+    borderRadius: { 'app':'0px' }, fontSize: { 'app-label':'0.8125rem','app-title':'0.875rem' }
+  }}
+}
+</script>
+<style>
+  body { font-family:'Helvetica','Arial',system-ui,sans-serif; font-size:0.8125rem; }
+  .qt-input { border:2px inset #808080; background:#fff; padding:1px 4px; font-size:0.8125rem; border-radius:0; }
+  .qt-input-ro { border:2px inset #808080; background:#e8e8e8; padding:1px 4px; font-size:0.8125rem; border-radius:0; }
+  .qt-textarea { border:2px inset #808080; background:#fff; padding:4px; font-size:0.8125rem; border-radius:0; font-family:monospace; resize:none; }
+  .qt-btn-big { border:2px outset #d4d0c8; background:#d4d0c8; padding:8px 20px; font-size:0.875rem; border-radius:0; cursor:pointer; min-width:80px; min-height:50px; }
+  .qt-btn-big:hover { background:#e0dcd4; }
+  .sub-label { font-size:0.8125rem; }
+  .form-row { display:flex; align-items:center; margin-bottom:4px; }
+  .form-row .label { width:100px; text-align:right; padding-right:5px; }
+</style>
+</head>
+<body class="bg-app-bg text-app-text p-0 m-0">
+<div style="width:600px; height:660px;" class="bg-app-bg border-2 border-app-border">
+  <div class="bg-app-titlebar text-white px-2 py-1 text-app-title font-bold">Edit PyPAD Instance [ID: 13]</div>
+  <div style="padding:8px; position:relative; height:calc(100% - 28px);">
+    <div class="form-row"><span class="label sub-label">Script Path:</span><input class="qt-input-ro" style="width:475px;" value="/usr/lib64/rivendell/pypad/pypad_icecast2.py" readonly></div>
+    <div class="form-row"><span class="label sub-label">Description:</span><input class="qt-input" style="width:475px;" value="new pypad_icecast2.py instance"></div>
+    <div class="sub-label font-semibold mt-1 ml-1">Configuration</div>
+    <textarea class="qt-textarea" style="width:580px; height:500px;">; This is the configuration for the Icecast2 script.
+; Set the icecast server URL below:
+;
+; Section - Server 1
+[Server]
+Hostname=localhost
+Mountpoint=/stream
+</textarea>
+
+    <div style="position:absolute; bottom:10px; right:10px;" class="flex gap-2">
+      <button class="qt-btn-big">OK</button>
+      <button class="qt-btn-big">Cancel</button>
+    </div>
+  </div>
+</div>
+</body>
+</html>

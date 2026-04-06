@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>EditReport - RDAdmin</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        'app-bg': '#d4d0c8',
+        'app-btn': '#d4d0c8',
+        'app-text': '#000000',
+        'app-border': '#808080',
+        'app-selection': '#0a246a',
+      },
+      borderRadius: { 'app': '0px' },
+      fontSize: { 'app-label': '0.8125rem', 'app-title': '0.875rem' }
+    }
+  }
+}
+</script>
+<style>
+  .qt-btn { box-shadow: inset -1px -1px 0 #404040, inset 1px 1px 0 #ffffff; }
+  .qt-btn:active { box-shadow: inset 1px 1px 0 #404040, inset -1px -1px 0 #ffffff; }
+  .qt-input { box-shadow: inset 1px 1px 0 #808080, inset -1px -1px 0 #ffffff; }
+  .qt-listsel { box-shadow: inset 1px 1px 0 #808080, inset -1px -1px 0 #ffffff; }
+  .qt-section-label { font-weight: bold; }
+</style>
+</head>
+<body class="bg-app-bg flex items-start justify-center pt-2" style="font-family: Helvetica, Arial, system-ui, sans-serif;">
+
+<div class="bg-app-bg border border-app-border" style="width:530px; height:709px; position:relative; overflow:hidden;">
+  <!-- Title bar -->
+  <div class="bg-[#4a6ea5] text-white text-app-title font-bold px-2 py-1">
+    Edit Report - Music Log Report
+  </div>
+
+  <div class="px-3 pt-2" style="font-size:0.8125rem;">
+    <!-- Report Description -->
+    <div class="flex items-center mb-1">
+      <label class="text-right mr-1" style="width:195px;">Report Description:</label>
+      <input type="text" value="Music Log Report" class="qt-input bg-white border border-app-border text-xs px-1 flex-1" style="height:19px;">
+    </div>
+
+    <!-- Export Filter -->
+    <div class="flex items-center mb-1">
+      <label class="text-right mr-1" style="width:195px;">Export Filter:</label>
+      <select class="bg-white border border-app-border text-xs px-1 flex-1" style="height:19px;">
+        <option>Music Playout</option>
+      </select>
+    </div>
+
+    <!-- Station ID -->
+    <div class="flex items-center mb-1">
+      <label class="text-right mr-1" style="width:195px;">Station ID:</label>
+      <input type="text" class="qt-input bg-white border border-app-border text-xs px-1" style="height:19px; width:180px;">
+    </div>
+
+    <!-- Cart Number Parameters -->
+    <div class="flex items-center mb-1">
+      <label class="text-right mr-1" style="width:195px;">Cart Number Parameters:</label>
+      <input type="checkbox" checked class="mr-1">
+      <label class="text-xs mr-3">Use Leading Zeros</label>
+      <label class="text-xs mr-1">Digits:</label>
+      <input type="number" value="6" class="qt-input bg-white border border-app-border text-xs text-center" style="width:40px; height:19px;">
+    </div>
+
+    <!-- Station Type -->
+    <div class="flex items-center mb-1">
+      <label class="text-right mr-1" style="width:195px;">Station Type:</label>
+      <select class="bg-white border border-app-border text-xs px-1" style="height:19px; width:70px;">
+        <option>AM</option>
+        <option>FM</option>
+      </select>
+    </div>
+
+    <!-- Service Name -->
+    <div class="flex items-center mb-1">
+      <label class="text-right mr-1" style="width:195px;">Service Name:</label>
+      <input type="text" class="qt-input bg-white border border-app-border text-xs px-1 flex-1" style="height:19px;">
+    </div>
+
+    <!-- Station Format -->
+    <div class="flex items-center mb-1">
+      <label class="text-right mr-1" style="width:195px;">Station Format:</label>
+      <input type="text" class="qt-input bg-white border border-app-border text-xs px-1 flex-1" style="height:19px;">
+    </div>
+
+    <!-- Export Path -->
+    <div class="flex items-center mb-1">
+      <label class="text-right mr-1" style="width:195px;">Export Path:</label>
+      <input type="text" class="qt-input bg-white border border-app-border text-xs px-1 flex-1" style="height:19px;">
+    </div>
+
+    <!-- Post Export Cmd -->
+    <div class="flex items-center mb-1">
+      <label class="text-right mr-1" style="width:195px;">Post Export Cmd:</label>
+      <input type="text" class="qt-input bg-white border border-app-border text-xs px-1 flex-1" style="height:19px;">
+    </div>
+
+    <!-- Export Event Types -->
+    <div class="flex items-center mb-1">
+      <label class="text-right mr-1" style="width:195px;">Export Event Types:</label>
+      <input type="checkbox" class="mr-1"><label class="text-xs mr-3">Traffic</label>
+      <input type="checkbox" class="mr-1"><label class="text-xs mr-3">Music</label>
+      <input type="checkbox" class="mr-1"><label class="text-xs">All</label>
+    </div>
+
+    <!-- Export Events From -->
+    <div class="flex items-center mb-1">
+      <label class="text-right mr-1" style="width:195px;">Export Events From:</label>
+      <input type="checkbox" class="mr-1"><label class="text-xs mr-3">Traffic Log</label>
+      <input type="checkbox" class="mr-1"><label class="text-xs">Music Log</label>
+    </div>
+
+    <!-- Include Only OnAir -->
+    <div class="flex items-center mb-2">
+      <label class="text-right mr-1" style="width:195px;">Include Only OnAir Events:</label>
+      <select class="bg-white border border-app-border text-xs px-1" style="height:19px; width:60px;">
+        <option>No</option>
+        <option>Yes</option>
+      </select>
+    </div>
+
+    <!-- Filter by Daypart -->
+    <div class="flex items-center mb-1 ml-14">
+      <input type="checkbox" class="mr-1">
+      <label class="text-app-label">Filter by Daypart</label>
+    </div>
+    <div class="flex items-center mb-2 ml-14">
+      <label class="text-xs text-right mr-1 text-gray-400" style="width:80px;">Start Time:</label>
+      <input type="time" disabled class="qt-input bg-white border border-app-border text-xs px-1" style="height:20px; width:80px;">
+      <label class="text-xs text-right mx-1 text-gray-400" style="width:80px;">End Time:</label>
+      <input type="time" disabled class="qt-input bg-white border border-app-border text-xs px-1" style="height:20px; width:80px;">
+    </div>
+
+    <!-- Service Selector -->
+    <div class="flex justify-center gap-3 mb-2">
+      <div>
+        <div class="text-xs text-center mb-1">Available Services</div>
+        <div class="qt-listsel bg-white border border-app-border" style="width:140px; height:60px; overflow:auto;">
+          <div class="text-xs px-1">Production</div>
+          <div class="text-xs px-1">Automation</div>
+        </div>
+      </div>
+      <div class="flex flex-col justify-center gap-1">
+        <button class="qt-btn bg-app-btn text-xs border border-app-border px-2 py-0.5">Add &gt;&gt;</button>
+        <button class="qt-btn bg-app-btn text-xs border border-app-border px-2 py-0.5">&lt;&lt; Remove</button>
+      </div>
+      <div>
+        <div class="text-xs text-center mb-1">Source Services</div>
+        <div class="qt-listsel bg-white border border-app-border" style="width:140px; height:60px; overflow:auto;">
+          <div class="text-xs px-1">Music</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Station Selector -->
+    <div class="flex justify-center gap-3 mb-2">
+      <div>
+        <div class="text-xs text-center mb-1">Available Hosts</div>
+        <div class="qt-listsel bg-white border border-app-border" style="width:140px; height:60px; overflow:auto;">
+          <div class="text-xs px-1">rdvault</div>
+        </div>
+      </div>
+      <div class="flex flex-col justify-center gap-1">
+        <button class="qt-btn bg-app-btn text-xs border border-app-border px-2 py-0.5">Add &gt;&gt;</button>
+        <button class="qt-btn bg-app-btn text-xs border border-app-border px-2 py-0.5">&lt;&lt; Remove</button>
+      </div>
+      <div>
+        <div class="text-xs text-center mb-1">Source Hosts</div>
+        <div class="qt-listsel bg-white border border-app-border" style="width:140px; height:60px; overflow:auto;">
+          <div class="text-xs px-1">gazerbeam</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filter by Groups -->
+    <div class="flex items-center mb-1 ml-14">
+      <input type="checkbox" class="mr-1">
+      <label class="text-app-label">Filter by Groups</label>
+    </div>
+
+    <!-- Group Selector -->
+    <div class="flex justify-center gap-3 mb-2">
+      <div>
+        <div class="text-xs text-center mb-1 text-gray-400">Available Groups</div>
+        <div class="qt-listsel bg-white border border-app-border opacity-50" style="width:140px; height:60px; overflow:auto;">
+          <div class="text-xs px-1">MUSIC</div>
+          <div class="text-xs px-1">TRAFFIC</div>
+        </div>
+      </div>
+      <div class="flex flex-col justify-center gap-1 opacity-50">
+        <button disabled class="qt-btn bg-app-btn text-xs border border-app-border px-2 py-0.5">Add &gt;&gt;</button>
+        <button disabled class="qt-btn bg-app-btn text-xs border border-app-border px-2 py-0.5">&lt;&lt; Remove</button>
+      </div>
+      <div>
+        <div class="text-xs text-center mb-1 text-gray-400">Allowed Groups</div>
+        <div class="qt-listsel bg-white border border-app-border opacity-50" style="width:140px; height:60px; overflow:auto;">
+        </div>
+      </div>
+    </div>
+
+    <!-- OK / Cancel -->
+    <div style="position:absolute; bottom:10px; right:10px; display:flex; gap:8px;">
+      <button class="qt-btn bg-app-btn text-app-text text-app-label border border-app-border font-bold" style="width:80px; height:50px;">OK</button>
+      <button class="qt-btn bg-app-btn text-app-text text-app-label border border-app-border" style="width:80px; height:50px;">Cancel</button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

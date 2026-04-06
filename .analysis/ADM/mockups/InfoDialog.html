@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<!-- Source: rdadmin/info_dialog.cpp | Class: InfoDialog | Screenshot: none -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RDAdmin - System Information</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        'app-bg': '#d4d0c8',
+        'app-panel': '#ffffff',
+        'app-input': '#ffffff',
+        'app-btn': '#d4d0c8',
+        'app-btn-hover': '#e0dcd4',
+        'app-titlebar': '#4a6ea5',
+        'app-text': '#000000',
+        'app-border': '#808080',
+        'app-border-light': '#ffffff',
+        'app-border-dark': '#404040',
+      },
+      borderRadius: { 'app': '0px' },
+      fontSize: { 'app-label': '0.8125rem', 'app-title': '0.875rem' },
+    }
+  }
+}
+</script>
+<style>
+  .qt-btn {
+    box-shadow: inset -1px -1px 0 #404040, inset 1px 1px 0 #ffffff;
+    font-family: 'Helvetica', 'Arial', system-ui, sans-serif;
+    font-size: 0.875rem;
+  }
+  body { font-family: 'Helvetica', 'Arial', system-ui, sans-serif; }
+  .banner { background: linear-gradient(90deg, #003366, #006699, #003366); height: 35px; }
+</style>
+</head>
+<body class="bg-app-bg flex items-center justify-center min-h-screen">
+  <div class="bg-app-bg border border-app-border" style="width:460px; height:310px; position:relative;">
+    <!-- Title bar -->
+    <div class="bg-app-titlebar text-white text-app-title font-bold px-2 py-0.5" style="font-size:0.75rem;">
+      RDAdmin - System Information
+    </div>
+
+    <!-- Top banner -->
+    <div class="banner" style="position:absolute; top:18px; left:0; width:460px;"></div>
+
+    <!-- Title -->
+    <div style="position:absolute; top:59px; left:10px;">
+      <span style="font-size:22px; font-weight:600;">Rivendell</span>
+    </div>
+
+    <!-- Slogan -->
+    <div style="position:absolute; top:70px; left:130px; width:200px; text-align:right;">
+      <span style="font-size:14px;">A Radio Automation System</span>
+    </div>
+
+    <!-- Version -->
+    <div style="position:absolute; top:91px; left:10px;" class="text-app-label text-app-text-sec">
+      Version 4.4.1
+    </div>
+    <div style="position:absolute; top:91px; right:10px;" class="text-app-label text-app-text-sec text-right">
+      Database Schema 369
+    </div>
+
+    <!-- Copyright -->
+    <div style="position:absolute; top:105px; left:10px; width:440px;" class="text-app-label text-app-text-sec">
+      Copyright 2003-2024 Fred Gleason - Rivendell comes with ABSOLUTELY NO WARRANTY
+    </div>
+
+    <!-- Disclaimer -->
+    <div style="position:absolute; top:122px; left:10px; width:440px;" class="text-app-label text-app-text-sec leading-tight">
+      This program is free software, and comes with ABSOLUTELY NO WARRANTY, not even the implied warranties of MERCHANTIBILITY or FITNESS FOR A PARTICULAR PURPOSE. Touch the "View License" button for details.
+    </div>
+
+    <!-- Buttons row -->
+    <div style="position:absolute; top:192px; left:85px;">
+      <button data-widget="credits_button" class="qt-btn bg-app-btn hover:bg-app-btn-hover border-0 rounded-app text-app-text" style="width:80px;height:50px;">View<br>Credits</button>
+    </div>
+    <div style="position:absolute; top:192px; left:185px;">
+      <button data-widget="license_button" class="qt-btn bg-app-btn hover:bg-app-btn-hover border-0 rounded-app text-app-text" style="width:80px;height:50px;">View<br>License</button>
+    </div>
+
+    <!-- Close button -->
+    <div style="position:absolute; top:238px; right:10px;">
+      <button data-widget="close_button" class="qt-btn bg-app-btn hover:bg-app-btn-hover border-0 rounded-app text-app-text" style="width:80px;height:50px;">Close</button>
+    </div>
+
+    <!-- Bottom banner -->
+    <div class="banner" style="position:absolute; bottom:0; left:0; width:460px;"></div>
+  </div>
+</body>
+</html>

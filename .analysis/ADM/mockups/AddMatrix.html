@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AddMatrix - Add Switcher</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Helvetica', 'Arial', system-ui, sans-serif; font-size: 0.875rem; background: #d4d0c8; color: #000; }
+  .dialog { width: 400px; height: 130px; margin: 20px auto; background: #d4d0c8; border: 2px outset #d4d0c8; padding: 4px; }
+  .titlebar { background: #4a6ea5; color: #fff; font-weight: 700; font-size: 0.875rem; padding: 2px 6px; margin-bottom: 4px; }
+  .content { padding: 4px 10px; }
+  .form-row { display: flex; align-items: center; margin-bottom: 5px; }
+  .form-row label { width: 150px; text-align: right; padding-right: 8px; font-size: 0.8125rem; font-weight: 700; }
+  input[type="number"] { width: 40px; border: 2px inset #d4d0c8; background: #fff; padding: 1px 4px; font-size: 0.8125rem; }
+  select { border: 2px inset #d4d0c8; background: #fff; font-size: 0.8125rem; width: 200px; }
+  .button-bar { display: flex; justify-content: flex-end; gap: 10px; position: absolute; bottom: 10px; right: 10px; }
+  .dialog { position: relative; }
+  button { font-family: inherit; font-size: 0.875rem; background: #d4d0c8; border: 2px outset #d4d0c8; padding: 4px 16px; min-width: 80px; min-height: 50px; cursor: pointer; }
+  button:hover { background: #e0dcd4; }
+  button:active { border-style: inset; }
+</style>
+</head>
+<body>
+<div class="dialog">
+  <div class="titlebar">RDAdmin - Add Switcher</div>
+  <div class="content">
+    <div class="form-row">
+      <label>New Matrix Number:</label>
+      <input type="number" value="3" min="0" max="7">
+    </div>
+    <div class="form-row">
+      <label>Switcher Type:</label>
+      <select>
+        <option>Local GPIO</option>
+        <option>Generic GPO</option>
+        <option>Generic Serial</option>
+        <option>Local Audio Adapter</option>
+        <option>Logitek vGuest</option>
+        <option>BroadcastTools SS4.4</option>
+        <option>StarGuide III</option>
+        <option>BroadcastTools SS8.2</option>
+        <option>BroadcastTools 10x1</option>
+        <option>SAS USI</option>
+        <option>BroadcastTools 16x1</option>
+        <option>BroadcastTools 16x2</option>
+        <option>BroadcastTools ACS8.2</option>
+        <option>SAS 32000</option>
+        <option>BroadcastTools SS4.2</option>
+        <option>LiveWire LWRP Audio</option>
+        <option>Quartz Type 1</option>
+        <option>BroadcastTools SS4.4 (2)</option>
+        <option>LiveWire LWRP GPIO</option>
+        <option>BroadcastTools SRC-8 III</option>
+        <option>BroadcastTools SRC-16</option>
+        <option>Harlond</option>
+        <option>Unity4000</option>
+        <option>Software Authority Protocol</option>
+        <option>BroadcastTools WVRC</option>
+        <option>PathFinder</option>
+        <option>ModBus TCP</option>
+        <option>Kernel GPIO</option>
+      </select>
+    </div>
+  </div>
+  <div class="button-bar">
+    <button>OK</button>
+    <button>Cancel</button>
+  </div>
+</div>
+</body>
+</html>

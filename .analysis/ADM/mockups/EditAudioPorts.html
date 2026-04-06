@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>EditAudioPorts - Edit Audio Ports</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: { extend: { colors: {
+    'app-bg':'#d4d0c8','app-panel':'#ffffff','app-input':'#ffffff',
+    'app-btn':'#d4d0c8','app-btn-hover':'#e0dcd4','app-titlebar':'#4a6ea5',
+    'app-text':'#000000','app-border':'#808080','app-border-light':'#ffffff','app-border-dark':'#404040'
+  }, borderRadius: { 'app':'0px' }, fontSize: { 'app-label':'0.8125rem','app-title':'0.875rem' } } }
+}
+</script>
+<style>
+  .qt-btn { box-shadow: inset -1px -1px 0 #404040, inset 1px 1px 0 #ffffff; }
+  .qt-sunken { box-shadow: inset 1px 1px 0 #808080, inset -1px -1px 0 #ffffff; }
+  .qt-input { box-shadow: inset 1px 1px 0 #808080, inset -1px -1px 0 #ffffff; border: none; background: #fff; }
+  .port-group { text-align: center; width: 170px; }
+  .port-label { font-weight: 700; font-size: 0.8125rem; text-align: center; }
+  .port-row { display: flex; align-items: center; gap: 4px; justify-content: center; margin: 2px 0; font-size: 0.8125rem; }
+  .port-row label { font-weight: 700; text-align: right; width: 55px; }
+</style>
+</head>
+<body class="bg-app-bg p-0 m-0 font-['Helvetica','Arial',system-ui,sans-serif] text-app-text text-app-label">
+<div class="w-[730px] h-[460px] bg-app-bg border border-app-border" data-widget="EditAudioPorts">
+  <div class="bg-app-titlebar text-white text-app-title font-bold px-2 py-0.5">RDAdmin - Edit AudioScience Audio Ports</div>
+  <div class="p-2">
+    <!-- Top controls -->
+    <div class="flex items-center gap-4 mb-2">
+      <div class="flex items-center gap-1">
+        <label class="font-bold">Card:</label>
+        <select class="qt-sunken w-[60px] h-[26px]" data-widget="edit_card_box">
+          <option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option>
+        </select>
+      </div>
+      <div class="flex items-center gap-1">
+        <label class="font-bold">Card Driver:</label>
+        <input type="text" class="qt-input w-[170px] h-[19px]" data-widget="card_driver_edit" value="AudioScience HPI" readonly>
+      </div>
+      <div class="flex items-center gap-1">
+        <label class="font-bold">Clock Source:</label>
+        <select class="qt-sunken w-[150px] h-[26px]" data-widget="edit_clock_box">
+          <option>Internal</option><option>AES/EBU Signal</option><option>SP/DIFF Signal</option><option>Word Clock</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Port grid: 2 rows of 4 columns -->
+    <div class="grid grid-cols-4 gap-1">
+      <!-- Input Ports 0-3 -->
+      <div class="port-group" data-widget="input_port_0">
+        <div class="port-label">Input Port 0</div>
+        <div class="port-row"><label>Type:</label><select class="qt-sunken w-[110px]" data-widget="edit_type_box_0"><option>Analog</option><option>AES/EBU</option><option>SP/DIFF</option></select></div>
+        <div class="port-row"><label>Mode:</label><select class="qt-sunken w-[110px]" data-widget="edit_mode_box_0"><option>Normal</option><option>Swap</option><option>Left only</option><option>Right only</option></select></div>
+        <div class="port-row"><label>Ref. Level:</label><input type="number" class="qt-input w-[60px] h-[20px]" data-widget="edit_input_box_0" value="0"> dB</div>
+        <div class="port-label mt-2">Output Port 0</div>
+        <div class="port-row"><label>Ref. Level:</label><input type="number" class="qt-input w-[60px] h-[20px]" data-widget="edit_output_box_0" value="0"> dB</div>
+      </div>
+      <div class="port-group" data-widget="input_port_1">
+        <div class="port-label">Input Port 1</div>
+        <div class="port-row"><label>Type:</label><select class="qt-sunken w-[110px]" data-widget="edit_type_box_1"><option>Analog</option><option selected>AES/EBU</option><option>SP/DIFF</option></select></div>
+        <div class="port-row"><label>Mode:</label><select class="qt-sunken w-[110px]" data-widget="edit_mode_box_1"><option>Normal</option><option>Swap</option><option selected>Left only</option><option>Right only</option></select></div>
+        <div class="port-row"><label>Ref. Level:</label><input type="number" class="qt-input w-[60px] h-[20px]" data-widget="edit_input_box_1" value="0" disabled> dB</div>
+        <div class="port-label mt-2">Output Port 1</div>
+        <div class="port-row"><label>Ref. Level:</label><input type="number" class="qt-input w-[60px] h-[20px]" data-widget="edit_output_box_1" value="0"> dB</div>
+      </div>
+      <div class="port-group" data-widget="input_port_2">
+        <div class="port-label">Input Port 2</div>
+        <div class="port-row"><label>Type:</label><select class="qt-sunken w-[110px]"><option>Analog</option></select></div>
+        <div class="port-row"><label>Mode:</label><select class="qt-sunken w-[110px]"><option>Normal</option></select></div>
+        <div class="port-row"><label>Ref. Level:</label><input type="number" class="qt-input w-[60px] h-[20px]" value="0"> dB</div>
+        <div class="port-label mt-2">Output Port 2</div>
+        <div class="port-row"><label>Ref. Level:</label><input type="number" class="qt-input w-[60px] h-[20px]" value="0"> dB</div>
+      </div>
+      <div class="port-group" data-widget="input_port_3">
+        <div class="port-label">Input Port 3</div>
+        <div class="port-row"><label>Type:</label><select class="qt-sunken w-[110px]"><option>Analog</option></select></div>
+        <div class="port-row"><label>Mode:</label><select class="qt-sunken w-[110px]"><option>Normal</option></select></div>
+        <div class="port-row"><label>Ref. Level:</label><input type="number" class="qt-input w-[60px] h-[20px]" value="0"> dB</div>
+        <div class="port-label mt-2">Output Port 3</div>
+        <div class="port-row"><label>Ref. Level:</label><input type="number" class="qt-input w-[60px] h-[20px]" value="0"> dB</div>
+      </div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="flex justify-between mt-4">
+      <button class="qt-btn bg-app-btn w-[80px] h-[50px]" data-widget="help_button">&amp;Help</button>
+      <button class="qt-btn bg-app-btn w-[80px] h-[50px]" data-widget="close_button">&amp;Close</button>
+    </div>
+  </div>
+</div>
+</body>
+</html>

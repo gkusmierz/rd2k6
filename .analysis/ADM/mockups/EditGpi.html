@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>EditGpi - Edit GPI 2</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Helvetica', 'Arial', system-ui, sans-serif; font-size: 0.875rem; background: #d4d0c8; color: #000; }
+  .dialog { width: 420px; height: 230px; margin: 20px auto; background: #d4d0c8; border: 2px outset #d4d0c8; padding: 4px; position: relative; }
+  .titlebar { background: #4a6ea5; color: #fff; font-weight: 700; font-size: 0.875rem; padding: 2px 6px; margin-bottom: 4px; }
+  .content { padding: 4px 10px; }
+  fieldset { border: 1px solid #a0a0a0; margin-bottom: 8px; padding: 6px 10px; }
+  legend { font-size: 0.8125rem; font-weight: 700; padding: 0 4px; }
+  .form-row { display: flex; align-items: center; margin-bottom: 4px; gap: 6px; }
+  .form-row label { width: 100px; text-align: right; font-size: 0.8125rem; font-weight: 700; }
+  input[type="text"] { border: 2px inset #d4d0c8; background: #fff; padding: 1px 4px; font-size: 0.8125rem; }
+  input.cart { width: 60px; }
+  input.desc { width: 240px; }
+  input.readonly { background: #e8e8e8; }
+  button.small { font-family: inherit; font-size: 0.75rem; background: #d4d0c8; border: 2px outset #d4d0c8; padding: 2px 8px; min-width: 60px; min-height: 20px; cursor: pointer; }
+  button.small:hover { background: #e0dcd4; }
+  .button-bar { display: flex; justify-content: flex-end; gap: 10px; position: absolute; bottom: 10px; right: 10px; }
+  button.action { font-family: inherit; font-size: 0.875rem; background: #d4d0c8; border: 2px outset #d4d0c8; padding: 4px 16px; min-width: 80px; min-height: 50px; cursor: pointer; }
+  button.action:hover { background: #e0dcd4; }
+</style>
+</head>
+<body>
+<div class="dialog">
+  <div class="titlebar">RDAdmin - Edit GPI 2</div>
+  <div class="content">
+    <fieldset>
+      <legend>ON Transition</legend>
+      <div class="form-row">
+        <label>Cart Number:</label>
+        <input type="text" class="cart" value="050002">
+        <button class="small">Select</button>
+        <button class="small">Clear</button>
+      </div>
+      <div class="form-row">
+        <label>Description:</label>
+        <input type="text" class="desc readonly" value="Label Test" readonly>
+      </div>
+    </fieldset>
+    <fieldset>
+      <legend>OFF Transition</legend>
+      <div class="form-row">
+        <label>Cart Number:</label>
+        <input type="text" class="cart" value="">
+        <button class="small">Select</button>
+        <button class="small">Clear</button>
+      </div>
+      <div class="form-row">
+        <label>Description:</label>
+        <input type="text" class="desc readonly" value="" readonly>
+      </div>
+    </fieldset>
+  </div>
+  <div class="button-bar">
+    <button class="action">OK</button>
+    <button class="action">Cancel</button>
+  </div>
+</div>
+</body>
+</html>

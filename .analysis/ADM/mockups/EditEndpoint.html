@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>EditEndpoint - Edit Input</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Helvetica', 'Arial', system-ui, sans-serif; font-size: 0.875rem; background: #d4d0c8; color: #000; }
+  .dialog { width: 400px; height: 130px; margin: 20px auto; background: #d4d0c8; border: 2px outset #d4d0c8; padding: 4px; position: relative; }
+  .titlebar { background: #4a6ea5; color: #fff; font-weight: 700; font-size: 0.875rem; padding: 2px 6px; margin-bottom: 4px; }
+  .content { padding: 4px 10px; }
+  .form-row { display: flex; align-items: center; margin-bottom: 6px; }
+  .form-row label { width: 60px; text-align: right; padding-right: 8px; font-size: 0.8125rem; font-weight: 700; }
+  input[type="text"] { border: 2px inset #d4d0c8; background: #fff; padding: 1px 4px; font-size: 0.8125rem; }
+  input.wide { width: 310px; }
+  input.narrow { width: 50px; }
+  select { border: 2px inset #d4d0c8; background: #fff; font-size: 0.8125rem; width: 85px; }
+  .button-bar { display: flex; justify-content: flex-end; gap: 10px; position: absolute; bottom: 10px; right: 10px; }
+  button { font-family: inherit; font-size: 0.875rem; background: #d4d0c8; border: 2px outset #d4d0c8; padding: 4px 16px; min-width: 80px; min-height: 50px; cursor: pointer; }
+  button:hover { background: #e0dcd4; }
+  button:active { border-style: inset; }
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+<div class="dialog">
+  <div class="titlebar">RDAdmin - Edit Input</div>
+  <div class="content">
+    <div class="form-row">
+      <label>Name:</label>
+      <input type="text" class="wide" value="Studio A">
+    </div>
+    <!-- Unity4000 Input only -->
+    <div class="form-row hidden">
+      <label>Feed:</label>
+      <input type="text" class="narrow" value="">
+      <label style="margin-left:10px; width:auto;">Mode:</label>
+      <select><option>Stereo</option><option>Left</option><option>Right</option></select>
+    </div>
+    <!-- LogitekVguest / StarGuide only -->
+    <div class="form-row hidden">
+      <label style="width:120px">Engine (Hex):</label>
+      <input type="text" class="narrow" value="">
+    </div>
+    <div class="form-row hidden">
+      <label style="width:120px">Device (Hex):</label>
+      <input type="text" class="narrow" value="">
+    </div>
+  </div>
+  <div class="button-bar">
+    <button>OK</button>
+    <button>Cancel</button>
+  </div>
+</div>
+</body>
+</html>

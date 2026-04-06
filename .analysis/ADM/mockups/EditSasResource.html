@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>EditSasResource - Edit SAS Switch</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Helvetica', 'Arial', system-ui, sans-serif; font-size: 0.875rem; background: #d4d0c8; color: #000; }
+  .dialog { width: 250px; height: 152px; margin: 20px auto; background: #d4d0c8; border: 2px outset #d4d0c8; padding: 4px; position: relative; }
+  .titlebar { background: #4a6ea5; color: #fff; font-weight: 700; font-size: 0.875rem; padding: 2px 6px; margin-bottom: 4px; }
+  .content { padding: 4px 10px; }
+  .form-row { display: flex; align-items: center; margin-bottom: 6px; }
+  .form-row label { width: 150px; text-align: right; padding-right: 8px; font-size: 0.8125rem; font-weight: 700; }
+  input[type="text"] { border: 2px inset #d4d0c8; background: #fff; padding: 1px 4px; font-size: 0.8125rem; width: 50px; }
+  .button-bar { display: flex; justify-content: flex-end; gap: 10px; position: absolute; bottom: 10px; right: 10px; }
+  button { font-family: inherit; font-size: 0.875rem; background: #d4d0c8; border: 2px outset #d4d0c8; padding: 4px 16px; min-width: 80px; min-height: 50px; cursor: pointer; }
+  button:hover { background: #e0dcd4; }
+  button:active { border-style: inset; }
+</style>
+</head>
+<body>
+<div class="dialog">
+  <div class="titlebar">RDAdmin - Edit SAS Switch</div>
+  <div class="content">
+    <div class="form-row">
+      <label>Console Number:</label>
+      <input type="text" value="1">
+    </div>
+    <div class="form-row">
+      <label>Source Number:</label>
+      <input type="text" value="5">
+    </div>
+    <div class="form-row">
+      <label>Opto/Relay Number:</label>
+      <input type="text" value="2">
+    </div>
+  </div>
+  <div class="button-bar">
+    <button>OK</button>
+    <button>Cancel</button>
+  </div>
+</div>
+</body>
+</html>

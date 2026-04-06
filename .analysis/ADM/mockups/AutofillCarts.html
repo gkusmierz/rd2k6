@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AutofillCarts - RDAdmin - Autofill Carts - Service: WXYZ</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: { extend: { colors: {
+    'app-bg':'#d4d0c8','app-panel':'#ffffff','app-input':'#ffffff',
+    'app-btn':'#d4d0c8','app-btn-hover':'#e0dcd4','app-titlebar':'#4a6ea5',
+    'app-selection':'#0a246a','app-text':'#000000','app-border':'#808080',
+    'app-border-light':'#ffffff','app-border-dark':'#404040'
+  }, borderRadius: { 'app':'0px' }, fontSize: { 'app-label':'0.8125rem','app-title':'0.875rem' } } }
+}
+</script>
+<style>
+  .qt-btn { box-shadow: inset -1px -1px 0 #404040, inset 1px 1px 0 #ffffff; }
+  .qt-btn:active { box-shadow: inset 1px 1px 0 #404040, inset -1px -1px 0 #ffffff; }
+  .qt-list { box-shadow: inset 1px 1px 0 #808080, inset -1px -1px 0 #ffffff; }
+  body { font-family: 'Helvetica','Arial',system-ui,sans-serif; }
+</style>
+</head>
+<body class="bg-app-bg p-0 m-0">
+<div style="width:375px;height:310px;" class="flex flex-col">
+  <div class="bg-app-titlebar text-white text-app-title font-bold px-2 py-1">RDAdmin - Autofill Carts - Service: WXYZ</div>
+  <div class="flex-1 bg-app-bg p-2 flex flex-col">
+    <!-- Cart list -->
+    <div class="flex-1 bg-app-panel qt-list border border-app-border overflow-auto mb-2" data-widget="svc_cart_list">
+      <table class="w-full text-app-label">
+        <thead class="bg-app-bg border-b border-app-border sticky top-0">
+          <tr>
+            <th class="px-1 py-0.5 text-center" style="width:60px;">Cart</th>
+            <th class="px-1 py-0.5 text-right" style="width:60px;">Length</th>
+            <th class="px-1 py-0.5 text-left">Title</th>
+            <th class="px-1 py-0.5 text-left">Artist</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="bg-app-selection text-white">
+            <td class="px-1 py-0.5 text-center">000002</td>
+            <td class="px-1 py-0.5 text-right">:30.0</td>
+            <td class="px-1 py-0.5">Per Inquiry Rotator</td>
+            <td class="px-1 py-0.5"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Add / Delete buttons -->
+    <div class="flex gap-1 mb-2">
+      <button data-widget="add_button" class="qt-btn bg-app-btn text-app-text text-app-label px-3 py-1 border border-app-border rounded-app hover:bg-app-btn-hover" style="width:60px;height:35px;">Add</button>
+      <button data-widget="delete_button" class="qt-btn bg-app-btn text-app-text text-app-label px-3 py-1 border border-app-border rounded-app hover:bg-app-btn-hover" style="width:60px;height:35px;">Delete</button>
+    </div>
+
+    <!-- OK / Cancel -->
+    <div class="flex justify-end gap-2">
+      <button data-widget="ok_button" class="qt-btn bg-app-btn text-app-text text-app-label px-4 py-2 border border-app-border rounded-app hover:bg-app-btn-hover font-bold" style="width:80px;height:40px;">OK</button>
+      <button data-widget="cancel_button" class="qt-btn bg-app-btn text-app-text text-app-label px-4 py-2 border border-app-border rounded-app hover:bg-app-btn-hover" style="width:80px;height:40px;">Cancel</button>
+    </div>
+  </div>
+</div>
+</body>
+</html>

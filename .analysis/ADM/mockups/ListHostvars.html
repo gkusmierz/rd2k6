@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ListHostvars - Host Variables for GAZERBEAM</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwindcss.config = {
+  theme: { extend: {
+    colors: { 'app-bg':'#d4d0c8','app-panel':'#ffffff','app-input':'#ffffff','app-btn':'#d4d0c8','app-btn-hover':'#e0dcd4','app-titlebar':'#4a6ea5','app-selection':'#0a246a','app-text':'#000000','app-border':'#808080','app-border-light':'#ffffff','app-border-dark':'#404040' },
+    borderRadius: { 'app':'0px' },
+    fontSize: { 'app-label':'0.8125rem','app-title':'0.875rem' }
+  }}
+}
+</script>
+<style>
+  .btn-3d { box-shadow: inset -1px -1px 0 #404040, inset 1px 1px 0 #ffffff; }
+  .input-sunken { box-shadow: inset 1px 1px 0 #808080, inset -1px -1px 0 #ffffff; }
+</style>
+</head>
+<body class="bg-app-bg font-['Helvetica','Arial',system-ui,sans-serif] text-app-text text-app-label">
+<div class="w-[490px] min-h-[320px] border border-app-border" data-widget="ListHostvars" data-window-title="RDAdmin - Host Variables for GAZERBEAM">
+  <div class="bg-app-titlebar text-white text-app-title font-bold px-2 py-1">RDAdmin - Host Variables for GAZERBEAM</div>
+  <div class="p-2">
+    <label class="font-bold text-app-label block mb-1" data-widget="list_title_label">Host Variables</label>
+    <!-- Q3ListView table -->
+    <div class="bg-app-panel border-2 border-app-border input-sunken overflow-auto h-[170px]" data-widget="list_view">
+      <table class="w-full text-app-label">
+        <thead class="bg-app-bg">
+          <tr>
+            <th class="text-center px-2 py-1 border-r border-app-border">NAME</th>
+            <th class="text-left px-2 py-1 border-r border-app-border">VALUE</th>
+            <th class="text-left px-2 py-1">REMARK</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="text-center px-2 py-1">%LINE_NUM%</td>
+            <td class="px-2 py-1">5</td>
+            <td class="px-2 py-1">CR Output Line Number on TOC Switcher</td>
+          </tr>
+          <tr class="bg-app-selection text-white">
+            <td class="text-center px-2 py-1">%MATRIX_NUM%</td>
+            <td class="px-2 py-1">1</td>
+            <td class="px-2 py-1">Matrix number for the TOC Switcher</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- Buttons -->
+    <div class="flex items-center mt-2 gap-2">
+      <button class="bg-app-btn btn-3d rounded-app px-4 py-3 text-app-label w-[80px]" data-widget="list_add_button">Add</button>
+      <button class="bg-app-btn btn-3d rounded-app px-4 py-3 text-app-label w-[80px]" data-widget="list_edit_button">Edit</button>
+      <button class="bg-app-btn btn-3d rounded-app px-4 py-3 text-app-label w-[80px]" data-widget="list_delete_button">Delete</button>
+      <div class="flex-1"></div>
+      <button class="bg-app-btn btn-3d rounded-app px-4 py-3 text-app-label w-[80px]" data-widget="list_ok_button">OK</button>
+      <button class="bg-app-btn btn-3d rounded-app px-4 py-3 text-app-label w-[80px]" data-widget="list_cancel_button">Cancel</button>
+    </div>
+  </div>
+</div>
+</body>
+</html>
