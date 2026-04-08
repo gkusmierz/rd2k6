@@ -1,38 +1,25 @@
-# Rivendell — Project Overview
+# Rivendell (rd2k6)
 
-Rivendell is a comprehensive digital audio system for professional radio broadcast environments.
-Licensed under GPL v2. Developed primarily by Fred Gleason.
-
-## Main Components (Qt/C++ applications)
-- **RDAdmin** — administration and configuration
-- **RDLibrary** — production audio interface
-- **RDCatch** — automatic recorder and task scheduler
-- **RDLogin** — user login utility
-- **RDLogEdit** — air log creation, editing and voicetracker
-- **RDLogManager** — automatic log generation from templates
-- **RDAirPlay** — on-air playout application
-- **RDPanel** — fullscreen SoundPanel cartwall
-- **RDCastManager** — podcast management
-- **RDCartSlots** — cart slot interface
-- **RDMonitor** — system monitoring
+Rivendell is a complete open-source radio automation system for Linux.
+Version: 3.6.7 (based on PACKAGE_VERSION).
 
 ## Tech Stack
-- Language: C++
-- UI Framework: Qt (classic widgets, no QML)
-- Build: Autotools (autoconf/automake) + qmake (.pro files)
-- No .ui files, no .qml files — UI built programmatically in C++
-- Database: MySQL (for audio library, logs, etc.)
-- Platform: Linux
+- C++ with Qt (Qt3/Qt4 compatibility layer)
+- Build system: autotools (autoconf/automake) + qmake
+- Database: MySQL/MariaDB
+- Audio: ALSA, JACK, AudioScience HPI
+- IPC: Unix sockets, TCP/UDP
+- Web: CGI-based API (rdxport.cgi, webget.cgi)
 
-## Repository Structure
-- `lib/` — shared library (librd)
-- `rdadmin/`, `rdairplay/`, `rdlibrary/`, etc. — individual applications
-- `apis/` — API definitions
-- `docs/` — documentation
-- `conf/` — configuration files
-- `helpers/`, `importers/` — auxiliary tools
-- `web/` — web services (rdxport)
-- `icons/` — application icons
+## Structure
+- `lib/` — core library (librd), ~399 files, used by all other components
+- `rdhpi/` — AudioScience HPI library
+- `cae/`, `ripcd/`, `rdservice/`, `rdcatchd/`, etc. — daemons
+- `rdadmin/`, `rdairplay/`, `rdlibrary/`, etc. — GUI applications
+- `utils/` — command-line tools
+- `web/` — CGI web services
+- `apis/` — external APIs (rivwebcapi, pypad)
+- `tests/` — test suite
 
-## Branch Status
-This branch (master) is frozen — historical only. Active development on branch 'v3'.
+## LOC
+~307,000 lines of code across 42 artifacts.

@@ -1,26 +1,12 @@
-# Rivendell — Suggested Commands
+# Suggested Commands
 
-## Build System
-The project uses Autotools + qmake. The .pro files exist for sub-project organization.
-
-### Initial Setup
+## Build
 ```bash
 ./autogen.sh
 ./configure
-make
+make -j$(nproc)
 ```
 
-### qmake (sub-projects)
-```bash
-qmake rivendell.pro
-make
-```
-
-## Utility Commands
-- `git` — version control
-- `ls`, `find`, `grep` — file exploration (Linux)
-- `qmake` — available at /home/gk/.local/bin/qmake
-
-## Notes
-- No `bear` installed — compile_commands.json must be generated manually if needed
-- No CMake — project uses autotools + qmake
+## System utilities
+- git, ls, cd, grep, find — standard Linux commands
+- bear -- make — regenerate compile_commands.json

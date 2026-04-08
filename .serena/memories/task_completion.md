@@ -1,7 +1,5 @@
-# What to do when a task is completed
+# Task Completion Checklist
 
-Since this is a frozen historical branch used for reverse engineering analysis only,
-there are no build/lint/test steps to run after changes.
-
-The project is being analyzed (not modified) by the QTRE multi-agent system.
-After completing analysis phases, update the relevant status files in `.analysis/`.
+This project is used for reverse engineering/analysis only.
+No code modifications are expected — only analysis output files in .analysis/ directory.
+No build/test/lint steps required after analysis tasks.
