@@ -26,6 +26,18 @@
 - Station and system administration (handled by the Admin module)
 - Audio device driver management (delegated to the audio engine service)
 
+## Visual Design Reference
+
+All UI/UX implementation decisions (colors, typography, spacing, component appearance, interaction patterns) are defined in the design system files. **Agents implementing UI components MUST read these before writing any visual code.**
+
+| Layer | File | Scope |
+|-------|------|-------|
+| Global | `.blah/steering/design.md` | Typography (Fira Code/Sans), base palette, spacing, z-index, accessibility baseline |
+| Spec | `design-system/MASTER.md` | Airplay-specific tokens (timing colors, panel states, layout, component specs) |
+| Page | `design-system/pages/*.md` | Per-view overrides (main-window, log-list-view, sound-panel, timing-displays) |
+
+**Hierarchy:** page override > spec MASTER > global steering. Higher layers only define differences.
+
 ## Architecture
 
 ### Architecture Pattern & Boundary Map

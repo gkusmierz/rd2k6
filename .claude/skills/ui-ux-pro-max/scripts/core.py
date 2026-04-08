@@ -80,7 +80,8 @@ STACK_CONFIG = {
     "react-native": {"file": "stacks/react-native.csv"},
     "flutter": {"file": "stacks/flutter.csv"},
     "shadcn": {"file": "stacks/shadcn.csv"},
-    "jetpack-compose": {"file": "stacks/jetpack-compose.csv"}
+    "jetpack-compose": {"file": "stacks/jetpack-compose.csv"},
+    "qml": {"file": "stacks/qml.csv"}
 }
 
 # Common columns for all stacks

@@ -122,6 +122,31 @@ winget install Python.Python.3.12
 
 When user requests UI/UX work (design, build, create, implement, review, fix, improve), follow this workflow:
 
+### Step 0: Check Global Design Steering (REQUIRED — before anything else)
+
+Before generating or recommending any design decisions, check if a global design steering file exists:
+
+```
+.blah/steering/design.md
+```
+
+**If the file exists:**
+1. **Read it first.** It is the global Source of Truth for typography, color palette, spacing, z-index, interaction rules, and accessibility baseline.
+2. **Do NOT override** its decisions with search results. The search tool provides recommendations for projects without an established design system. When `steering/design.md` exists, its tokens and rules are authoritative.
+3. **Use search results only to fill gaps** — e.g., if steering defines typography and colors but the user needs chart recommendations or a landing page pattern, search for those specific domains only.
+4. **Per-spec overrides live in** `.blah/specs/{feature}/design-system/MASTER.md`. When persisting (`--persist`), write only spec-specific additions/overrides to the spec's MASTER.md, and add `> **Inherits from:** .blah/steering/design.md` at the top.
+
+**If the file does NOT exist:**
+- Proceed normally with Step 1+. After generating a design system, suggest extracting shared decisions (typography, base palette, spacing) into `.blah/steering/design.md` so future specs can inherit them.
+
+**Hierarchy (highest priority wins):**
+```
+.blah/specs/{feature}/design-system/pages/{page}.md   ← page-specific overrides
+.blah/specs/{feature}/design-system/MASTER.md          ← spec-level overrides
+.blah/steering/design.md                                ← global Source of Truth
+search.py results                                       ← recommendations (lowest priority)
+```
+
 ### Step 1: Analyze User Requirements
 
 Extract key information from user request:
@@ -130,7 +155,7 @@ Extract key information from user request:
 - **Industry**: healthcare, fintech, gaming, education, etc.
 - **Stack**: React, Vue, Next.js, or default to `html-tailwind`
 
-### Step 2: Generate Design System (REQUIRED)
+### Step 2: Generate Design System (REQUIRED — unless steering already covers it)
 
 **Always start with `--design-system`** to get comprehensive recommendations with reasoning:
 
@@ -170,9 +195,10 @@ This also creates:
 - `design-system/pages/dashboard.md` — Page-specific deviations from Master
 
 **How hierarchical retrieval works:**
-1. When building a specific page (e.g., "Checkout"), first check `design-system/pages/checkout.md`
-2. If the page file exists, its rules **override** the Master file
-3. If not, use `design-system/MASTER.md` exclusively
+1. Start with `.blah/steering/design.md` (global steering) if it exists — this is the base layer
+2. Apply `.blah/specs/{feature}/design-system/MASTER.md` on top — spec-level overrides
+3. Apply `.blah/specs/{feature}/design-system/pages/{page}.md` on top — page-level overrides
+4. Higher layers only need to define **differences** from the layer below
 
 ### Step 3: Supplement with Detailed Searches (as needed)
 
@@ -200,7 +226,7 @@ Get implementation-specific best practices. If user doesn't specify a stack, **d
 python3 skills/ui-ux-pro-max/scripts/search.py "<keyword>" --stack html-tailwind
 ```
 
-Available stacks: `html-tailwind`, `react`, `nextjs`, `vue`, `svelte`, `swiftui`, `react-native`, `flutter`, `shadcn`, `jetpack-compose`
+Available stacks: `html-tailwind`, `react`, `nextjs`, `vue`, `svelte`, `swiftui`, `react-native`, `flutter`, `shadcn`, `jetpack-compose`, `qml`
 
 ---
 
@@ -235,6 +261,7 @@ Available stacks: `html-tailwind`, `react`, `nextjs`, `vue`, `svelte`, `swiftui`
 | `flutter` | Widgets, State, Layout, Theming |
 | `shadcn` | shadcn/ui components, theming, forms, patterns |
 | `jetpack-compose` | Composables, Modifiers, State Hoisting, Recomposition |
+| `qml` | Qt Quick/QML: bindings, States, C++ models, anchors, Loader, Accessible, Canvas |
 
 ---
 
@@ -292,12 +319,14 @@ python3 skills/ui-ux-pro-max/scripts/search.py "fintech crypto" --design-system 
 
 ## Tips for Better Results
 
-1. **Be specific with keywords** - "healthcare SaaS dashboard" > "app"
-2. **Search multiple times** - Different keywords reveal different insights
-3. **Combine domains** - Style + Typography + Color = Complete design system
-4. **Always check UX** - Search "animation", "z-index", "accessibility" for common issues
-5. **Use stack flag** - Get implementation-specific best practices
-6. **Iterate** - If first search doesn't match, try different keywords
+1. **Check steering first** - If `.blah/steering/design.md` exists, respect it. Only search for what it doesn't cover.
+2. **Be specific with keywords** - "healthcare SaaS dashboard" > "app"
+3. **Search multiple times** - Different keywords reveal different insights
+4. **Combine domains** - Style + Typography + Color = Complete design system
+5. **Always check UX** - Search "animation", "z-index", "accessibility" for common issues
+6. **Use stack flag** - Get implementation-specific best practices
+7. **Iterate** - If first search doesn't match, try different keywords
+8. **Extract shared decisions** - After generating a design system, suggest moving typography/palette to `steering/design.md` if it doesn't exist yet
 
 ---
 
