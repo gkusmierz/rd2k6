@@ -73,7 +73,7 @@ artifacts_count: 28
 | ADM | rdadmin | done | done | pending | pending | pending |
 | LBR | rdlibrary | done | done | pending | pending | pending |
 | LGE | rdlogedit | done | done | pending | pending | pending |
-| LGM | rdlogmanager | done | pending | pending | pending | pending |
+| LGM | rdlogmanager | done | done | pending | pending | pending |
 | CTH | rdcatch | done | pending | pending | pending | pending |
 | PNL | rdpanel | done | pending | pending | pending | pending |
 | CST | rdcartslots | done | pending | pending | pending | pending |
