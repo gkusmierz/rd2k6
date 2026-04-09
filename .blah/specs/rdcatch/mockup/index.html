@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rivendell 2.0 — Complete System Prototype</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Fira+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwindcss.config={darkMode:'class',theme:{extend:{fontFamily:{sans:['Fira Sans','system-ui','sans-serif'],mono:['Fira Code','monospace']},colors:{surface:{950:'#020617',900:'#0F172A',800:'#1E293B',700:'#334155'}}}}}
+  </script>
+  <style>
+    html,body{background:#020617;color-scheme:dark}body{font-family:'Fira Sans',sans-serif}.font-mono{font-family:'Fira Code',monospace}
+    ::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:#0F172A}::-webkit-scrollbar-thumb{background:#334155;border-radius:3px}
+    .drawer-overlay{background:rgba(2,6,23,0.7)}.drawer{transition:transform .2s ease}.drawer.closed{transform:translateX(-100%)}
+    @keyframes pulse-on-air{0%,100%{opacity:1}50%{opacity:.7}}.on-air-pulse{animation:pulse-on-air 2s ease-in-out infinite}
+    @keyframes blink-colon{0%,49%{opacity:1}50%,100%{opacity:0}}.blink{animation:blink-colon 1s step-end infinite}
+    @keyframes meter-l{0%{height:72%}25%{height:85%}50%{height:60%}75%{height:78%}100%{height:72%}}.meter-l{animation:meter-l 1.8s ease-in-out infinite}
+    @keyframes meter-r{0%{height:65%}25%{height:75%}50%{height:82%}75%{height:58%}100%{height:65%}}.meter-r{animation:meter-r 2.1s ease-in-out infinite}
+    @keyframes rec-pulse{0%,100%{opacity:1}50%{opacity:.5}}.rec-pulse{animation:rec-pulse 1s ease-in-out infinite}
+    @keyframes meter-h{0%{width:65%}25%{width:78%}50%{width:55%}75%{width:72%}100%{width:65%}}.meter-h{animation:meter-h 2s ease-in-out infinite}
+    .nav-active{background:#1E293B;border-left:4px solid #3B82F6}
+    @media(prefers-reduced-motion:reduce){.on-air-pulse,.blink,.meter-l,.meter-r,.rec-pulse,.meter-h{animation:none}.blink{opacity:1}.drawer{transition:none}}
+  </style>
+</head>
+<body class="bg-surface-950 text-slate-50 h-screen w-screen overflow-hidden flex flex-col select-none">
+
+  <!-- TOP HEADER -->
+  <header class="h-10 bg-surface-900 border-b border-surface-700 flex items-center px-3 gap-3 shrink-0 z-40">
+    <button id="drawerToggle" class="w-8 h-8 flex items-center justify-center text-slate-400 hover:text-slate-200 cursor-pointer rounded hover:bg-surface-800"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+    <span class="text-sm font-semibold text-blue-400" id="appTitle">RDCatch</span>
+    <span class="text-xs text-slate-500" id="appSub">Catch / Record Scheduler</span>
+    <div class="flex-1"></div>
+    <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-green-500"></span><span class="text-[10px] text-slate-400">3 stations</span></div>
+    <div class="w-px h-4 bg-surface-700"></div>
+    <span class="text-xs text-slate-500">MAIN-STUDIO</span><div class="w-px h-4 bg-surface-700"></div><span class="text-xs text-slate-400">admin</span>
+  </header>
+
+  <!-- DRAWER OVERLAY -->
+  <div id="drawerOverlay" class="fixed inset-0 z-50 drawer-overlay hidden" onclick="closeDrawer()"></div>
+
+  <!-- DRAWER — ALL 6 MODULES -->
+  <nav id="drawer" class="fixed top-0 left-0 bottom-0 w-72 bg-surface-900 border-r border-surface-700 z-50 drawer closed flex flex-col">
+    <div class="h-14 flex items-center px-4 gap-3 border-b border-surface-700 shrink-0">
+      <div class="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center"><svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 19V6l12-3v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="15" r="3"/></svg></div>
+      <div><div class="text-sm font-semibold text-slate-200">Rivendell 2.0</div><div class="text-[10px] text-slate-500">Broadcast Automation Suite</div></div>
+      <button class="ml-auto text-slate-500 hover:text-slate-300 cursor-pointer" onclick="closeDrawer()"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg></button>
+    </div>
+    <div class="flex-1 overflow-y-auto py-2">
+      <div class="px-3 pt-2 pb-1"><span class="text-[10px] font-semibold uppercase tracking-wider text-slate-500">Modules</span></div>
+
+      <button onclick="go('airplay')" class="di w-full flex items-center gap-3 h-11 px-4 text-left cursor-pointer hover:bg-surface-800/50 border-l-4 border-transparent" data-app="airplay">
+        <svg class="w-5 h-5 text-red-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5.636 18.364a9 9 0 010-12.728"/><path d="M18.364 5.636a9 9 0 010 12.728"/><circle cx="12" cy="12" r="1"/></svg>
+        <div><div class="text-[13px] text-slate-300">RDAirPlay</div><div class="text-[10px] text-slate-500">On-Air Playout</div></div><span class="ml-auto text-[9px] bg-surface-800 text-slate-500 px-1.5 py-0.5 rounded">AIR</span></button>
+
+      <button onclick="go('rdadmin')" class="di w-full flex items-center gap-3 h-11 px-4 text-left cursor-pointer hover:bg-surface-800/50 border-l-4 border-transparent" data-app="rdadmin">
+        <svg class="w-5 h-5 text-slate-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573-1.066c-.426 1.756-2.924 1.756-3.35 0"/><circle cx="12" cy="12" r="3"/></svg>
+        <div><div class="text-[13px] text-slate-300">RDAdmin</div><div class="text-[10px] text-slate-500">Administration</div></div><span class="ml-auto text-[9px] bg-surface-800 text-slate-500 px-1.5 py-0.5 rounded">ADM</span></button>
+
+      <button onclick="go('rdlibrary')" class="di w-full flex items-center gap-3 h-11 px-4 text-left cursor-pointer hover:bg-surface-800/50 border-l-4 border-transparent" data-app="rdlibrary">
+        <svg class="w-5 h-5 text-blue-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+        <div><div class="text-[13px] text-slate-300">RDLibrary</div><div class="text-[10px] text-slate-500">Audio Library</div></div><span class="ml-auto text-[9px] bg-surface-800 text-slate-500 px-1.5 py-0.5 rounded">LBR</span></button>
+
+      <button onclick="go('rdlogedit')" class="di w-full flex items-center gap-3 h-11 px-4 text-left cursor-pointer hover:bg-surface-800/50 border-l-4 border-transparent" data-app="rdlogedit">
+        <svg class="w-5 h-5 text-emerald-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        <div><div class="text-[13px] text-slate-300">RDLogEdit</div><div class="text-[10px] text-slate-500">Log Editor</div></div><span class="ml-auto text-[9px] bg-surface-800 text-slate-500 px-1.5 py-0.5 rounded">LGE</span></button>
+
+      <button onclick="go('rdlogmanager')" class="di w-full flex items-center gap-3 h-11 px-4 text-left cursor-pointer hover:bg-surface-800/50 border-l-4 border-transparent" data-app="rdlogmanager">
+        <svg class="w-5 h-5 text-amber-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        <div><div class="text-[13px] text-slate-300">RDLogManager</div><div class="text-[10px] text-slate-500">Log Manager / Scheduler</div></div><span class="ml-auto text-[9px] bg-surface-800 text-slate-500 px-1.5 py-0.5 rounded">LGM</span></button>
+
+      <button onclick="go('rdcatch')" class="di w-full flex items-center gap-3 h-11 px-4 text-left cursor-pointer hover:bg-surface-800/50 border-l-4 border-red-500 bg-surface-800/50" data-app="rdcatch">
+        <svg class="w-5 h-5 text-red-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l2 2"/></svg>
+        <div><div class="text-[13px] text-slate-100 font-semibold">RDCatch</div><div class="text-[10px] text-red-400">Catch / Record Scheduler</div></div><span class="ml-auto text-[9px] bg-red-600 text-white px-1.5 py-0.5 rounded font-semibold">CTH</span></button>
+    </div>
+    <div class="border-t border-surface-700 p-3 shrink-0">
+      <div class="flex items-center gap-2"><div class="w-7 h-7 rounded-full bg-blue-600 flex items-center justify-center text-xs font-bold">A</div><div><div class="text-xs text-slate-300">admin</div><div class="text-[10px] text-slate-500">MAIN-STUDIO</div></div></div>
+      <div class="text-[10px] text-slate-600 mt-2">v2.0.0 — Rivendell</div>
+    </div>
+  </nav>
+
+  <!-- ===== VIEWS ===== -->
+  <div class="flex-1 min-h-0 overflow-hidden">
+
+    <!-- AIRPLAY -->
+    <div id="v-airplay" class="h-full hidden flex-col">
+      <div class="h-12 bg-surface-900 border-b border-surface-700 flex items-center px-4 gap-4 shrink-0">
+        <div class="font-mono text-3xl font-bold">14<span class="blink">:</span>23<span class="blink">:</span>07</div>
+        <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase bg-green-500/20 text-green-400 border border-green-500/30">Auto</span>
+        <div class="on-air-pulse flex items-center gap-1 bg-red-600 px-2 py-0.5 rounded text-[10px] font-bold uppercase"><span class="w-1.5 h-1.5 rounded-full bg-white"></span>ON AIR</div>
+        <div class="flex-1 text-center text-xs text-slate-400 italic truncate">Radio Rivendell — 98.7 FM</div>
+      </div>
+      <div class="flex-1 flex min-h-0">
+        <aside class="w-16 bg-surface-900 border-r border-surface-700 flex flex-col items-center py-2 gap-1.5 shrink-0">
+          <button class="w-12 h-12 rounded-lg bg-green-600 flex items-center justify-center"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+          <button class="w-12 h-12 rounded-lg bg-red-600 flex items-center justify-center"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="1"/></svg></button>
+          <button class="w-12 h-12 rounded-lg bg-amber-600 flex items-center justify-center"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg></button>
+        </aside>
+        <main class="flex-1 overflow-y-auto min-w-0">
+          <div class="h-8 flex items-center px-2 text-xs border-l-4 border-green-500 bg-green-500/5"><span class="w-12 font-mono text-[10px] text-slate-400">102345</span><span class="flex-1 truncate font-medium text-slate-100 ml-2">Bohemian Rhapsody</span><span class="w-24 truncate text-[10px] text-slate-400 ml-1">Queen</span><span class="font-mono text-[10px] text-slate-300 ml-2">5:55</span><span class="ml-2"><span class="px-1 py-0.5 rounded text-[8px] font-bold bg-green-800/60 text-green-300">SEGUE</span></span></div>
+          <div class="h-8 flex items-center px-2 text-xs border-l-2 border-blue-500 bg-blue-500/5"><span class="w-12 font-mono text-[10px] text-slate-400">100891</span><span class="flex-1 truncate text-slate-200 ml-2">Hotel California</span><span class="w-24 truncate text-[10px] text-slate-400 ml-1">Eagles</span><span class="font-mono text-[10px] text-slate-300 ml-2">6:30</span><span class="ml-2"><span class="px-1 py-0.5 rounded text-[8px] font-bold bg-blue-800/60 text-blue-300">PLAY</span></span></div>
+          <div class="h-8 flex items-center px-2 text-xs border-l-4 border-transparent bg-surface-950"><span class="w-12 font-mono text-[10px] text-slate-500">100204</span><span class="flex-1 truncate text-slate-400 ml-2">Station ID</span><span class="w-24 text-[10px] text-slate-500 ml-1"></span><span class="font-mono text-[10px] text-slate-500 ml-2">0:08</span></div>
+          <div class="h-8 flex items-center px-2 text-xs border-l-4 border-transparent bg-surface-900"><span class="w-12 font-mono text-[10px] text-slate-500">103782</span><span class="flex-1 truncate text-slate-400 ml-2">Stairway to Heaven</span><span class="w-24 truncate text-[10px] text-slate-500 ml-1">Led Zeppelin</span><span class="font-mono text-[10px] text-slate-500 ml-2">8:02</span></div>
+          <div class="h-8 flex items-center px-2 text-xs border-l-4 border-transparent bg-surface-950"><span class="w-12 font-mono text-[10px] text-slate-500">100567</span><span class="flex-1 truncate text-slate-400 ml-2">News Intro Jingle</span><span class="w-24 text-[10px] text-slate-500 ml-1"></span><span class="font-mono text-[10px] text-slate-500 ml-2">0:05</span></div>
+          <div class="h-8 flex items-center px-2 text-xs border-l-4 border-transparent bg-surface-900"><span class="w-12 font-mono text-[10px] text-slate-500">104201</span><span class="flex-1 truncate text-slate-400 ml-2">Come Together</span><span class="w-24 truncate text-[10px] text-slate-500 ml-1">The Beatles</span><span class="font-mono text-[10px] text-slate-500 ml-2">4:19</span></div>
+        </main>
+        <aside class="w-44 bg-surface-900 border-l border-surface-700 flex flex-col items-center py-3 shrink-0">
+          <div class="relative w-32 h-32"><svg viewBox="0 0 120 120" class="w-full h-full -rotate-90"><circle cx="60" cy="60" r="52" fill="none" stroke="#1E293B" stroke-width="10"/><circle cx="60" cy="60" r="52" fill="none" stroke="#F59E0B" stroke-width="10" opacity=".25" stroke-dasharray="98 228" stroke-dashoffset="-65"/><circle cx="60" cy="60" r="52" fill="none" stroke="#3B82F6" stroke-width="10" stroke-dasharray="203 326"/></svg><div class="absolute inset-0 flex flex-col items-center justify-center"><span class="font-mono text-2xl font-semibold">3:41</span><span class="text-[9px] uppercase text-green-400 font-semibold">Segue</span></div></div>
+          <div class="mt-1 font-mono text-sm text-green-400 bg-green-950/40 rounded px-1.5 py-0.5">+0:12</div>
+          <div class="mt-2 flex-1 flex items-end gap-1.5 justify-center w-full px-4 min-h-[60px]">
+            <div class="flex-1 bg-surface-800 rounded-sm h-full relative overflow-hidden"><div class="absolute bottom-0 left-0 right-0 meter-l rounded-sm" style="height:72%;background:linear-gradient(to top,#22C55E 0%,#22C55E 60%,#F59E0B 60%,#F59E0B 85%,#EF4444 85%)"></div></div>
+            <div class="flex-1 bg-surface-800 rounded-sm h-full relative overflow-hidden"><div class="absolute bottom-0 left-0 right-0 meter-r rounded-sm" style="height:65%;background:linear-gradient(to top,#22C55E 0%,#22C55E 60%,#F59E0B 60%,#F59E0B 85%,#EF4444 85%)"></div></div>
+          </div>
+        </aside>
+      </div>
+      <footer class="h-24 bg-surface-900 border-t border-surface-700 p-1 shrink-0"><div class="grid grid-cols-8 grid-rows-2 gap-1 h-full">
+        <button class="rounded bg-green-800 border border-green-500/40 text-[9px] text-slate-100">Applause</button>
+        <button class="rounded bg-surface-800 border border-surface-700 text-[9px] text-slate-300">Rim Shot</button>
+        <button class="rounded bg-surface-800 border border-surface-700 text-[9px] text-slate-300">Trombone</button>
+        <button class="rounded bg-surface-800 border border-surface-700 text-[9px] text-slate-300">Air Horn</button>
+        <button class="rounded bg-surface-800 border border-surface-700 text-[9px] text-slate-300">News</button>
+        <button class="rounded bg-surface-800 border border-surface-700 text-[9px] text-slate-300">Weather</button>
+        <button class="rounded bg-surface-800 border border-surface-700 text-[9px] text-slate-300">Station ID</button>
+        <button class="rounded bg-surface-800 border border-surface-700 text-[9px] text-slate-300">Sponsor</button>
+        <button class="rounded bg-surface-800 border border-surface-700 text-[9px] text-slate-300">Jingle 1</button>
+        <button class="rounded bg-surface-800 border border-surface-700 text-[9px] text-slate-300">Jingle 2</button>
+        <button class="rounded bg-surface-950 border border-surface-800/50 text-[9px] text-slate-600">Empty</button><button class="rounded bg-surface-950 border border-surface-800/50 text-[9px] text-slate-600">Empty</button><button class="rounded bg-surface-950 border border-surface-800/50 text-[9px] text-slate-600">Empty</button><button class="rounded bg-surface-950 border border-surface-800/50 text-[9px] text-slate-600">Empty</button><button class="rounded bg-surface-950 border border-surface-800/50 text-[9px] text-slate-600">Empty</button><button class="rounded bg-surface-950 border border-surface-800/50 text-[9px] text-slate-600">Empty</button>
+      </div></footer>
+    </div>
+
+    <!-- RDADMIN (compact) -->
+    <div id="v-rdadmin" class="h-full hidden flex-col"><div class="flex-1 flex min-h-0"><aside class="w-48 bg-surface-900 border-r border-surface-700 overflow-y-auto py-2 shrink-0"><div class="px-3 pt-2 pb-1"><span class="text-[9px] font-semibold uppercase text-slate-500">System</span></div><a class="flex items-center h-7 px-3 text-[11px] text-slate-400 border-l-4 border-transparent">Settings</a><a class="flex items-center h-7 px-3 text-[11px] text-slate-400 border-l-4 border-transparent">Scheduler Codes</a><div class="px-3 pt-2 pb-1"><span class="text-[9px] font-semibold uppercase text-slate-500">Users</span></div><a class="flex items-center h-7 px-3 text-[11px] text-slate-400 border-l-4 border-transparent">Users</a><a class="flex items-center h-7 px-3 text-[11px] text-slate-400 border-l-4 border-transparent">Groups</a><div class="px-3 pt-2 pb-1"><span class="text-[9px] font-semibold uppercase text-slate-500">Infrastructure</span></div><a class="nav-active flex items-center h-7 px-3 text-[11px] text-slate-200">Stations</a></aside><main class="flex-1 p-4 overflow-y-auto"><div class="max-w-3xl mx-auto bg-surface-900 rounded border border-surface-700 p-4"><h3 class="text-xs font-semibold text-slate-200 mb-3">Station: MAIN-STUDIO — AirPlay Profile</h3><div class="grid grid-cols-2 gap-3"><div><label class="block text-[10px] text-slate-400 mb-1">Card</label><select class="w-full bg-surface-950 border border-surface-700 rounded px-2 py-1.5 text-xs text-slate-300"><option>Card 0 — HPI</option></select></div><div><label class="block text-[10px] text-slate-400 mb-1">Skin</label><select class="w-full bg-surface-950 border border-surface-700 rounded px-2 py-1.5 text-xs text-slate-300"><option>Default Dark</option></select></div><div><label class="block text-[10px] text-slate-400 mb-1">Segue (ms)</label><input type="number" value="250" class="w-full bg-surface-950 border border-surface-700 rounded px-2 py-1.5 text-xs text-slate-300 font-mono"></div><div><label class="block text-[10px] text-slate-400 mb-1">Transition</label><select class="w-full bg-surface-950 border border-surface-700 rounded px-2 py-1.5 text-xs text-slate-300"><option>Segue</option></select></div></div><div class="mt-3 flex justify-end gap-2"><button class="px-3 py-1.5 text-xs text-slate-400">Cancel</button><button class="px-3 py-1.5 text-xs font-medium bg-blue-600 rounded cursor-pointer">Save</button></div></div></main></div></div>
+
+    <!-- RDLIBRARY (compact) -->
+    <div id="v-rdlibrary" class="h-full hidden flex-col">
+      <div class="bg-surface-900 border-b border-surface-700 px-3 py-1.5 flex items-center gap-2 shrink-0"><input type="text" placeholder="Search carts..." class="w-48 h-7 bg-surface-950 border border-surface-700 rounded px-2 text-[11px] text-slate-300 placeholder-slate-600"><select class="h-7 bg-surface-950 border border-surface-700 rounded px-2 text-[11px] text-slate-300"><option>All Groups</option></select><label class="flex items-center gap-1 text-[10px] text-slate-400 ml-2"><input type="checkbox" checked class="w-3 h-3">Audio</label><label class="flex items-center gap-1 text-[10px] text-slate-400"><input type="checkbox" checked class="w-3 h-3">Macro</label><span class="ml-auto text-[10px] text-slate-500 font-mono">1,247 carts</span></div>
+      <div class="flex-1 overflow-y-auto">
+        <div class="h-7 flex items-center px-3 text-xs border-l-4 border-blue-500 bg-blue-500/5"><span class="w-12 font-mono text-[10px]">001234</span><span class="w-5"><span class="inline-block w-3 h-3 rounded bg-blue-600 text-[7px] font-bold text-white text-center leading-3">A</span></span><span class="w-14 text-blue-400 text-[10px]">MUSIC</span><span class="w-12 text-right font-mono text-[10px]">3:30</span><span class="flex-1 pl-2 truncate text-slate-100 font-medium">Bohemian Rhapsody</span><span class="w-24 truncate text-[10px] text-slate-400">Queen</span></div>
+        <div class="h-7 flex items-center px-3 text-xs border-l-4 border-green-500 bg-green-500/5"><span class="w-12 font-mono text-[10px]">002100</span><span class="w-5"><span class="inline-block w-3 h-3 rounded bg-blue-600 text-[7px] font-bold text-white text-center leading-3">A</span></span><span class="w-14 text-green-400 text-[10px]">NEWS</span><span class="w-12 text-right font-mono text-[10px]">0:45</span><span class="flex-1 pl-2 truncate text-slate-100 font-medium">Morning News Intro</span><span class="w-24 truncate text-[10px] text-slate-400">Newsroom</span></div>
+        <div class="h-7 flex items-center px-3 text-xs border-l-4 border-amber-500 bg-amber-500/5"><span class="w-12 font-mono text-[10px]">003001</span><span class="w-5"><span class="inline-block w-3 h-3 rounded bg-blue-600 text-[7px] font-bold text-white text-center leading-3">A</span></span><span class="w-14 text-amber-400 text-[10px]">JINGLES</span><span class="w-12 text-right font-mono text-[10px]">0:08</span><span class="flex-1 pl-2 truncate text-slate-100 font-medium">Station ID</span><span class="w-24 text-[10px] text-slate-400"></span></div>
+        <div class="h-7 flex items-center px-3 text-xs border-l-4 border-blue-500 bg-blue-600/20 ring-1 ring-blue-500/20"><span class="w-12 font-mono text-[10px]">004501</span><span class="w-5"><span class="inline-block w-3 h-3 rounded bg-blue-600 text-[7px] font-bold text-white text-center leading-3">A</span></span><span class="w-14 text-blue-400 text-[10px]">MUSIC</span><span class="w-12 text-right font-mono text-[10px]">4:19</span><span class="flex-1 pl-2 truncate text-white font-semibold">Come Together</span><span class="w-24 truncate text-[10px] text-slate-300">The Beatles</span></div>
+        <div class="h-7 flex items-center px-3 text-xs border-l-4 border-slate-600 bg-surface-950"><span class="w-12 font-mono text-[10px]">010001</span><span class="w-5"><span class="inline-block w-3 h-3 rounded bg-purple-600 text-[7px] font-bold text-white text-center leading-3">M</span></span><span class="w-14 text-slate-400 text-[10px]">SYSTEM</span><span class="w-12 text-right font-mono text-[10px]">0:05</span><span class="flex-1 pl-2 truncate text-slate-100">Auto-Start Morning</span><span class="w-24 text-[10px] text-slate-400"></span></div>
+      </div>
+      <div class="h-9 bg-surface-900 border-t border-surface-700 flex items-center px-3 gap-2 shrink-0"><button class="h-7 px-3 bg-blue-600 rounded text-[11px] font-semibold">Add</button><button class="h-7 px-3 bg-purple-600 rounded text-[11px] font-semibold">Macro</button><button class="h-7 px-3 bg-blue-600 rounded text-[11px] font-semibold">Edit</button><button class="h-7 px-3 bg-red-600 rounded text-[11px] font-semibold">Delete</button><div class="flex-1"></div><button class="h-7 px-3 bg-surface-800 rounded text-[11px] text-slate-400">Rip CD</button></div>
+    </div>
+
+    <!-- RDLOGEDIT (compact with voice tracker hint) -->
+    <div id="v-rdlogedit" class="h-full hidden flex-col">
+      <div class="bg-surface-900 border-b border-surface-700 px-3 py-1.5 flex items-center gap-2 shrink-0"><input type="text" placeholder="Filter logs..." class="w-48 h-7 bg-surface-950 border border-surface-700 rounded px-2 text-[11px] text-slate-300 placeholder-slate-600"><select class="h-7 bg-surface-950 border border-surface-700 rounded px-2 text-[11px] text-slate-300"><option>All Services</option></select><span class="ml-auto text-[10px] text-slate-500 font-mono">42 logs</span></div>
+      <div class="flex-1 overflow-y-auto">
+        <div class="h-7 flex items-center px-3 text-xs bg-blue-600/15"><span class="w-28 font-mono text-[10px] text-slate-200">LOG_20260408</span><span class="flex-1 truncate text-slate-300 ml-2">Tuesday Morning Show</span><span class="w-20 text-[10px] text-slate-400 ml-1">Radio Riv.</span><span class="w-3 h-3 rounded-full bg-green-500 mx-1"></span><span class="w-3 h-3 rounded-full bg-green-500 mx-1"></span><span class="font-mono text-[10px] text-slate-300 ml-1">5/12</span></div>
+        <div class="h-7 flex items-center px-3 text-xs bg-surface-950"><span class="w-28 font-mono text-[10px] text-slate-300">LOG_20260409</span><span class="flex-1 truncate text-slate-400 ml-2">Wednesday Morning</span><span class="w-20 text-[10px] text-slate-400 ml-1">Radio Riv.</span><span class="w-3 h-3 rounded-full bg-amber-500 mx-1"></span><span class="w-3 h-3 rounded-full bg-slate-500 mx-1"></span><span class="font-mono text-[10px] text-slate-400 ml-1">0/8</span></div>
+        <div class="h-7 flex items-center px-3 text-xs bg-surface-900"><span class="w-28 font-mono text-[10px] text-slate-300">LOG_20260410</span><span class="flex-1 truncate text-slate-400 ml-2">Thursday Morning</span><span class="w-20 text-[10px] text-slate-400 ml-1">Radio Riv.</span><span class="w-3 h-3 rounded-full bg-slate-500 mx-1"></span><span class="w-3 h-3 rounded-full bg-slate-500 mx-1"></span><span class="font-mono text-[10px] text-slate-400 ml-1">0/10</span></div>
+      </div>
+      <div class="h-9 bg-surface-900 border-t border-surface-700 flex items-center px-3 gap-2 shrink-0"><button class="h-7 px-3 bg-blue-600 rounded text-[11px] font-semibold">Add</button><button class="h-7 px-3 bg-blue-600 rounded text-[11px] font-semibold">Edit</button><button class="h-7 px-3 bg-red-600 rounded text-[11px] font-semibold">Delete</button><div class="w-px h-4 bg-surface-700"></div><button class="h-7 px-3 bg-emerald-600 rounded text-[11px] font-semibold">Voice Track</button><button class="h-7 px-3 bg-surface-800 rounded text-[11px] text-slate-400">Reports</button></div>
+    </div>
+
+    <!-- RDLOGMANAGER (compact with grid) -->
+    <div id="v-rdlogmanager" class="h-full hidden flex-col">
+      <div class="h-9 bg-surface-900 border-b border-surface-700 flex items-end px-4 gap-1 shrink-0">
+        <button class="px-4 py-1.5 text-[11px] font-medium border-b-2 border-transparent text-slate-500">Events</button>
+        <button class="px-4 py-1.5 text-[11px] font-medium border-b-2 border-transparent text-slate-500">Clocks</button>
+        <button class="px-4 py-1.5 text-[11px] font-medium border-b-2 border-blue-500 text-blue-400">Grids</button>
+        <button class="px-4 py-1.5 text-[11px] font-medium border-b-2 border-transparent text-slate-500">Logs</button>
+        <button class="px-4 py-1.5 text-[11px] font-medium border-b-2 border-transparent text-slate-500">Reports</button>
+      </div>
+      <div class="flex-1 overflow-auto p-3">
+        <div class="text-[10px] text-slate-400 mb-2">Service: <span class="text-slate-200 font-semibold">Radio Rivendell</span> — Weekly Grid</div>
+        <table class="w-full border-collapse text-center"><thead><tr><th class="bg-surface-900 border border-surface-700 p-1 text-[8px] uppercase text-slate-500 w-10"></th><th class="bg-surface-900 border border-surface-700 p-1 text-[8px] uppercase text-slate-500">Mon</th><th class="bg-surface-900 border border-surface-700 p-1 text-[8px] uppercase text-slate-500">Tue</th><th class="bg-surface-900 border border-surface-700 p-1 text-[8px] uppercase text-slate-500">Wed</th><th class="bg-surface-900 border border-surface-700 p-1 text-[8px] uppercase text-slate-500">Thu</th><th class="bg-surface-900 border border-surface-700 p-1 text-[8px] uppercase text-slate-500">Fri</th><th class="bg-surface-900 border border-surface-700 p-1 text-[8px] uppercase text-slate-500">Sat</th><th class="bg-surface-900 border border-surface-700 p-1 text-[8px] uppercase text-slate-500">Sun</th></tr></thead><tbody>
+        <script>const g=[{h:[0,1,2,3,4,5],c:'OVER',b:'rgba(100,116,139,.35)',w:'WEEK',wb:'rgba(244,63,94,.25)'},{h:[6,7,8,9],c:'MDRV',b:'rgba(59,130,246,.35)',w:'WEEK',wb:'rgba(244,63,94,.25)'},{h:[10,11,12,13],c:'MIDD',b:'rgba(34,197,94,.35)',w:'WEEK',wb:'rgba(244,63,94,.25)'},{h:[14,15,16,17],c:'AFTN',b:'rgba(245,158,11,.35)',w:'WEEK',wb:'rgba(244,63,94,.25)'},{h:[18,19,20,21],c:'EVNG',b:'rgba(168,85,247,.35)',w:'WEEK',wb:'rgba(244,63,94,.25)'},{h:[22,23],c:'OVER',b:'rgba(100,116,139,.35)',w:'WEEK',wb:'rgba(244,63,94,.25)'}];for(let h=0;h<24;h++){const k=g.find(x=>x.h.includes(h));const hr=String(h).padStart(2,'0')+':00';const wd=`<td class="border border-surface-700 py-0.5 cursor-pointer hover:brightness-125" style="background:${k.b}"><span class="font-mono text-[8px] font-semibold text-slate-200">${k.c}</span></td>`;const we=`<td class="border border-surface-700 py-0.5 cursor-pointer hover:brightness-125" style="background:${k.wb}"><span class="font-mono text-[8px] font-semibold text-slate-200">${k.w}</span></td>`;document.write(`<tr><td class="bg-surface-900 border border-surface-700 font-mono text-[8px] text-slate-500 px-1">${hr}</td>${wd.repeat(5)}${we.repeat(2)}</tr>`)}</script>
+        </tbody></table>
+      </div>
+    </div>
+
+    <!-- ===== RDCATCH VIEW — THE MAIN EVENT ===== -->
+    <div id="v-rdcatch" class="h-full flex flex-col">
+
+      <!-- Deck Monitors -->
+      <div class="bg-surface-900 border-b border-surface-700 px-3 py-2 flex gap-3 overflow-x-auto shrink-0">
+        <!-- Deck 1: Recording (active) -->
+        <div class="min-w-[240px] bg-[#450a0a] border border-red-500/30 rounded-lg p-2.5 shrink-0">
+          <div class="flex items-center gap-2 mb-1">
+            <span class="text-[10px] font-semibold text-slate-200">MAIN-STUDIO</span>
+            <span class="text-[9px] text-slate-400">Ch:1</span>
+            <span class="ml-auto flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-red-500 rec-pulse"></span><span class="text-[9px] font-semibold text-red-400">Recording</span></span>
+          </div>
+          <div class="text-[10px] text-slate-300 truncate font-mono">001234_001 — Morning Show</div>
+          <div class="text-[9px] text-slate-500 truncate mb-1.5">Daily recording 6-10am</div>
+          <div class="flex items-center gap-2">
+            <div class="flex-1 flex gap-1">
+              <div class="flex-1 h-2.5 bg-surface-950 rounded-sm overflow-hidden"><div class="h-full meter-h rounded-sm" style="width:72%;background:linear-gradient(to right,#22C55E 0%,#22C55E 70%,#F59E0B 70%,#F59E0B 90%,#EF4444 90%)"></div></div>
+              <div class="flex-1 h-2.5 bg-surface-950 rounded-sm overflow-hidden"><div class="h-full meter-h rounded-sm" style="width:65%;background:linear-gradient(to right,#22C55E 0%,#22C55E 70%,#F59E0B 70%,#F59E0B 90%,#EF4444 90%);animation-delay:-.5s"></div></div>
+            </div>
+            <button class="w-6 h-6 rounded bg-red-600/50 hover:bg-red-600 flex items-center justify-center cursor-pointer" title="Abort"><svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" stroke="currentColor" stroke-width="3" fill="none"/></svg></button>
+            <button class="w-6 h-6 rounded bg-surface-800 hover:bg-surface-700 flex items-center justify-center cursor-pointer" title="Monitor"><svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15.536 8.464a5 5 0 010 7.072M18.364 5.636a9 9 0 010 12.728M12 12h.01"/></svg></button>
+          </div>
+        </div>
+
+        <!-- Deck 2: Idle -->
+        <div class="min-w-[240px] bg-surface-800 border border-surface-700 rounded-lg p-2.5 shrink-0">
+          <div class="flex items-center gap-2 mb-1">
+            <span class="text-[10px] font-semibold text-slate-300">MAIN-STUDIO</span>
+            <span class="text-[9px] text-slate-500">Ch:2</span>
+            <span class="ml-auto flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-slate-500"></span><span class="text-[9px] text-slate-500">Idle</span></span>
+          </div>
+          <div class="text-[10px] text-slate-500 font-mono">—</div>
+          <div class="text-[9px] text-slate-600 mb-1.5">No active event</div>
+          <div class="flex items-center gap-2">
+            <div class="flex-1 flex gap-1"><div class="flex-1 h-2.5 bg-surface-950 rounded-sm"></div><div class="flex-1 h-2.5 bg-surface-950 rounded-sm"></div></div>
+            <button class="w-6 h-6 rounded bg-surface-700/50 flex items-center justify-center opacity-30" disabled><svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" stroke="currentColor" stroke-width="3" fill="none"/></svg></button>
+            <button class="w-6 h-6 rounded bg-surface-700/50 flex items-center justify-center opacity-30" disabled><svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15.536 8.464a5 5 0 010 7.072"/></svg></button>
+          </div>
+        </div>
+
+        <!-- Deck 3: Waiting -->
+        <div class="min-w-[240px] bg-[#422006] border border-amber-500/30 rounded-lg p-2.5 shrink-0">
+          <div class="flex items-center gap-2 mb-1">
+            <span class="text-[10px] font-semibold text-slate-200">PRODUCTION</span>
+            <span class="text-[9px] text-slate-400">Ch:1</span>
+            <span class="ml-auto flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-amber-500 rec-pulse"></span><span class="text-[9px] font-semibold text-amber-400">Waiting</span></span>
+          </div>
+          <div class="text-[10px] text-slate-300 truncate font-mono">005001_001 — Network Feed</div>
+          <div class="text-[9px] text-slate-500 truncate mb-1.5">GPI trigger — window 14:00-14:05</div>
+          <div class="flex items-center gap-2">
+            <div class="flex-1 flex gap-1"><div class="flex-1 h-2.5 bg-surface-950 rounded-sm"></div><div class="flex-1 h-2.5 bg-surface-950 rounded-sm"></div></div>
+            <button class="w-6 h-6 rounded bg-red-600/50 hover:bg-red-600 flex items-center justify-center cursor-pointer"><svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" stroke="currentColor" stroke-width="3" fill="none"/></svg></button>
+            <button class="w-6 h-6 rounded bg-surface-800 hover:bg-surface-700 flex items-center justify-center cursor-pointer"><svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15.536 8.464a5 5 0 010 7.072"/></svg></button>
+          </div>
+        </div>
+
+        <!-- Deck 4: Offline -->
+        <div class="min-w-[240px] bg-surface-900 border border-surface-700/50 rounded-lg p-2.5 shrink-0 opacity-40">
+          <div class="flex items-center gap-2 mb-1">
+            <span class="text-[10px] font-semibold text-slate-500">REMOTE-1</span>
+            <span class="text-[9px] text-slate-600">Ch:1</span>
+            <span class="ml-auto text-[9px] font-semibold text-slate-600">OFFLINE</span>
+          </div>
+          <div class="text-[10px] text-slate-600 font-mono">—</div>
+          <div class="text-[9px] text-slate-700 mb-1.5">Connection lost</div>
+        </div>
+      </div>
+
+      <!-- Filter Bar -->
+      <div class="h-9 bg-surface-900 border-b border-surface-700 flex items-center px-3 gap-3 shrink-0">
+        <label class="flex items-center gap-1 text-[10px] text-slate-400 cursor-pointer"><input type="checkbox" class="w-3 h-3">Active Only</label>
+        <label class="flex items-center gap-1 text-[10px] text-slate-400 cursor-pointer"><input type="checkbox" checked class="w-3 h-3">Today Only</label>
+        <select class="h-6 bg-surface-950 border border-surface-700 rounded px-2 text-[10px] text-slate-300 cursor-pointer"><option>All Days</option><option>Weekdays</option></select>
+        <select class="h-6 bg-surface-950 border border-surface-700 rounded px-2 text-[10px] text-slate-300 cursor-pointer"><option>All Types</option><option>Recording</option><option>Playout</option><option>Download</option><option>Upload</option><option>Macro</option><option>Switch</option></select>
+        <div class="flex-1"></div>
+        <span class="text-[10px] text-slate-500 font-mono">18 events</span>
+      </div>
+
+      <!-- Event List Header -->
+      <div class="h-6 bg-surface-800 border-b border-surface-700 flex items-center text-[8px] uppercase tracking-wider text-slate-500 font-semibold px-3 shrink-0">
+        <span class="w-6">T</span><span class="flex-1">Description</span><span class="w-24">Station</span><span class="w-10">Deck</span><span class="w-16">Start</span><span class="w-16">End</span><span class="w-20">Source</span><span class="w-20">Dest</span><span class="w-[112px]">Days</span><span class="w-16">Status</span>
+      </div>
+
+      <!-- Event List -->
+      <div class="flex-1 overflow-y-auto">
+        <!-- Active recording (green) -->
+        <div class="h-8 flex items-center px-3 text-xs bg-[#052e16] cursor-pointer">
+          <span class="w-6"><svg class="w-3.5 h-3.5 text-red-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/></svg></span>
+          <span class="flex-1 truncate text-green-200 font-medium">Morning Show Recording</span>
+          <span class="w-24 text-[10px] text-green-300">MAIN-STUDIO</span>
+          <span class="w-10 font-mono text-[10px] text-green-300">1</span>
+          <span class="w-16 font-mono text-[10px] text-green-300">06:00:00</span>
+          <span class="w-16 font-mono text-[10px] text-green-300">10:00:00</span>
+          <span class="w-20 text-[10px] text-green-300">Analog In</span>
+          <span class="w-20 font-mono text-[10px] text-green-300">001234</span>
+          <span class="w-[112px] flex gap-0.5"><span class="w-3.5 h-3.5 rounded text-[7px] font-bold bg-blue-600 text-white flex items-center justify-center">M</span><span class="w-3.5 h-3.5 rounded text-[7px] font-bold bg-blue-600 text-white flex items-center justify-center">T</span><span class="w-3.5 h-3.5 rounded text-[7px] font-bold bg-blue-600 text-white flex items-center justify-center">W</span><span class="w-3.5 h-3.5 rounded text-[7px] font-bold bg-blue-600 text-white flex items-center justify-center">T</span><span class="w-3.5 h-3.5 rounded text-[7px] font-bold bg-blue-600 text-white flex items-center justify-center">F</span><span class="w-3.5 h-3.5 rounded text-[7px] font-bold bg-surface-800 text-slate-600 flex items-center justify-center">S</span><span class="w-3.5 h-3.5 rounded text-[7px] font-bold bg-surface-800 text-slate-600 flex items-center justify-center">S</span></span>
+          <span class="w-16 text-[10px] font-semibold text-green-400">Active</span>
+        </div>
+
+        <!-- Waiting for GPI (magenta) -->
+        <div class="h-8 flex items-center px-3 text-xs bg-[#4a044e] cursor-pointer">
+          <span class="w-6"><svg class="w-3.5 h-3.5 text-red-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/></svg></span>
+          <span class="flex-1 truncate text-fuchsia-200 font-medium">Network Feed Capture</span>
+          <span class="w-24 text-[10px] text-fuchsia-300">PRODUCTION</span>
+          <span class="w-10 font-mono text-[10px] text-fuchsia-300">1</span>
+          <span class="w-16 font-mono text-[10px] text-fuchsia-300">14:00:00</span>
+          <span class="w-16 font-mono text-[10px] text-fuchsia-300">14:30:00</span>
+          <span class="w-20 text-[10px] text-fuchsia-300">AES In</span>
+          <span class="w-20 font-mono text-[10px] text-fuchsia-300">005001</span>
+          <span class="w-[112px] flex gap-0.5"><span class="w-3.5 h-3.5 rounded text-[7px] font-bold bg-blue-600 text-white flex items-center justify-center">M</span><span class="w-3.5 h-3.5 rounded text-[7px] font-bold bg-blue-600 text-white flex items-center justify-center">T</span><span class="w-3.5 h-3.5 rounded text-[7px] font-bold bg-blue-600 text-white flex items-center justify-center">W</span><span class="w-3.5 h-3.5 rounded text-[7px] font-bold bg-blue-600 text-white flex items-center justify-center">T</span><span class="w-3.5 h-3.5 rounded text-[7px] font-bold bg-blue-600 text-white flex items-center justify-center">F</span><span class="w-3.5 h-3.5 rounded text-[7px] font-bold bg-blue-600 text-white flex items-center justify-center">S</span><span class="w-3.5 h-3.5 rounded text-[7px] font-bold bg-blue-600 text-white flex items-center justify-center">S</span></span>
+          <span class="w-16 text-[10px] font-semibold text-fuchsia-400">Waiting</span>
+        </div>
+
+        <!-- Next scheduled (yellow) -->
+        <div class="h-8 flex items-center px-3 text-xs bg-[#422006] cursor-pointer">
+          <span class="w-6"><svg class="w-3.5 h-3.5 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span>
+          <span class="flex-1 truncate text-yellow-200 font-medium">Podcast Download — Tech Today</span>
+          <span class="w-24 text-[10px] text-yellow-300">MAIN-STUDIO</span>
+          <span class="w-10 font-mono text-[10px] text-yellow-300">—</span>
+          <span class="w-16 font-mono text-[10px] text-yellow-300">15:00:00</span>
+          <span class="w-16 font-mono text-[10px] text-yellow-300">—</span>
+          <span class="w-20 text-[10px] text-yellow-300 truncate">https://...</span>
+          <span class="w-20 font-mono text-[10px] text-yellow-300">007001</span>
+          <span class="w-[112px] flex gap-0.5"><span class="w-3.5 h-3.5 rounded text-[7px] font-bold bg-blue-600 text-white flex items-center justify-center">M</span><span class="w-3.5 h-3.5 rounded text-[7px] font-bold bg-blue-600 text-white flex items-center justify-center">T</span><span class="w-3.5 h-3.5 rounded text-[7px] font-bold bg-blue-600 text-white flex items-center justify-center">W</span><span class="w-3.5 h-3.5 rounded text-[7px] font-bold bg-blue-600 text-white flex items-center justify-center">T</span><span class="w-3.5 h-3.5 rounded text-[7px] font-bold bg-blue-600 text-white flex items-center justify-center">F</span><span class="w-3.5 h-3.5 rounded text-[7px] font-bold bg-surface-800 text-slate-600 flex items-center justify-center">S</span><span class="w-3.5 h-3.5 rounded text-[7px] font-bold bg-surface-800 text-slate-600 flex items-center justify-center">S</span></span>
+          <span class="w-16 text-[10px] font-semibold text-yellow-400">Next</span>
+        </div>
+
+        <!-- Ready (cyan) -->
+        <div class="h-8 flex items-center px-3 text-xs bg-[#083344] cursor-pointer">
+          <span class="w-6"><svg class="w-3.5 h-3.5 text-green-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></span>
+          <span class="flex-1 truncate text-cyan-200 font-medium">Afternoon Jingle Playout</span>
+          <span class="w-24 text-[10px] text-cyan-300">MAIN-STUDIO</span>
+          <span class="w-10 font-mono text-[10px] text-cyan-300">1</span>
+          <span class="w-16 font-mono text-[10px] text-cyan-300">14:55:00</span>
+          <span class="w-16 font-mono text-[10px] text-cyan-300">—</span>
+          <span class="w-20 text-[10px] text-cyan-300">—</span>
+          <span class="w-20 font-mono text-[10px] text-cyan-300">003001</span>
+          <span class="w-[112px] flex gap-0.5"><span class="w-3.5 h-3.5 rounded text-[7px] font-bold bg-blue-600 text-white flex items-center justify-center">M</span><span class="w-3.5 h-3.5 rounded text-[7px] font-bold bg-blue-600 text-white flex items-center justify-center">T</span><span class="w-3.5 h-3.5 rounded text-[7px] font-bold bg-blue-600 text-white flex items-center justify-center">W</span><span class="w-3.5 h-3.5 rounded text-[7px] font-bold bg-blue-600 text-white flex items-center justify-center">T</span><span class="w-3.5 h-3.5 rounded text-[7px] font-bold bg-blue-600 text-white flex items-center justify-center">F</span><span class="w-3.5 h-3.5 rounded text-[7px] font-bold bg-surface-800 text-slate-600 flex items-center justify-center">S</span><span class="w-3.5 h-3.5 rounded text-[7px] font-bold bg-surface-800 text-slate-600 flex items-center justify-center">S</span></span>
+          <span class="w-16 text-[10px] font-semibold text-cyan-400">Ready</span>
+        </div>
+
+        <!-- Idle events -->
+        <div class="h-8 flex items-center px-3 text-xs bg-surface-950 hover:bg-surface-800 cursor-pointer">
+          <span class="w-6"><svg class="w-3.5 h-3.5 text-amber-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg></span>
+          <span class="flex-1 truncate text-slate-200">Midnight Auto-Start Macro</span>
+          <span class="w-24 text-[10px] text-slate-400">MAIN-STUDIO</span>
+          <span class="w-10 font-mono text-[10px] text-slate-400">—</span>
+          <span class="w-16 font-mono text-[10px] text-slate-400">00:00:00</span>
+          <span class="w-16 font-mono text-[10px] text-slate-500">—</span>
+          <span class="w-20 text-[10px] text-slate-400">—</span>
+          <span class="w-20 font-mono text-[10px] text-slate-400">010001</span>
+          <span class="w-[112px] flex gap-0.5"><span class="w-3.5 h-3.5 rounded text-[7px] font-bold bg-blue-600 text-white flex items-center justify-center">M</span><span class="w-3.5 h-3.5 rounded text-[7px] font-bold bg-blue-600 text-white flex items-center justify-center">T</span><span class="w-3.5 h-3.5 rounded text-[7px] font-bold bg-blue-600 text-white flex items-center justify-center">W</span><span class="w-3.5 h-3.5 rounded text-[7px] font-bold bg-blue-600 text-white flex items-center justify-center">T</span><span class="w-3.5 h-3.5 rounded text-[7px] font-bold bg-blue-600 text-white flex items-center justify-center">F</span><span class="w-3.5 h-3.5 rounded text-[7px] font-bold bg-blue-600 text-white flex items-center justify-center">S</span><span class="w-3.5 h-3.5 rounded text-[7px] font-bold bg-blue-600 text-white flex items-center justify-center">S</span></span>
+          <span class="w-16 text-[10px] text-slate-500">Idle</span>
+        </div>
+
+        <div class="h-8 flex items-center px-3 text-xs bg-surface-900 hover:bg-surface-800 cursor-pointer">
+          <span class="w-6"><svg class="w-3.5 h-3.5 text-purple-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></span>
+          <span class="flex-1 truncate text-slate-200">Evening Podcast Upload</span>
+          <span class="w-24 text-[10px] text-slate-400">MAIN-STUDIO</span>
+          <span class="w-10 font-mono text-[10px] text-slate-400">—</span>
+          <span class="w-16 font-mono text-[10px] text-slate-400">18:00:00</span>
+          <span class="w-16 font-mono text-[10px] text-slate-500">—</span>
+          <span class="w-20 font-mono text-[10px] text-slate-400">007001</span>
+          <span class="w-20 text-[10px] text-slate-400 truncate">ftp://...</span>
+          <span class="w-[112px] flex gap-0.5"><span class="w-3.5 h-3.5 rounded text-[7px] font-bold bg-blue-600 text-white flex items-center justify-center">M</span><span class="w-3.5 h-3.5 rounded text-[7px] font-bold bg-blue-600 text-white flex items-center justify-center">T</span><span class="w-3.5 h-3.5 rounded text-[7px] font-bold bg-blue-600 text-white flex items-center justify-center">W</span><span class="w-3.5 h-3.5 rounded text-[7px] font-bold bg-blue-600 text-white flex items-center justify-center">T</span><span class="w-3.5 h-3.5 rounded text-[7px] font-bold bg-blue-600 text-white flex items-center justify-center">F</span><span class="w-3.5 h-3.5 rounded text-[7px] font-bold bg-surface-800 text-slate-600 flex items-center justify-center">S</span><span class="w-3.5 h-3.5 rounded text-[7px] font-bold bg-surface-800 text-slate-600 flex items-center justify-center">S</span></span>
+          <span class="w-16 text-[10px] text-slate-500">Idle</span>
+        </div>
+
+        <!-- Error state (pink) -->
+        <div class="h-8 flex items-center px-3 text-xs bg-[#4c0519] cursor-pointer">
+          <span class="w-6"><svg class="w-3.5 h-3.5 text-cyan-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 3v7a6 6 0 006 6 6 6 0 006-6V3"/></svg></span>
+          <span class="flex-1 truncate text-rose-200 font-medium">Audio Router — Studio B</span>
+          <span class="w-24 text-[10px] text-rose-300">REMOTE-1</span>
+          <span class="w-10 font-mono text-[10px] text-rose-300">—</span>
+          <span class="w-16 font-mono text-[10px] text-rose-300">12:00:00</span>
+          <span class="w-16 font-mono text-[10px] text-rose-300">—</span>
+          <span class="w-20 text-[10px] text-rose-300">In:3</span>
+          <span class="w-20 text-[10px] text-rose-300">Out:1</span>
+          <span class="w-[112px] flex gap-0.5"><span class="w-3.5 h-3.5 rounded text-[7px] font-bold bg-blue-600 text-white flex items-center justify-center">M</span><span class="w-3.5 h-3.5 rounded text-[7px] font-bold bg-blue-600 text-white flex items-center justify-center">T</span><span class="w-3.5 h-3.5 rounded text-[7px] font-bold bg-blue-600 text-white flex items-center justify-center">W</span><span class="w-3.5 h-3.5 rounded text-[7px] font-bold bg-blue-600 text-white flex items-center justify-center">T</span><span class="w-3.5 h-3.5 rounded text-[7px] font-bold bg-blue-600 text-white flex items-center justify-center">F</span><span class="w-3.5 h-3.5 rounded text-[7px] font-bold bg-surface-800 text-slate-600 flex items-center justify-center">S</span><span class="w-3.5 h-3.5 rounded text-[7px] font-bold bg-surface-800 text-slate-600 flex items-center justify-center">S</span></span>
+          <span class="w-16 text-[10px] font-semibold text-rose-400">Error</span>
+        </div>
+      </div>
+
+      <!-- Toolbar -->
+      <div class="h-11 bg-surface-900 border-t border-surface-700 flex items-center px-3 gap-2 shrink-0">
+        <button class="h-8 px-4 bg-blue-600 hover:bg-blue-500 rounded flex items-center gap-1.5 text-xs font-semibold cursor-pointer"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Add</button>
+        <button class="h-8 px-4 bg-blue-600 hover:bg-blue-500 rounded flex items-center gap-1.5 text-xs font-semibold cursor-pointer"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Edit</button>
+        <button class="h-8 px-4 bg-red-600 hover:bg-red-500 rounded flex items-center gap-1.5 text-xs font-semibold cursor-pointer"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>Delete</button>
+        <div class="w-px h-6 bg-surface-700"></div>
+        <button class="h-8 w-8 bg-green-600/30 hover:bg-green-600/50 rounded flex items-center justify-center cursor-pointer border border-green-500/30" title="Head Play"><svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+        <button class="h-8 w-8 bg-green-600/30 hover:bg-green-600/50 rounded flex items-center justify-center cursor-pointer border border-green-500/30" title="Tail Play"><svg class="w-3.5 h-3.5 rotate-180" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+        <button class="h-8 w-8 bg-red-600/30 hover:bg-red-600/50 rounded flex items-center justify-center cursor-pointer border border-red-500/30" title="Stop"><svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="1"/></svg></button>
+        <div class="w-px h-6 bg-surface-700"></div>
+        <button class="h-8 px-4 bg-surface-800 hover:bg-surface-700 rounded flex items-center gap-1.5 text-xs text-slate-400 cursor-pointer"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Reports</button>
+        <div class="flex-1"></div>
+        <button class="h-8 px-4 bg-surface-800 hover:bg-surface-700 rounded text-xs text-slate-400 cursor-pointer">Close</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const drawer=document.getElementById('drawer'),overlay=document.getElementById('drawerOverlay');
+    document.getElementById('drawerToggle').addEventListener('click',()=>{drawer.classList.toggle('closed');overlay.classList.toggle('hidden')});
+    function closeDrawer(){drawer.classList.add('closed');overlay.classList.add('hidden')}
+    function go(id){
+      document.querySelectorAll('[id^="v-"]').forEach(v=>{v.classList.add('hidden');v.classList.remove('flex')});
+      const v=document.getElementById('v-'+id);if(v){v.classList.remove('hidden');v.classList.add('flex')}
+      document.querySelectorAll('.di').forEach(i=>{
+        if(i.dataset.app===id){i.classList.add('border-red-500','bg-surface-800/50');i.classList.remove('border-transparent')}
+        else{i.classList.remove('border-red-500','border-blue-500','border-amber-500','bg-surface-800/50');i.classList.add('border-transparent')}
+      });
+      const t={airplay:'RDAirPlay',rdadmin:'RDAdmin',rdlibrary:'RDLibrary',rdlogedit:'RDLogEdit',rdlogmanager:'RDLogManager',rdcatch:'RDCatch'};
+      const s={airplay:'On-Air Playout',rdadmin:'Administration',rdlibrary:'Audio Library',rdlogedit:'Log Editor',rdlogmanager:'Log Manager / Scheduler',rdcatch:'Catch / Record Scheduler'};
+      document.getElementById('appTitle').textContent=t[id]||id;document.getElementById('appSub').textContent=s[id]||'';
+      closeDrawer();
+    }
+  </script>
+</body>
+</html>
