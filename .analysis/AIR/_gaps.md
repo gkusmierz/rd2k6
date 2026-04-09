@@ -6,6 +6,5 @@
   - Impact: Low -- requirements cover keyboard control conceptually; specific bindings are a configuration detail
 
 - Section: Steering Context
-  - Missing: Rivendell-specific steering files (product.md, tech.md, structure.md contain Photo Albums project, not Rivendell)
-  - Source: .blah/steering/*.md
-  - Impact: Medium -- Technology Stack in design.md left as TBD because no target technology decisions are available for the Rivendell rewrite
+  - Resolved: Steering files were rewritten on 2026-04-08 with Rivendell 2.0 architectural decisions
+  - Impact: None -- gap closed
