@@ -185,3 +185,5 @@ xdg/rivendell-opsguide-pdf.desktop
 
 # custom ignores
 .cache/
+*.pyc__pycache__/
+.claude/projects/

@@ -65,6 +65,40 @@ STRICT RULES:
 - `.blah/specs/{artifact_id}/spec.json` — BLAH metadata
 - `.blah/specs/{artifact_id}/requirements.md` — EARS requirements
 - `.blah/specs/{artifact_id}/design.md` — technical design
+- `.blah/specs/{artifact_id}/design-system/` — (optional, UI artifacts only) visual design system
+
+## Post-Bridge: Visual Design System (optional)
+
+After the Bridge Agent completes, check if the artifact has UI components by reading
+the generated `spec.json` and looking for `_src_to_sdd.has_ui: true`.
+
+**If `has_ui` is false** — skip this step entirely. Proceed to Next Steps.
+
+**If `has_ui` is true** — launch a subagent to generate the visual design system:
+
+```
+Agent(
+  description="Generate design system for $1",
+  prompt="""
+You are generating a visual design system for the BLAH specification at .blah/specs/$1/.
+
+Use the /ui-ux-pro-max skill by calling:
+  Skill(skill="ui-ux-pro-max", args=".blah/specs/$1")
+
+This will generate:
+  .blah/specs/$1/design-system/MASTER.md
+  .blah/specs/$1/design-system/pages/*.md
+
+The skill will use the existing design.md and requirements.md as input context.
+It should also read .blah/steering/design.md for global design guidelines inheritance.
+
+After the skill completes, verify that design-system/MASTER.md was created.
+"""
+)
+```
+
+This step ensures that UI implementation agents have deterministic visual guidelines
+(colors, typography, spacing, components) instead of ad-hoc choices per run.
 
 ## Next Steps
 The generated specs are directly compatible with BLAH pipeline:

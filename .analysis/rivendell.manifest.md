@@ -4,7 +4,7 @@ version: 3.6.7
 analyzed_at: 2026-04-08
 agent_version: 2.0.0
 loc_estimate: ~307000
-artifacts_count: 28
+artifacts_count: 29
 ---
 
 # Project Manifest: Rivendell
@@ -17,7 +17,7 @@ artifacts_count: 28
 | Version | 3.6.7 |
 | Build System | autotools (Makefile.am) + qmake (.pro) |
 | LOC (est.) | ~307,000 |
-| Artifacts | 28 |
+| Artifacts | 29 |
 | Analysis Date | 2026-04-08 |
 
 ## Artifacts
@@ -52,39 +52,41 @@ artifacts_count: 28
 | IMP | importers | tool | 4 | importers/ | 12 | LIB |
 | WEB | web (rdxport, webget) | api | 5 | web/ | 21 | LIB |
 | TST | tests | test | 9 | tests/ | 56 | LIB |
+| MLI | MairList integration | data+adapter | 0 | .analysis/MLI/ | -- | LIB |
 
 ## Pipeline Status
 
 | ID | Name | Discovery | Extraction | Bridge | Tasks | Impl |
 |----|------|-----------|------------|--------|-------|------|
-| LIB | librd | done | done | done | pending | pending |
-| HPI | librdhpi | done | done | done | pending | pending |
-| API | rivwebcapi | done | done | done | pending | pending |
-| CAE | caed | done | done | done | pending | pending |
-| RPC | ripcd | done | done | done | pending | pending |
-| SVC | rdservice | done | done | done | pending | pending |
-| CTD | rdcatchd | done | done | done | pending | pending |
-| RPL | rdrepld | done | done | done | pending | pending |
-| VAD | rdvairplayd | done | done | done | pending | pending |
-| PDD | rdpadengined | done | done | done | pending | pending |
-| PAD | rdpadd | done | done | done | pending | pending |
-| RSS | rdrssd | done | done | done | pending | pending |
-| AIR | rdairplay | done | done | done | pending | pending |
-| ADM | rdadmin | done | done | pending | pending | pending |
-| LBR | rdlibrary | done | done | pending | pending | pending |
-| LGE | rdlogedit | done | done | pending | pending | pending |
-| LGM | rdlogmanager | done | done | pending | pending | pending |
-| CTH | rdcatch | done | done | pending | pending | pending |
-| PNL | rdpanel | done | pending | pending | pending | pending |
-| CST | rdcartslots | done | pending | pending | pending | pending |
-| CSM | rdcastmanager | done | pending | pending | pending | pending |
-| MON | rdmonitor | done | pending | pending | pending | pending |
-| SEL | rdselect | done | pending | pending | pending | pending |
-| LGN | rdlogin | done | pending | pending | pending | pending |
-| UTL | utils | done | pending | pending | pending | pending |
-| IMP | importers | done | pending | pending | pending | pending |
-| WEB | web | done | pending | pending | pending | pending |
-| TST | tests | done | pending | pending | pending | pending |
+| LIB | librd | done | done | done | done | pending |
+| HPI | librdhpi | done | done | done | done | pending |
+| API | rivwebcapi | done | done | done | done | pending |
+| CAE | caed | done | done | done | done | pending |
+| RPC | ripcd | done | done | done | done | pending |
+| SVC | rdservice | done | done | done | done | pending |
+| CTD | rdcatchd | done | done | done | done | pending |
+| RPL | rdrepld | done | done | done | done | pending |
+| VAD | rdvairplayd | done | done | done | done | pending |
+| PDD | rdpadengined | done | done | done | done | pending |
+| PAD | rdpadd | done | done | done | done | pending |
+| RSS | rdrssd | done | done | done | done | pending |
+| AIR | rdairplay | done | done | done | done | pending |
+| ADM | rdadmin | done | done | done | done | pending |
+| LBR | rdlibrary | done | done | done | done | pending |
+| LGE | rdlogedit | done | done | done | done | pending |
+| LGM | rdlogmanager | done | done | done | done | pending |
+| CTH | rdcatch | done | done | done | done | pending |
+| PNL | rdpanel | done | done | done | done | pending |
+| CST | rdcartslots | done | done | done | done | pending |
+| CSM | rdcastmanager | done | done | done | done | pending |
+| MON | rdmonitor | done | done | done | done | pending |
+| SEL | rdselect | done | done | done | done | pending |
+| LGN | rdlogin | done | done | done | done | pending |
+| UTL | utils | done | done | done | done | pending |
+| IMP | importers | done | done | done | done | pending |
+| WEB | web | done | done | done | done | pending |
+| TST | tests | done | done | done | done | pending |
+| MLI | MairList integration | done | done | done | n/a | n/a |
 
 Status values: `pending` | `in-progress` | `done` | `failed` | `skip`
 
@@ -187,6 +189,56 @@ graph TD
     WEB --> LIB
     TST --> LIB
 ```
+
+## MLI — MairList Integration (Test Data & Schema Registry)
+
+> **Starting point for all implementations requiring real radio data.**
+> MLI contains the complete Rivendell database schema registry (90+ tables),
+> MairList→cart-based migration tooling, and access to real-world test data:
+> music library, playlists, voicetracks, cue points, and playback history.
+> Any artifact needing database schema knowledge, test fixtures, or media
+> file access should reference MLI as a dependency.
+
+### Role
+1. **Schema Registry** — complete Rivendell MySQL schema (v3.6, 90+ tables) extracted from semantic analysis, organized by domain (cart/cut, logs, scheduling, audio HW, permissions, etc.)
+2. **Test Data Adapter** — hexagonal port/adapter architecture to read MairList data and write to cart-based schema (SQLite for tests, PostgreSQL for staging)
+3. **Media File Gateway** — adapter to access ~4,200 real audio files (music, jingles, beds, voicetracks)
+4. **Migration Tool** — standalone CLI to migrate MairList→Rivendell with full cart/cut/log/voicetrack mapping
+
+### Test Data Source: Radio 929 FM
+
+Source: MairList automation system (sync from 2025-03-14)
+
+| Resource | Path | Description |
+|----------|------|-------------|
+| MairList DB | `/data/929-sync-2025-03-14/dump/20250314.mldb` | SQLite database (2,296 items) |
+| Music files | `/data/929-sync-2025-03-14/mus/` | 2,086 files (FLAC/WAV) |
+| Jingles | `/data/929-sync-2025-03-14/jin/` | 27 files + subdirs |
+| Beds | `/data/929-sync-2025-03-14/bed/` | 132 files in subdirs |
+| News | `/data/929-sync-2025-03-14/nws/` | 15 files |
+| Drones | `/data/929-sync-2025-03-14/drn/` | 20 files |
+| VoiceTracks | `/data/929-sync-2025-03-14/vtx/` | 1,862 WAV files |
+| Playlists | `/data/929-sync-2025-03-14/ply/` | MairList .mlp playlist files |
+| Playback logs | `/data/929-sync-2025-03-14/logi-mm/` | .TPI files |
+
+### Data Coverage
+- **Items:** 2,296 (2,079 Music, 152 Instrumental, 29 Jingle, 23 Drop, 8 Weather, 5 News)
+- **Playlists:** 15,092 entries across 488 hourly slots (2025-02-12 to 2025-03-14)
+- **Playback log:** 12,452 entries
+- **VoiceTracks:** 702 playlist references, 1,862 WAV files
+- **Cue markers:** 13,271 (CueIn/Out, FadeOut, StartNext, Hook, Ramp)
+- **Metadata attributes:** 43,162 (BPM, Album, ISRC, RadioText, etc.)
+- **Stations:** 2 (Lublin 92,9 FM, DAB+)
+
+### MLI Artifact Contents (`.analysis/MLI/`)
+- `semantic-context.md` — Schema registry: all Rivendell tables + MairList tables + test data locations
+- `schema-mapping.md` — Field-level MairList→Rivendell mapping with conversion rules
+- `rivendell-schema.sql` — Cart-based target schema (SQLite/PostgreSQL compatible)
+- `migration/` — Python package with hexagonal architecture:
+  - **Ports:** `source_port.py`, `persistence_port.py`, `media_port.py`
+  - **Adapters:** MairList SQLite, SQLite persistence, PostgreSQL persistence, local media
+  - **CLI:** `cd .analysis/MLI && python3 -m migration.cli /data/929-sync-2025-03-14/dump/20250314.mldb`
+  - **Tests:** 19 tests (adapter, persistence, media, full end-to-end migration)
 
 ## Sessions Log
 
