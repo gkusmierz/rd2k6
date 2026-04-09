@@ -1,0 +1,19 @@
+{
+  "feature_name": "rdcartslots",
+  "created_at": "2026-04-08T12:00:00Z",
+  "updated_at": "2026-04-08T12:00:00Z",
+  "language": "en",
+  "phase": "tasks-generated",
+  "approvals": {
+    "requirements": { "generated": true, "approved": true },
+    "design": { "generated": true, "approved": true },
+    "tasks": { "generated": true, "approved": true }
+  },
+  "ready_for_implementation": true,
+  "_src_to_sdd": {
+    "source_artifact": "CST",
+    "source_project": "Rivendell",
+    "extraction_version": "2.0.0",
+    "has_ui": true
+  }
+}
