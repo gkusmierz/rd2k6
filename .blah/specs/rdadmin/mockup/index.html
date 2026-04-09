@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RDAdmin — Mockup</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Fira+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwindcss.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Fira Sans', 'system-ui', 'sans-serif'],
+            mono: ['Fira Code', 'monospace'],
+          },
+          colors: {
+            surface: { 950: '#020617', 900: '#0F172A', 800: '#1E293B', 700: '#334155' },
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    html, body { background: #020617; color-scheme: dark; }
+    body { font-family: 'Fira Sans', sans-serif; }
+    .font-mono { font-family: 'Fira Code', monospace; }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #0F172A; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+
+    /* Sidebar nav transitions */
+    .nav-item { transition: background-color 0.1s; }
+    .content-fade { animation: fadeIn 0.15s ease-out; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    /* Mini playout animations */
+    @keyframes blink-colon { 0%,49%{opacity:1} 50%,100%{opacity:0} }
+    .blink { animation: blink-colon 1s step-end infinite; }
+    @keyframes pulse-on-air { 0%,100%{opacity:1} 50%{opacity:0.7} }
+    .on-air-pulse { animation: pulse-on-air 2s ease-in-out infinite; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .blink, .on-air-pulse { animation: none; }
+      .blink { opacity: 1; }
+      .content-fade { animation: none; }
+    }
+
+    /* Active nav indicator */
+    .nav-active { background: #1E293B; border-left: 4px solid #3B82F6; }
+    .nav-active .nav-icon { color: #F8FAFC; }
+    .nav-active .nav-label { color: #F8FAFC; }
+  </style>
+</head>
+<body class="bg-surface-950 text-slate-50 h-screen w-screen overflow-hidden flex flex-col select-none">
+
+  <!-- ===== HEADER BAR (48px) ===== -->
+  <header class="h-12 bg-surface-900 border-b border-surface-700 flex items-center px-4 gap-4 shrink-0 z-20">
+    <!-- Hamburger (mobile only) -->
+    <button id="menuToggle" class="lg:hidden w-8 h-8 flex items-center justify-center text-slate-400 hover:text-slate-200 cursor-pointer">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+
+    <!-- App Logo -->
+    <div class="flex items-center gap-2">
+      <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+        <circle cx="12" cy="12" r="3"/>
+      </svg>
+      <span class="text-sm font-semibold text-slate-200">RDAdmin</span>
+    </div>
+
+    <div class="flex-1"></div>
+
+    <!-- Current user -->
+    <div class="flex items-center gap-2 text-sm">
+      <span class="text-slate-500">Station:</span>
+      <select class="bg-surface-800 border border-surface-700 rounded px-2 py-1 text-xs text-slate-300 cursor-pointer">
+        <option>MAIN-STUDIO</option>
+        <option>PRODUCTION</option>
+        <option>REMOTE-1</option>
+      </select>
+    </div>
+
+    <div class="flex items-center gap-2">
+      <div class="w-7 h-7 rounded-full bg-blue-600 flex items-center justify-center text-xs font-bold">A</div>
+      <div class="text-sm">
+        <div class="text-slate-200 font-medium text-xs">admin</div>
+        <div class="text-slate-500 text-[10px]">System Administrator</div>
+      </div>
+    </div>
+
+    <button class="text-slate-500 hover:text-slate-300 cursor-pointer" title="Logout">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+    </button>
+  </header>
+
+  <!-- ===== MAIN SHELL ===== -->
+  <div class="flex-1 flex min-h-0">
+
+    <!-- ===== SIDEBAR (240px) ===== -->
+    <aside id="sidebar" class="w-60 bg-surface-900 border-r border-surface-700 flex flex-col shrink-0 overflow-y-auto
+                                 max-lg:fixed max-lg:top-12 max-lg:left-0 max-lg:bottom-0 max-lg:z-30 max-lg:-translate-x-full max-lg:transition-transform max-lg:duration-200">
+
+      <nav class="flex-1 py-2">
+        <!-- SYSTEM -->
+        <div class="px-3 pt-4 pb-1">
+          <span class="text-[10px] font-semibold uppercase tracking-wider text-slate-500">System</span>
+        </div>
+        <a href="#" class="nav-item flex items-center gap-3 h-9 px-3 text-sm text-slate-400 hover:bg-surface-900/50 cursor-pointer border-l-4 border-transparent" onclick="switchSection('settings', this)">
+          <svg class="nav-icon w-4 h-4 text-slate-500 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573-1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><circle cx="12" cy="12" r="3"/></svg>
+          <span class="nav-label text-[13px]">System Settings</span>
+        </a>
+        <a href="#" class="nav-item flex items-center gap-3 h-9 px-3 text-sm text-slate-400 hover:bg-surface-900/50 cursor-pointer border-l-4 border-transparent" onclick="switchSection('scheduler', this)">
+          <svg class="nav-icon w-4 h-4 text-slate-500 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <span class="nav-label text-[13px]">Scheduler Codes</span>
+        </a>
+
+        <!-- USERS & ACCESS -->
+        <div class="px-3 pt-4 pb-1">
+          <span class="text-[10px] font-semibold uppercase tracking-wider text-slate-500">Users & Access</span>
+        </div>
+        <a href="#" class="nav-item flex items-center gap-3 h-9 px-3 text-sm text-slate-400 hover:bg-surface-900/50 cursor-pointer border-l-4 border-transparent" onclick="switchSection('users', this)">
+          <svg class="nav-icon w-4 h-4 text-slate-500 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+          <span class="nav-label text-[13px]">Users</span>
+          <span class="ml-auto text-[10px] bg-surface-800 text-slate-500 px-1.5 rounded-full">24</span>
+        </a>
+        <a href="#" class="nav-item flex items-center gap-3 h-9 px-3 text-sm text-slate-400 hover:bg-surface-900/50 cursor-pointer border-l-4 border-transparent" onclick="switchSection('groups', this)">
+          <svg class="nav-icon w-4 h-4 text-slate-500 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+          <span class="nav-label text-[13px]">Groups</span>
+          <span class="ml-auto text-[10px] bg-surface-800 text-slate-500 px-1.5 rounded-full">8</span>
+        </a>
+
+        <!-- BROADCAST -->
+        <div class="px-3 pt-4 pb-1">
+          <span class="text-[10px] font-semibold uppercase tracking-wider text-slate-500">Broadcast</span>
+        </div>
+        <a href="#" class="nav-item flex items-center gap-3 h-9 px-3 text-sm text-slate-400 hover:bg-surface-900/50 cursor-pointer border-l-4 border-transparent" onclick="switchSection('services', this)">
+          <svg class="nav-icon w-4 h-4 text-slate-500 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+          <span class="nav-label text-[13px]">Services</span>
+        </a>
+        <a href="#" class="nav-item flex items-center gap-3 h-9 px-3 text-sm text-slate-400 hover:bg-surface-900/50 cursor-pointer border-l-4 border-transparent" onclick="switchSection('reports', this)">
+          <svg class="nav-icon w-4 h-4 text-slate-500 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          <span class="nav-label text-[13px]">Reports</span>
+        </a>
+        <a href="#" class="nav-item flex items-center gap-3 h-9 px-3 text-sm text-slate-400 hover:bg-surface-900/50 cursor-pointer border-l-4 border-transparent" onclick="switchSection('podcasts', this)">
+          <svg class="nav-icon w-4 h-4 text-slate-500 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 11a9 9 0 0118 0"/><path d="M4 11a9 9 0 0118 0"/><circle cx="12" cy="20" r="1"/><path d="M8 14a5 5 0 018 0"/></svg>
+          <span class="nav-label text-[13px]">Podcasts & Feeds</span>
+        </a>
+
+        <!-- INFRASTRUCTURE -->
+        <div class="px-3 pt-4 pb-1">
+          <span class="text-[10px] font-semibold uppercase tracking-wider text-slate-500">Infrastructure</span>
+        </div>
+        <a href="#" class="nav-item nav-active flex items-center gap-3 h-9 px-3 text-sm text-slate-400 hover:bg-surface-900/50 cursor-pointer" onclick="switchSection('stations', this)">
+          <svg class="nav-icon w-4 h-4 text-slate-500 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
+          <span class="nav-label text-[13px]">Stations</span>
+          <span class="ml-auto text-[10px] bg-surface-800 text-slate-500 px-1.5 rounded-full">3</span>
+        </a>
+        <a href="#" class="nav-item flex items-center gap-3 h-9 px-3 text-sm text-slate-400 hover:bg-surface-900/50 cursor-pointer border-l-4 border-transparent" onclick="switchSection('replicators', this)">
+          <svg class="nav-icon w-4 h-4 text-slate-500 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          <span class="nav-label text-[13px]">Replicators</span>
+        </a>
+      </nav>
+
+      <!-- Collapse toggle -->
+      <div class="border-t border-surface-700 p-2 shrink-0">
+        <div class="text-[10px] text-slate-600 text-center">v2.0.0 — Rivendell</div>
+      </div>
+    </aside>
+
+    <!-- Sidebar overlay backdrop (mobile) -->
+    <div id="sidebarBackdrop" class="fixed inset-0 bg-surface-950/60 z-20 hidden lg:hidden" onclick="closeSidebar()"></div>
+
+    <!-- ===== CONTENT AREA ===== -->
+    <main class="flex-1 flex flex-col min-w-0 overflow-hidden">
+
+      <!-- Breadcrumb -->
+      <div class="h-10 bg-surface-950 border-b border-surface-700/50 flex items-center px-6 gap-2 shrink-0">
+        <span class="text-xs text-slate-500">Infrastructure</span>
+        <svg class="w-3 h-3 text-slate-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        <span class="text-xs text-slate-500">Stations</span>
+        <svg class="w-3 h-3 text-slate-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        <span class="text-xs text-slate-300 font-medium">MAIN-STUDIO</span>
+        <svg class="w-3 h-3 text-slate-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        <span class="text-xs text-blue-400 font-medium">App Profiles</span>
+        <svg class="w-3 h-3 text-slate-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        <span class="text-xs text-blue-300 font-medium">AirPlay</span>
+      </div>
+
+      <!-- Station tabs (primary) -->
+      <div class="h-9 bg-surface-900 border-b border-surface-700 flex items-end px-4 gap-1 shrink-0">
+        <button class="px-4 py-1.5 text-xs font-medium text-slate-500 hover:text-slate-300 cursor-pointer transition-colors border-b-2 border-transparent">Core</button>
+        <button class="px-4 py-1.5 text-xs font-medium text-blue-400 cursor-pointer border-b-2 border-blue-500">App Profiles</button>
+        <button class="px-4 py-1.5 text-xs font-medium text-slate-500 hover:text-slate-300 cursor-pointer transition-colors border-b-2 border-transparent">Hardware</button>
+        <button class="px-4 py-1.5 text-xs font-medium text-slate-500 hover:text-slate-300 cursor-pointer transition-colors border-b-2 border-transparent">Switchers</button>
+        <button class="px-4 py-1.5 text-xs font-medium text-slate-500 hover:text-slate-300 cursor-pointer transition-colors border-b-2 border-transparent">Dropboxes</button>
+        <button class="px-4 py-1.5 text-xs font-medium text-slate-500 hover:text-slate-300 cursor-pointer transition-colors border-b-2 border-transparent">Host Variables</button>
+      </div>
+
+      <!-- App Profile sub-tabs (secondary) -->
+      <div class="h-7 bg-surface-800 border-b border-surface-700 flex items-end px-4 gap-1 shrink-0">
+        <button class="px-3 py-1 text-[11px] font-medium text-blue-400 cursor-pointer border-b border-blue-500">AirPlay</button>
+        <button class="px-3 py-1 text-[11px] font-medium text-slate-500 hover:text-slate-300 cursor-pointer transition-colors border-b border-transparent">Library</button>
+        <button class="px-3 py-1 text-[11px] font-medium text-slate-500 hover:text-slate-300 cursor-pointer transition-colors border-b border-transparent">Log Editor</button>
+        <button class="px-3 py-1 text-[11px] font-medium text-slate-500 hover:text-slate-300 cursor-pointer transition-colors border-b border-transparent">Panel</button>
+        <button class="px-3 py-1 text-[11px] font-medium text-slate-500 hover:text-slate-300 cursor-pointer transition-colors border-b border-transparent">Decks</button>
+        <button class="px-3 py-1 text-[11px] font-medium text-slate-500 hover:text-slate-300 cursor-pointer transition-colors border-b border-transparent">Hotkeys</button>
+      </div>
+
+      <!-- Content: AirPlay Profile + Preview -->
+      <div class="flex-1 overflow-y-auto content-fade">
+        <div class="flex min-h-full">
+
+          <!-- LEFT: AirPlay Profile Form (60%) -->
+          <div class="w-3/5 p-6 border-r border-surface-700/50">
+
+            <!-- Audio Configuration -->
+            <div class="mb-6">
+              <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3 flex items-center gap-2">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 19V6l12-3v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="15" r="3"/></svg>
+                Audio Configuration
+              </h3>
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-[11px] text-slate-400 mb-1">Card <span class="text-red-400">*</span></label>
+                  <select class="w-full bg-surface-900 border border-surface-700 rounded px-3 py-2 text-sm text-slate-300 focus:border-blue-500 focus:outline-none cursor-pointer">
+                    <option>Card 0 — HPI AudioScience</option>
+                    <option>Card 1 — ALSA Default</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-[11px] text-slate-400 mb-1">Port 1 — Input</label>
+                  <select class="w-full bg-surface-900 border border-surface-700 rounded px-3 py-2 text-sm text-slate-300 focus:border-blue-500 focus:outline-none cursor-pointer">
+                    <option>Input 0 — Analog In</option>
+                    <option>Input 1 — AES/EBU In</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-[11px] text-slate-400 mb-1">Port 1 — Output</label>
+                  <select class="w-full bg-surface-900 border border-surface-700 rounded px-3 py-2 text-sm text-slate-300 focus:border-blue-500 focus:outline-none cursor-pointer">
+                    <option>Output 0 — Analog Out</option>
+                    <option>Output 1 — AES/EBU Out</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-[11px] text-slate-400 mb-1">Port 2 — Output</label>
+                  <select class="w-full bg-surface-900 border border-surface-700 rounded px-3 py-2 text-sm text-slate-300 focus:border-blue-500 focus:outline-none cursor-pointer">
+                    <option>Output 2 — Monitor</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Divider -->
+            <div class="border-t border-surface-700/50 my-4"></div>
+
+            <!-- Log Machine Configuration -->
+            <div class="mb-6">
+              <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3 flex items-center gap-2">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                Log Machines
+              </h3>
+              <div class="space-y-3">
+                <!-- Main Log -->
+                <div class="flex items-center gap-3 bg-surface-900 rounded-lg p-3 border border-surface-700">
+                  <input type="checkbox" checked class="w-4 h-4 rounded bg-surface-800 border-surface-700 text-blue-500 cursor-pointer">
+                  <div class="flex-1">
+                    <div class="text-sm font-medium text-slate-200">Main Log</div>
+                    <div class="text-[11px] text-slate-500">Primary playout log machine</div>
+                  </div>
+                  <div class="flex gap-2">
+                    <select class="bg-surface-800 border border-surface-700 rounded px-2 py-1 text-xs text-slate-300 cursor-pointer">
+                      <option>Card 0, Port 0</option>
+                    </select>
+                    <select class="bg-surface-800 border border-surface-700 rounded px-2 py-1 text-xs text-slate-300 cursor-pointer">
+                      <option>Mode: Auto</option>
+                      <option>Mode: Manual</option>
+                      <option>Mode: LiveAssist</option>
+                    </select>
+                  </div>
+                </div>
+                <!-- Aux 1 -->
+                <div class="flex items-center gap-3 bg-surface-900 rounded-lg p-3 border border-surface-700">
+                  <input type="checkbox" checked class="w-4 h-4 rounded bg-surface-800 border-surface-700 text-blue-500 cursor-pointer">
+                  <div class="flex-1">
+                    <div class="text-sm font-medium text-slate-200">Aux Log 1</div>
+                    <div class="text-[11px] text-slate-500">Auxiliary playout machine</div>
+                  </div>
+                  <div class="flex gap-2">
+                    <select class="bg-surface-800 border border-surface-700 rounded px-2 py-1 text-xs text-slate-300 cursor-pointer">
+                      <option>Card 0, Port 1</option>
+                    </select>
+                    <select class="bg-surface-800 border border-surface-700 rounded px-2 py-1 text-xs text-slate-300 cursor-pointer">
+                      <option>Mode: Manual</option>
+                    </select>
+                  </div>
+                </div>
+                <!-- Aux 2 -->
+                <div class="flex items-center gap-3 bg-surface-900 rounded-lg p-3 border border-surface-700/50 opacity-60">
+                  <input type="checkbox" class="w-4 h-4 rounded bg-surface-800 border-surface-700 cursor-pointer">
+                  <div class="flex-1">
+                    <div class="text-sm font-medium text-slate-400">Aux Log 2</div>
+                    <div class="text-[11px] text-slate-600">Disabled</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Divider -->
+            <div class="border-t border-surface-700/50 my-4"></div>
+
+            <!-- Visual & Behavior -->
+            <div class="mb-6">
+              <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3 flex items-center gap-2">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                Visual & Behavior
+              </h3>
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-[11px] text-slate-400 mb-1">Skin</label>
+                  <select class="w-full bg-surface-900 border border-surface-700 rounded px-3 py-2 text-sm text-slate-300 focus:border-blue-500 focus:outline-none cursor-pointer">
+                    <option>Default Dark</option>
+                    <option>Classic Blue</option>
+                    <option>High Contrast</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-[11px] text-slate-400 mb-1">Start Mode</label>
+                  <div class="flex gap-4 mt-1">
+                    <label class="flex items-center gap-1.5 text-sm text-slate-300 cursor-pointer">
+                      <input type="radio" name="startMode" checked class="text-blue-500 cursor-pointer"> Previous
+                    </label>
+                    <label class="flex items-center gap-1.5 text-sm text-slate-300 cursor-pointer">
+                      <input type="radio" name="startMode" class="text-blue-500 cursor-pointer"> Empty
+                    </label>
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-[11px] text-slate-400 mb-1">Segue Length (ms)</label>
+                  <input type="number" value="250" class="w-full bg-surface-900 border border-surface-700 rounded px-3 py-2 text-sm text-slate-300 font-mono focus:border-blue-500 focus:outline-none">
+                </div>
+                <div>
+                  <label class="block text-[11px] text-slate-400 mb-1">Default Transition</label>
+                  <select class="w-full bg-surface-900 border border-surface-700 rounded px-3 py-2 text-sm text-slate-300 focus:border-blue-500 focus:outline-none cursor-pointer">
+                    <option>Play</option>
+                    <option>Segue</option>
+                    <option>Stop</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Divider -->
+            <div class="border-t border-surface-700/50 my-4"></div>
+
+            <!-- Sound Panel -->
+            <div class="mb-6">
+              <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3 flex items-center gap-2">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+                Sound Panel
+              </h3>
+              <div class="grid grid-cols-3 gap-4">
+                <div>
+                  <label class="block text-[11px] text-slate-400 mb-1">Columns</label>
+                  <input type="number" value="8" min="1" max="16" class="w-full bg-surface-900 border border-surface-700 rounded px-3 py-2 text-sm text-slate-300 font-mono focus:border-blue-500 focus:outline-none">
+                </div>
+                <div>
+                  <label class="block text-[11px] text-slate-400 mb-1">Rows</label>
+                  <input type="number" value="2" min="1" max="8" class="w-full bg-surface-900 border border-surface-700 rounded px-3 py-2 text-sm text-slate-300 font-mono focus:border-blue-500 focus:outline-none">
+                </div>
+                <div>
+                  <label class="block text-[11px] text-slate-400 mb-1">Default Service</label>
+                  <select class="w-full bg-surface-900 border border-surface-700 rounded px-3 py-2 text-sm text-slate-300 focus:border-blue-500 focus:outline-none cursor-pointer">
+                    <option>Radio Rivendell</option>
+                    <option>Production</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- GPIO Section -->
+            <div class="border-t border-surface-700/50 my-4"></div>
+            <div class="mb-6">
+              <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3 flex items-center gap-2">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                GPIO Channel Assignments
+              </h3>
+              <div class="overflow-hidden rounded-lg border border-surface-700">
+                <table class="w-full">
+                  <thead>
+                    <tr class="bg-surface-800">
+                      <th class="text-[10px] text-slate-500 font-semibold uppercase text-left px-3 py-2">Channel</th>
+                      <th class="text-[10px] text-slate-500 font-semibold uppercase text-left px-3 py-2">Start Cart</th>
+                      <th class="text-[10px] text-slate-500 font-semibold uppercase text-left px-3 py-2">Stop Cart</th>
+                      <th class="text-[10px] text-slate-500 font-semibold uppercase text-left px-3 py-2">Matrix</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="border-t border-surface-700/50 hover:bg-surface-800/50 transition-colors">
+                      <td class="px-3 py-2 text-sm text-slate-300">GPI 1</td>
+                      <td class="px-3 py-2"><input class="bg-surface-900 border border-surface-700 rounded px-2 py-1 text-xs font-mono text-slate-300 w-20 focus:border-blue-500 focus:outline-none" value="100001"></td>
+                      <td class="px-3 py-2"><input class="bg-surface-900 border border-surface-700 rounded px-2 py-1 text-xs font-mono text-slate-300 w-20 focus:border-blue-500 focus:outline-none" value="100002"></td>
+                      <td class="px-3 py-2 text-xs text-slate-500">Matrix 0</td>
+                    </tr>
+                    <tr class="border-t border-surface-700/50 hover:bg-surface-800/50 transition-colors">
+                      <td class="px-3 py-2 text-sm text-slate-300">GPI 2</td>
+                      <td class="px-3 py-2"><input class="bg-surface-900 border border-surface-700 rounded px-2 py-1 text-xs font-mono text-slate-300 w-20 focus:border-blue-500 focus:outline-none" value=""></td>
+                      <td class="px-3 py-2"><input class="bg-surface-900 border border-surface-700 rounded px-2 py-1 text-xs font-mono text-slate-300 w-20 focus:border-blue-500 focus:outline-none" value=""></td>
+                      <td class="px-3 py-2 text-xs text-slate-500">Matrix 0</td>
+                    </tr>
+                    <tr class="border-t border-surface-700/50 hover:bg-surface-800/50 transition-colors">
+                      <td class="px-3 py-2 text-sm text-slate-300">GPI 3</td>
+                      <td class="px-3 py-2"><input class="bg-surface-900 border border-surface-700 rounded px-2 py-1 text-xs font-mono text-slate-300 w-20 focus:border-blue-500 focus:outline-none" value="100010"></td>
+                      <td class="px-3 py-2"><input class="bg-surface-900 border border-surface-700 rounded px-2 py-1 text-xs font-mono text-slate-300 w-20 focus:border-blue-500 focus:outline-none" value=""></td>
+                      <td class="px-3 py-2 text-xs text-slate-500">Matrix 0</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Save/Cancel -->
+            <div class="flex items-center justify-end gap-3 pt-4 pb-8 border-t border-surface-700/50">
+              <span class="flex items-center gap-1.5 text-xs text-amber-400 mr-auto">
+                <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+                Unsaved changes
+              </span>
+              <button class="px-4 py-2 text-sm text-slate-400 hover:text-slate-200 cursor-pointer transition-colors">Cancel</button>
+              <button class="px-4 py-2 text-sm font-medium bg-blue-600 hover:bg-blue-500 rounded-lg cursor-pointer transition-colors">Save Changes</button>
+            </div>
+          </div>
+
+          <!-- RIGHT: Mini Playout Preview (40%) -->
+          <div class="w-2/5 p-6">
+            <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3 flex items-center gap-2">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              Live Preview — Playout Layout
+            </h3>
+            <div class="text-[10px] text-slate-600 mb-3">Read-only preview showing how settings map to the playout interface</div>
+
+            <!-- Mini Playout Window -->
+            <div class="bg-surface-950 rounded-lg border border-surface-700 overflow-hidden shadow-2xl">
+
+              <!-- Mini Top Bar -->
+              <div class="h-7 bg-surface-900 border-b border-surface-700 flex items-center px-2 gap-2">
+                <span class="font-mono text-[11px] font-bold text-slate-200">14<span class="blink">:</span>23<span class="blink">:</span>07</span>
+                <span class="px-1.5 py-0.5 rounded-full text-[8px] font-semibold uppercase bg-green-500/20 text-green-400 border border-green-500/30">Auto</span>
+                <div class="on-air-pulse flex items-center gap-1 bg-red-600 px-1.5 py-0.5 rounded text-[8px] font-bold uppercase tracking-wider">
+                  <span class="w-1 h-1 rounded-full bg-white"></span>ON AIR
+                </div>
+                <span class="flex-1 text-[8px] text-slate-500 italic truncate text-center">Radio Rivendell</span>
+              </div>
+
+              <!-- Mini Main Area -->
+              <div class="flex" style="height: 180px;">
+
+                <!-- Mini Transport -->
+                <div class="w-8 bg-surface-900 border-r border-surface-700 flex flex-col items-center py-1 gap-1">
+                  <div class="w-5 h-5 rounded bg-green-600 flex items-center justify-center">
+                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                  </div>
+                  <div class="w-5 h-5 rounded bg-red-600 flex items-center justify-center">
+                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="1"/></svg>
+                  </div>
+                  <div class="w-5 h-5 rounded bg-amber-600 flex items-center justify-center">
+                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>
+                  </div>
+                </div>
+
+                <!-- Mini Log List -->
+                <div class="flex-1 flex flex-col min-w-0">
+                  <!-- Mini Tab Bar -->
+                  <div class="h-4 bg-surface-900 border-b border-surface-700 flex items-center px-1 gap-0.5">
+                    <span class="px-1 text-[7px] font-semibold text-blue-400 bg-surface-950 rounded-t border-t border-x border-blue-500/30">Main</span>
+                    <span class="px-1 text-[7px] text-slate-600">Aux 1</span>
+                    <span class="px-1 text-[7px] text-slate-600">Panel</span>
+                  </div>
+                  <!-- Mini rows -->
+                  <div class="flex-1 overflow-hidden">
+                    <div class="h-4 flex items-center px-1 text-[7px] border-l-2 border-green-500 bg-green-500/5">
+                      <span class="w-8 font-mono text-slate-500 truncate">102345</span>
+                      <span class="flex-1 truncate text-slate-200 font-medium ml-1">Bohemian Rhapsody</span>
+                      <span class="font-mono text-slate-400 ml-1">5:55</span>
+                    </div>
+                    <div class="h-4 flex items-center px-1 text-[7px] border-l border-blue-500 bg-blue-500/5">
+                      <span class="w-8 font-mono text-slate-500 truncate">100891</span>
+                      <span class="flex-1 truncate text-slate-300 ml-1">Hotel California</span>
+                      <span class="font-mono text-slate-400 ml-1">6:30</span>
+                    </div>
+                    <div class="h-4 flex items-center px-1 text-[7px] bg-surface-950">
+                      <span class="w-8 font-mono text-slate-600 truncate">100204</span>
+                      <span class="flex-1 truncate text-slate-400 ml-1">Station ID</span>
+                      <span class="font-mono text-slate-500 ml-1">0:08</span>
+                    </div>
+                    <div class="h-4 flex items-center px-1 text-[7px] bg-surface-900">
+                      <span class="w-8 font-mono text-slate-600 truncate">103782</span>
+                      <span class="flex-1 truncate text-slate-400 ml-1">Stairway to Heaven</span>
+                      <span class="font-mono text-slate-500 ml-1">8:02</span>
+                    </div>
+                    <div class="h-4 flex items-center px-1 text-[7px] bg-surface-950">
+                      <span class="w-8 font-mono text-slate-600 truncate">100567</span>
+                      <span class="flex-1 truncate text-slate-400 ml-1">News Intro Jingle</span>
+                      <span class="font-mono text-slate-500 ml-1">0:05</span>
+                    </div>
+                    <div class="h-4 flex items-center px-1 text-[7px] bg-surface-900">
+                      <span class="w-8 font-mono text-slate-600 truncate">100568</span>
+                      <span class="flex-1 truncate text-slate-400 ml-1">Afternoon News</span>
+                      <span class="font-mono text-slate-500 ml-1">5:00</span>
+                    </div>
+                    <div class="h-4 flex items-center px-1 text-[7px] bg-surface-950">
+                      <span class="w-8 font-mono text-slate-600 truncate">104201</span>
+                      <span class="flex-1 truncate text-slate-400 ml-1">Come Together</span>
+                      <span class="font-mono text-slate-500 ml-1">4:19</span>
+                    </div>
+                    <div class="h-4 flex items-center px-1 text-[7px] bg-surface-900">
+                      <span class="w-8 font-mono text-slate-600 truncate">102890</span>
+                      <span class="flex-1 truncate text-slate-400 ml-1">Wish You Were Here</span>
+                      <span class="font-mono text-slate-500 ml-1">5:34</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Mini Timing Panel -->
+                <div class="w-16 bg-surface-900 border-l border-surface-700 flex flex-col items-center py-1">
+                  <!-- Mini Pie -->
+                  <div class="relative w-12 h-12">
+                    <svg viewBox="0 0 120 120" class="w-full h-full -rotate-90">
+                      <circle cx="60" cy="60" r="52" fill="none" stroke="#1E293B" stroke-width="12"/>
+                      <circle cx="60" cy="60" r="52" fill="none" stroke="#3B82F6" stroke-width="12" stroke-dasharray="203 326" stroke-dashoffset="0"/>
+                    </svg>
+                    <div class="absolute inset-0 flex items-center justify-center">
+                      <span class="font-mono text-[9px] font-bold text-slate-200">3:41</span>
+                    </div>
+                  </div>
+                  <!-- Mini Post -->
+                  <div class="mt-1 font-mono text-[8px] text-green-400 bg-green-950/40 rounded px-1">+0:12</div>
+                  <!-- Mini Meters -->
+                  <div class="flex-1 flex items-end gap-0.5 mt-2 pb-1">
+                    <div class="w-1.5 bg-green-500 rounded-t" style="height:70%"></div>
+                    <div class="w-1.5 bg-green-500 rounded-t" style="height:60%"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Mini Sound Panel -->
+              <div class="h-12 bg-surface-900 border-t border-surface-700 p-0.5">
+                <div class="grid grid-cols-8 grid-rows-2 gap-0.5 h-full">
+                  <div class="rounded-sm bg-green-800 border border-green-500/40 flex items-center justify-center">
+                    <span class="text-[6px] text-slate-200 truncate px-0.5">Applause</span>
+                  </div>
+                  <div class="rounded-sm bg-surface-800 border border-surface-700 flex items-center justify-center">
+                    <span class="text-[6px] text-slate-400 truncate px-0.5">Rim Shot</span>
+                  </div>
+                  <div class="rounded-sm bg-surface-800 border border-surface-700 flex items-center justify-center">
+                    <span class="text-[6px] text-slate-400 truncate px-0.5">Trombone</span>
+                  </div>
+                  <div class="rounded-sm bg-surface-800 border border-surface-700 flex items-center justify-center">
+                    <span class="text-[6px] text-slate-400 truncate px-0.5">Air Horn</span>
+                  </div>
+                  <div class="rounded-sm bg-surface-800 border border-surface-700 flex items-center justify-center">
+                    <span class="text-[6px] text-slate-400 truncate px-0.5">News</span>
+                  </div>
+                  <div class="rounded-sm bg-surface-800 border border-surface-700 flex items-center justify-center">
+                    <span class="text-[6px] text-slate-400 truncate px-0.5">Weather</span>
+                  </div>
+                  <div class="rounded-sm bg-surface-800 border border-surface-700 flex items-center justify-center">
+                    <span class="text-[6px] text-slate-400 truncate px-0.5">ID</span>
+                  </div>
+                  <div class="rounded-sm bg-surface-800 border border-surface-700 flex items-center justify-center">
+                    <span class="text-[6px] text-slate-400 truncate px-0.5">Sponsor</span>
+                  </div>
+                  <div class="rounded-sm bg-surface-800 border border-surface-700 flex items-center justify-center">
+                    <span class="text-[6px] text-slate-400 truncate px-0.5">Jingle 1</span>
+                  </div>
+                  <div class="rounded-sm bg-surface-800 border border-surface-700 flex items-center justify-center">
+                    <span class="text-[6px] text-slate-400 truncate px-0.5">Jingle 2</span>
+                  </div>
+                  <div class="rounded-sm bg-surface-800 border border-surface-700 flex items-center justify-center">
+                    <span class="text-[6px] text-slate-400 truncate px-0.5">Drop</span>
+                  </div>
+                  <div class="rounded-sm bg-surface-800 border border-surface-700 flex items-center justify-center">
+                    <span class="text-[6px] text-slate-400 truncate px-0.5">Phone</span>
+                  </div>
+                  <div class="rounded-sm bg-surface-950 border border-surface-800/50"></div>
+                  <div class="rounded-sm bg-surface-950 border border-surface-800/50"></div>
+                  <div class="rounded-sm bg-surface-950 border border-surface-800/50"></div>
+                  <div class="rounded-sm bg-surface-950 border border-surface-800/50"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-3 text-[10px] text-slate-600 text-center">
+              Preview reflects the airplay playout layout for station MAIN-STUDIO
+            </div>
+
+            <!-- Quick Config Summary -->
+            <div class="mt-4 bg-surface-900 rounded-lg border border-surface-700 p-3">
+              <h4 class="text-[10px] font-semibold uppercase tracking-wider text-slate-500 mb-2">Configuration Summary</h4>
+              <div class="space-y-1.5 text-[11px]">
+                <div class="flex justify-between">
+                  <span class="text-slate-500">Audio Card</span>
+                  <span class="text-slate-300 font-mono">Card 0 — HPI</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-slate-500">Log Machines</span>
+                  <span class="text-slate-300">2 active (Main, Aux 1)</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-slate-500">Sound Panel</span>
+                  <span class="text-slate-300">8 x 2 grid</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-slate-500">Skin</span>
+                  <span class="text-slate-300">Default Dark</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-slate-500">Start Mode</span>
+                  <span class="text-slate-300">Previous</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-slate-500">Segue Length</span>
+                  <span class="text-slate-300 font-mono">250ms</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-slate-500">GPIO Channels</span>
+                  <span class="text-slate-300">2 of 3 assigned</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Simple nav switching (mockup only)
+    function switchSection(sectionId, el) {
+      // Remove active from all
+      document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.remove('nav-active');
+        item.classList.add('border-l-4', 'border-transparent');
+      });
+      // Add active to clicked
+      el.classList.add('nav-active');
+      el.classList.remove('border-l-4', 'border-transparent');
+      // Close mobile sidebar
+      closeSidebar();
+    }
+
+    // Mobile sidebar toggle
+    document.getElementById('menuToggle').addEventListener('click', () => {
+      const sidebar = document.getElementById('sidebar');
+      const backdrop = document.getElementById('sidebarBackdrop');
+      sidebar.classList.toggle('max-lg:-translate-x-full');
+      backdrop.classList.toggle('hidden');
+    });
+
+    function closeSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const backdrop = document.getElementById('sidebarBackdrop');
+      if (!sidebar.classList.contains('max-lg:-translate-x-full')) {
+        sidebar.classList.add('max-lg:-translate-x-full');
+        backdrop.classList.add('hidden');
+      }
+    }
+  </script>
+
+</body>
+</html>
